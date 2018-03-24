@@ -70,11 +70,12 @@ namespace Reborn_Zune
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(SplashScreen), e.Arguments);
+                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
                 // Ensure the current window is active
 
                 // using Windows.UI.ViewManagement;
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500,300));
                 var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
                 coreTitleBar.ExtendViewIntoTitleBar = true;
 

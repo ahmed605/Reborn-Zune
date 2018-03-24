@@ -7,9 +7,119 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid x:Name="rootPanel" Background="LightGray">
+    <Grid x:Name="rootPanel" Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="220" MaxWidth="490" />
+            <ColumnDefinition MinWidth="260" MaxWidth="910" />
+            <ColumnDefinition MinWidth="500" />
+        </Grid.ColumnDefinitions>
 
-        <local:VariableSizedWrapPanel
+        <Grid.RowDefinitions>
+            <RowDefinition Height="167" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            Width="1"
+            Height="735"
+            Margin="0,25,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Background="DarkGray" />
+
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <TextBlock
+                Margin="55,-4,0,0"
+                FontSize="11"
+                FontWeight="Bold"
+                Foreground="Black"
+                Text="16 ARTISTS" />
+            <ListView x:Name="ArtistList" Margin="55,17,0,0">
+
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Margin" Value="-10,0,0,0" />
+                        <Setter Property="MinHeight" Value="26" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock
+                                FontFamily="Microsoft YaHei UI"
+                                FontSize="13"
+                                Text="{Binding}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        <Border
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="1"
+            Height="735"
+            Margin="0,25,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Background="DarkGray" />
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <TextBlock
+                Margin="20,-4,0,0"
+                FontSize="11"
+                FontWeight="Bold"
+                Foreground="Black"
+                Text="25 ALBUMS BY DATE ADDED" />
+            <GridView x:Name="AlbumList" Margin="0,-10,25,0">
+                <GridView.ItemContainerStyle>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="Margin" Value="27,25,0,0" />
+                        <Setter Property="MinHeight" Value="26" />
+                    </Style>
+                </GridView.ItemContainerStyle>
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <Image Width="80" Source="{Binding}" />
+                            <TextBlock
+                                Margin="0,3,0,0"
+                                FontSize="12"
+                                FontWeight="Medium"
+                                Text="Hahahaha" />
+                            <TextBlock
+                                Margin="0,-3,0,0"
+                                FontSize="12"
+                                FontWeight="Medium"
+                                Text="jijiji" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </StackPanel>
+        <Border
+            Grid.Row="1"
+            Grid.Column="3"
+            Width="1"
+            Height="735"
+            Margin="0,25,55,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Background="DarkGray" />
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="0,0,50,0">
+            <TextBlock
+                Margin="30,-4,0,0"
+                FontSize="11"
+                FontWeight="Bold"
+                Foreground="Black"
+                Text="141 SONGS BY RATING" />
+        </StackPanel>
+
+        <!--<local:VariableSizedWrapPanel
             x:Name="panel"
             Width="2580"
             Height="1200"
@@ -20,7 +130,7 @@
             ItemHeight="75"
             ItemWidth="75"
             Loaded="rootPanel_Loaded"
-            Orientation="Vertical" />
+            Orientation="Vertical" />-->
 
     </Grid>
 </Page>
