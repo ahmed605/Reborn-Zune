@@ -38,7 +38,7 @@ namespace Reborn_Zune
         private PointLight _pointLight;
         //private PointLight _secondPointLight;
         private Visual _root;
-        private MainViewModel _viewModel;
+        private MainViewModel viewModel;
 
         public MainPage()
         {
@@ -142,7 +142,7 @@ namespace Reborn_Zune
             //AlbumList.ItemsSource = _Alumbs;
             //SongList.ItemsSource = _Songs;
 
-            _viewModel = new MainViewModel();
+            viewModel = new MainViewModel();
 
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.InactiveBackgroundColor = Windows.UI.Colors.Transparent;

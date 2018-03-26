@@ -12,20 +12,22 @@ namespace Reborn_Zune.Model
     {
         public LocalArtistModel()
         {
-            Albums = new Dictionary<string, LocalAlbumModel>();
+            Albums = new ObservableCollection<LocalAlbumModel>();
+            albumsDict = new Dictionary<string, LocalAlbumModel>();
         }
 
         public LocalArtistModel(string strArtist)
         {
             Name = strArtist;
-            Albums = new Dictionary<string, LocalAlbumModel>();
+            Albums = new ObservableCollection<LocalAlbumModel>();
+            albumsDict = new Dictionary<string, LocalAlbumModel>();
         }
 
         public void AddSong(LocalMusicModel music)
         {
-            if (Albums.ContainsKey(music.Album))
+            if (albumsDict.ContainsKey(music.Album))
             {
-                Albums[music.Album].AddSong(music);
+                albumsDict[music.Album].AddSong(music);
             }
             else
             {
@@ -33,12 +35,14 @@ namespace Reborn_Zune.Model
                 newAlbum.AddSong(music);
                 newAlbum.Artist = Name;
                 newAlbum.Thumbnail = music.Thumbnail;
-                Albums[music.Album] = newAlbum;
+                albumsDict[music.Album] = newAlbum;
+                Albums.Add(newAlbum);
             }
         }
 
         private String _name;
-        private Dictionary<string, LocalAlbumModel> _albums;
+        private Dictionary<string, LocalAlbumModel> albumsDict;
+        private ObservableCollection<LocalAlbumModel> _albums;
 
         public String Name
         {
@@ -52,7 +56,7 @@ namespace Reborn_Zune.Model
             }
         }
 
-        public Dictionary<string, LocalAlbumModel> Albums
+        public ObservableCollection<LocalAlbumModel> Albums
         {
             get
             {
@@ -60,7 +64,7 @@ namespace Reborn_Zune.Model
             }
             set
             {
-                Set<Dictionary<string, LocalAlbumModel>>(() => this.Albums, ref _albums, value);
+                Set<ObservableCollection<LocalAlbumModel>>(() => this.Albums, ref _albums, value);
             }
         }
     }

@@ -5,8 +5,10 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Reborn_Zune"
+    xmlns:model="using:Reborn_Zune.Model"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    >
 
     <Grid x:Name="rootPanel" Background="White">
 
@@ -70,7 +72,8 @@
                         <ListView
                             x:Name="ArtistList"
                             Margin="55,12,0,0"
-                            controls:DockPanel.Dock="Top">
+                            controls:DockPanel.Dock="Top"
+                            ItemsSource="{x:Bind viewModel.Artists}">
 
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
@@ -79,12 +82,12 @@
                                 </Style>
                             </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="model:LocalArtistModel">
                                     <Grid>
                                         <TextBlock
                                             FontFamily="Microsoft YaHei UI"
                                             FontSize="13"
-                                            Text="{Binding}" />
+                                            Text="{x:Bind Name}" />
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -110,7 +113,8 @@
                             x:Name="AlbumList"
                             Margin="0,12,0,0"
                             Padding="0,0,25,0"
-                            controls:DockPanel.Dock="Top">
+                            controls:DockPanel.Dock="Top"
+                            ItemsSource="{x:Bind viewModel.Albums}">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
                                     <Setter Property="Margin" Value="27,0,0,25" />
@@ -118,19 +122,20 @@
                                 </Style>
                             </GridView.ItemContainerStyle>
                             <GridView.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="model:LocalAlbumModel">
                                     <StackPanel>
-                                        <Image Width="80" Source="{Binding}" />
+                                        <Image Width="95" Source="{x:Bind Thumbnail}" />
                                         <TextBlock
                                             Margin="0,3,0,0"
                                             FontSize="12"
                                             FontWeight="Medium"
-                                            Text="Hahahaha" />
+                                            Text="{x:Bind AlbumTitle}" />
                                         <TextBlock
-                                            Margin="0,-3,0,0"
+                                            Margin="0,0,0,0"
                                             FontSize="12"
                                             FontWeight="Medium"
-                                            Text="jijiji" />
+                                            Foreground="DarkGray"
+                                            Text="{x:Bind Artist}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
@@ -155,7 +160,8 @@
                         <ListView
                             x:Name="SongList"
                             Margin="30,10,0,0"
-                            controls:DockPanel.Dock="Top">
+                            controls:DockPanel.Dock="Top"
+                            ItemsSource="{x:Bind viewModel.Musics}">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="Margin" Value="-10,0,0,0" />
@@ -164,12 +170,12 @@
                             </ListView.ItemContainerStyle>
 
                             <ListView.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="model:LocalMusicModel">
                                     <Grid>
                                         <TextBlock
                                             FontFamily="Microsoft YaHei UI"
                                             FontSize="13"
-                                            Text="{Binding}" />
+                                            Text="{x:Bind Title}" />
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

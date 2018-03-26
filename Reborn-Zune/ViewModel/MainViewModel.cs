@@ -2,6 +2,7 @@
 using Reborn_Zune.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -17,11 +18,17 @@ namespace Reborn_Zune.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private Dictionary<String, LocalArtistModel> _artists;
+        private Dictionary<String, LocalArtistModel> artistsDict;
+        private ObservableCollection<LocalArtistModel> _artists;
+        private ObservableCollection<LocalAlbumModel> _albums;
+        private ObservableCollection<LocalMusicModel> _musics;
+
         public MainViewModel()
         {
-            _artists = new Dictionary<string, LocalArtistModel>();
-
+            artistsDict = new Dictionary<string, LocalArtistModel>();
+            Artists = new ObservableCollection<LocalArtistModel>();
+            Albums = new ObservableCollection<LocalAlbumModel>();
+            Musics = new ObservableCollection<LocalMusicModel>();
             GetSong();
         }
 
@@ -52,30 +59,51 @@ namespace Reborn_Zune.ViewModel
             WriteableBitmap strThumbnail;
 
 
-            LocalMusicModel music = new LocalMusicModel();
+            
             MusicProperties property = await item.Properties.GetMusicPropertiesAsync();
             strTitle = property.Title;
             strAlbum = property.Album;
             strArtist = property.Artist;
             strThumbnail = await GetThumbnail(item);
 
-            music.Title = strTitle;
-            music.Album = strAlbum;
-            music.Artist = strArtist;
-            music.Thumbnail = strThumbnail;
-            music.Music = item;
-
-            if (_artists.ContainsKey(strArtist))
+            LocalMusicModel music = new LocalMusicModel()
             {
-                _artists[strArtist].AddSong(music);
+                Title = strTitle,
+                Album = strAlbum,
+                Artist = strArtist,
+                Thumbnail = strThumbnail,
+                Music = item
+            };
+
+            if (artistsDict.ContainsKey(strArtist))
+            {
+                artistsDict[strArtist].AddSong(music);
             }
             else
             {
                 var newArtist = new LocalArtistModel(strArtist);
                 newArtist.AddSong(music);
-                _artists[strArtist] = newArtist;
+                artistsDict[strArtist] = newArtist;
+                Artists.Add(newArtist);
             }
+
+            GetAllAlbums();
+            Musics.Add(music);
             
+        }
+
+        private void GetAllAlbums()
+        {
+            foreach(LocalArtistModel artist in Artists)
+            {
+                foreach(var item in artist.Albums)
+                {
+                    if (!Albums.Contains(item))
+                    {
+                        Albums.Add(item);
+                    }
+                }
+            }
         }
 
         private async Task<WriteableBitmap> GetThumbnail(StorageFile item)
@@ -116,6 +144,54 @@ namespace Reborn_Zune.ViewModel
                 // Invalidate the WriteableBitmap and set as Image source
                 bitmap.Invalidate();
                 return bitmap;
+            }
+        }
+
+        public ObservableCollection<LocalArtistModel> Artists
+        {
+            get
+            {
+                return _artists;
+            }
+            set
+            {
+                if(_artists != value)
+                {
+                    _artists = value;
+                    RaisePropertyChanged(() => Artists);
+                }
+            }
+        }
+
+        public ObservableCollection<LocalAlbumModel> Albums
+        {
+            get
+            {
+                return _albums;
+            }
+            set
+            {
+                if(_albums != value)
+                {
+                    _albums = value;
+                    RaisePropertyChanged(() => Albums);
+                }
+            }
+        }
+
+        public ObservableCollection<LocalMusicModel> Musics
+        {
+            get
+            {
+                return _musics;
+            }
+            set
+            {
+                if(_musics != value)
+                {
+                    _musics = value;
+                    RaisePropertyChanged(() => Musics);
+                }
             }
         }
     }
