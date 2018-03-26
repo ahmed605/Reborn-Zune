@@ -153,7 +153,7 @@ namespace Reborn_Zune
         {
             List<StorageFile> result = new List<StorageFile>();
             QueryOptions queryOption = new QueryOptions
-                (CommonFileQuery.OrderByTitle, new string[] { ".mp3", ".mp4", ".wma", ".m4a" });
+                (CommonFileQuery.OrderByTitle, new string[] { ".mp3", ".mp4", ".m4a" });
 
             queryOption.FolderDepth = FolderDepth.Shallow;
 

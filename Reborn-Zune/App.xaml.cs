@@ -79,17 +79,7 @@ namespace Reborn_Zune
                 var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
                 coreTitleBar.ExtendViewIntoTitleBar = true;
 
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                titleBar.InactiveBackgroundColor = Windows.UI.Colors.Transparent;
-                titleBar.InactiveForegroundColor = Colors.White;
-                titleBar.ButtonBackgroundColor =   "#00000000".ToColor();
-                titleBar.ButtonForegroundColor = Colors.White;
-                titleBar.ButtonInactiveBackgroundColor = "#00000000".ToColor();
-                titleBar.ButtonInactiveForegroundColor = Colors.White;
-                titleBar.ButtonHoverBackgroundColor = "#20FFFFFF".ToColor();
-                titleBar.ButtonHoverForegroundColor = Colors.White;
-                titleBar.ButtonPressedBackgroundColor = "#10FFFFFF".ToColor();
-                titleBar.ButtonPressedForegroundColor = Colors.White;
+                
 
                 Window.Current.Activate();
             }
