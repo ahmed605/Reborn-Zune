@@ -1,4 +1,6 @@
-﻿using Windows.UI.Composition;
+﻿using System;
+using Microsoft.Toolkit.Uwp.UI.Animations;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
@@ -38,5 +40,6 @@ namespace Reborn_Zune
         {
             this.InitializeComponent();
         }
+
     }
 }

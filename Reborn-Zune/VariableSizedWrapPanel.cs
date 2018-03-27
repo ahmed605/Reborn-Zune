@@ -1,4 +1,5 @@
 ﻿using Microsoft.Graphics.Canvas.Effects;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -485,7 +486,7 @@ namespace Reborn_Zune
                 
                 // Get the visual of the child
                 var visual = ElementCompositionPreview.GetElementVisual(child);
-                
+
                 visual.Opacity = 0f;
                 int next = rnd.Next(animationGroupList.Length);
                 var group = animationGroupList[next];

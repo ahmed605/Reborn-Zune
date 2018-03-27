@@ -36,7 +36,7 @@ namespace Reborn_Zune
 
             if (_Thumbnail != null && _Thumbnail.Count > 0)
             {
-                Frame.Navigate(typeof(MainPage), _Thumbnail);
+                Frame.Navigate(typeof(TilePage), _Thumbnail);
             }
         }
 

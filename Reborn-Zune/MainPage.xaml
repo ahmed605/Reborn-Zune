@@ -5,10 +5,9 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Reborn_Zune"
-    xmlns:model="using:Reborn_Zune.Model"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    >
+    xmlns:model="using:Reborn_Zune.Model"
+    mc:Ignorable="d">
 
     <Grid x:Name="rootPanel" Background="White">
 
@@ -376,22 +375,13 @@
         <Grid
             x:Name="BottomControl"
             Grid.Row="2"
-            Grid.ColumnSpan="3"
-            Background="Blue" />
+            Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-
-        <!--<local:VariableSizedWrapPanel
-            x:Name="panel"
-            Width="2580"
-            Height="1200"
-            Margin="-20,-20,-1784,-100"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            IsComposing="True"
-            ItemHeight="75"
-            ItemWidth="75"
-            Loaded="rootPanel_Loaded"
-            Orientation="Vertical" />-->
-
+            
+        </Grid>
     </Grid>
 </Page>
