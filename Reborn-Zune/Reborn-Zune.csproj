@@ -95,7 +95,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FluidBitMatrix.cs" />
+    <Compile Include="Control\MusicProgressBar.xaml.cs">
+      <DependentUpon>MusicProgressBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\PlayButtonControl.xaml.cs">
+      <DependentUpon>PlayButtonControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\FluidBitMatrix.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -106,14 +112,14 @@
     <Compile Include="SplashScreen.xaml.cs">
       <DependentUpon>SplashScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tile.xaml.cs">
+    <Compile Include="Control\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
     <Compile Include="TilePage.xaml.cs">
       <DependentUpon>TilePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils.cs" />
-    <Compile Include="VariableSizedWrapPanel.cs" />
+    <Compile Include="Utilities\Utils.cs" />
+    <Compile Include="Control\VariableSizedWrapPanel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +183,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Control\MusicProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\PlayButtonControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -185,7 +199,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tile.xaml">
+    <Page Include="Control\Tile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

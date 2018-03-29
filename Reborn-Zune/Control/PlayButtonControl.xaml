@@ -1,0 +1,72 @@
+﻿<UserControl
+    x:Class="Reborn_Zune.Control.PlayButtonControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Reborn_Zune.Control"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="100"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+
+    <StackPanel Background="White" Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <Button Background="Transparent" Style="{StaticResource MusicPlayButtonStyle}">
+                <TextBlock
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="15"
+                    FontWeight="Bold"
+                    Text="&#xE8EE;" />
+            </Button>
+            <Button Background="Transparent" Style="{StaticResource MusicPlayButtonStyle}">
+                <TextBlock
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="15"
+                    FontWeight="Bold"
+                    Text="&#xE8B1;" />
+            </Button>
+            <Button Background="Transparent" Style="{StaticResource MusicPlayButtonStyle}">
+                <Border
+                    Padding="4"
+                    BorderBrush="Black"
+                    BorderThickness="1.5"
+                    CornerRadius="20">
+                    <TextBlock
+                        FontFamily="Segoe MDL2 Assets"
+                        FontSize="15"
+                        FontWeight="ExtraBold"
+                        Text="&#xE892;" />
+                </Border>
+            </Button>
+            <Button Background="Transparent" Style="{StaticResource MusicPlayButtonStyle}">
+                <Border
+                    Padding="4"
+                    BorderBrush="Black"
+                    BorderThickness="1.5"
+                    CornerRadius="20">
+                    <TextBlock
+                        FontFamily="Segoe MDL2 Assets"
+                        FontSize="25"
+                        Text="&#xE768;" />
+                </Border>
+            </Button>
+            <Button Background="Transparent" Style="{StaticResource MusicPlayButtonStyle}">
+                <Border
+                    Padding="4"
+                    BorderBrush="Black"
+                    BorderThickness="1.5"
+                    CornerRadius="20">
+                    <TextBlock
+                        FontFamily="Segoe MDL2 Assets"
+                        FontSize="15"
+                        FontWeight="ExtraBold"
+                        Text="&#xE893;" />
+                </Border>
+            </Button>
+        </StackPanel>
+        <Grid>
+            <TextBlock Text="Volume 100" />
+            <ProgressBar Visibility="Collapsed" />
+        </Grid>
+    </StackPanel>
+</UserControl>

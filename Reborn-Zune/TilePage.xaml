@@ -6,11 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Reborn_Zune"
+    xmlns:controls="using:Reborn_Zune.Control"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <Grid x:Name="rootPanel" Background="DarkGray">
-        <local:VariableSizedWrapPanel
+        <controls:VariableSizedWrapPanel
             x:Name="panel"
             Width="2580"
             Height="1200"

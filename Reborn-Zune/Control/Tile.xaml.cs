@@ -1,13 +1,10 @@
-﻿using System;
-using Microsoft.Toolkit.Uwp.UI.Animations;
-using Windows.UI.Composition;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace Reborn_Zune
+namespace Reborn_Zune.Control
 {
     public sealed partial class Tile : UserControl
     {

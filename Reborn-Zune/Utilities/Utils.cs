@@ -36,7 +36,7 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
-namespace Reborn_Zune
+namespace Reborn_Zune.Utilities
 {
     /// <summary>
     /// Class containing collection of useful methods

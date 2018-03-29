@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:custom_controls="using:Reborn_Zune.Control"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Reborn_Zune"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -372,16 +373,16 @@
             Text="Setting" />
 
 
-        <Grid
-            x:Name="BottomControl"
+        <custom_controls:MusicProgressBar
             Grid.Row="2"
-            Grid.ColumnSpan="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            HorizontalAlignment="Center"
+            DataContext="{x:Bind viewModel}" />
 
-            
-        </Grid>
+        <custom_controls:PlayButtonControl
+            Grid.Row="2"
+            Margin="0,0,40,0"
+            HorizontalAlignment="Right"
+            DataContext="{x:Bind viewModel}" />
+
     </Grid>
 </Page>

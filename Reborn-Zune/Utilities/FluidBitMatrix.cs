@@ -32,7 +32,7 @@ using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 
-namespace Reborn_Zune
+namespace Reborn_Zune.Utilities
 {
     /// <summary>
     /// Represents a bit location within the BitMatrix
