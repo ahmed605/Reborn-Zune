@@ -3,10 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
+    xmlns:controls="using:Reborn_Zune.Control"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Reborn_Zune"
-    xmlns:controls="using:Reborn_Zune.Control"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
@@ -19,8 +19,8 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             IsComposing="True"
-            ItemHeight="75"
-            ItemWidth="75"
+            ItemHeight="70"
+            ItemWidth="70"
             Loaded="rootPanel_Loaded"
             Orientation="Vertical" />
     </Grid>

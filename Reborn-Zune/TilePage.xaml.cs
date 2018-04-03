@@ -12,6 +12,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
 using Windows.Graphics.Effects;
+using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Composition.Effects;
 using Windows.UI.Xaml;
@@ -34,7 +35,7 @@ namespace Reborn_Zune
     {
 
         private ObservableCollection<UIElement> _items;
-        private const float lightDepth = 300f;
+        private const float lightDepth = 200f;
         private const int animationDelay = 600;
         private const int animationDuration = 70;
         private CompositionEffectFactory _effectFactory;
@@ -42,6 +43,7 @@ namespace Reborn_Zune
         private Compositor _compositor;
         private PointLight _pointLight;
         private PointLight _secondPointLight;
+        private AmbientLight _ambientLight;
         private Visual _root;
 
 
@@ -72,6 +74,9 @@ namespace Reborn_Zune
             _secondPointLight.Offset = new Vector3(-2500f, -2500f, 300f);
             _pointLight.Intensity = 1.3f;
             _secondPointLight.Intensity = 1.3f;
+            _ambientLight = _compositor.CreateAmbientLight();
+            _ambientLight.Intensity = 0.1f;
+            _ambientLight.Color = "#d3d3d3".ToColor();
             IGraphicsEffect graphicsEffect = new CompositeEffect()
             {
                 Mode = CanvasComposite.DestinationIn,
@@ -86,7 +91,7 @@ namespace Reborn_Zune
                                         new SceneLightingEffect()
                                         {
                                             AmbientAmount = 0,
-                                            DiffuseAmount = .5f,
+                                            DiffuseAmount = 30f,
                                             SpecularAmount = 0,
                                             NormalMapSource = new CompositionEffectSourceParameter("NormalMap"),
                                         }
@@ -101,6 +106,7 @@ namespace Reborn_Zune
             _pointLight.Targets.Add(_root);
             _secondPointLight.CoordinateSpace = _root;
             _secondPointLight.Targets.Add(_root);
+            _ambientLight.Targets.Add(_root);
 
             panel.ItemsSource = _items;
 
