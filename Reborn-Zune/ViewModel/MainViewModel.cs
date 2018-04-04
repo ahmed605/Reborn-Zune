@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using Reborn_Zune.Model;
+using Reborn_Zune.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +10,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
+using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
@@ -18,14 +20,15 @@ namespace Reborn_Zune.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private Dictionary<String, LocalArtistModel> artistsDict;
+        private Dictionary<String, LocalArtistModel> _artistsDict;
         private ObservableCollection<LocalArtistModel> _artists;
         private ObservableCollection<LocalAlbumModel> _albums;
         private ObservableCollection<LocalMusicModel> _musics;
+        private MediaPlayer _player = PlaybackService.Instance.Player;
 
         public MainViewModel()
         {
-            artistsDict = new Dictionary<string, LocalArtistModel>();
+            _artistsDict = new Dictionary<string, LocalArtistModel>();
             Artists = new ObservableCollection<LocalArtistModel>();
             Albums = new ObservableCollection<LocalAlbumModel>();
             Musics = new ObservableCollection<LocalMusicModel>();
@@ -75,15 +78,15 @@ namespace Reborn_Zune.ViewModel
                 Music = item
             };
 
-            if (artistsDict.ContainsKey(strArtist))
+            if (_artistsDict.ContainsKey(strArtist))
             {
-                artistsDict[strArtist].AddSong(music);
+                _artistsDict[strArtist].AddSong(music);
             }
             else
             {
                 var newArtist = new LocalArtistModel(strArtist);
                 newArtist.AddSong(music);
-                artistsDict[strArtist] = newArtist;
+                _artistsDict[strArtist] = newArtist;
                 Artists.Add(newArtist);
             }
 

@@ -11,13 +11,18 @@ namespace Reborn_Zune.Model
 {
     public class LocalMusicModel : ObservableObject
     {
-        public LocalMusicModel() { }
+        public LocalMusicModel()
+        {
+            
+        }
 
         private StorageFile _music;
         private String _title;
         private String _album;
         private String _artist;
         private WriteableBitmap _thumbnail;
+
+
 
         public StorageFile Music
         {

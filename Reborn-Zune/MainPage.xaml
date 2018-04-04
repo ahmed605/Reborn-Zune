@@ -5,7 +5,6 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:custom_controls="using:Reborn_Zune.Control"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Reborn_Zune"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Reborn_Zune.Model"
     mc:Ignorable="d">
@@ -365,24 +364,19 @@
             </PivotItem>
         </Pivot>
 
-        <TextBlock
-            Margin="0,7,155,0"
-            HorizontalAlignment="Right"
-            FontSize="12"
-            Foreground="DarkGray"
-            Text="Setting" />
 
-
-        <custom_controls:MusicProgressBar
+        <MediaPlayerElement
+            x:Name="mediaPlayer"
             Grid.Row="2"
-            HorizontalAlignment="Center"
-            DataContext="{x:Bind viewModel}" />
+            AreTransportControlsEnabled="True">
+            <MediaPlayerElement.TransportControls>
+                <custom_controls:CustomMediaTransportControl />
+            </MediaPlayerElement.TransportControls>
+        </MediaPlayerElement>
 
-        <custom_controls:PlayButtonControl
-            Grid.Row="2"
-            Margin="0,0,40,0"
-            HorizontalAlignment="Right"
-            DataContext="{x:Bind viewModel}" />
+
+
+
 
     </Grid>
 </Page>
