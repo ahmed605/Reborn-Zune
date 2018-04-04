@@ -482,7 +482,6 @@ namespace Reborn_Zune.Control
                 
                 // Get the visual of the child
                 var visual = ElementCompositionPreview.GetElementVisual(child);
-
                 visual.Opacity = 0f;
                 int next = rnd.Next(animationGroupList.Length);
                 var group = animationGroupList[next];
@@ -911,17 +910,16 @@ namespace Reborn_Zune.Control
 
         private void ScaleAnimationSetting(Vector3KeyFrameAnimation animation, double delay)
         {
-            animation.InsertKeyFrame(0.0f, new Vector3(0.7f, 0.7f, -.5f));
-            animation.InsertKeyFrame(1.0f, new Vector3(1, 1, 0), _compositor.CreateCubicBezierEasingFunction(new Vector2(0.0f, 0.0f), new Vector2(0.5f, 1.0f)));
-            animation.Duration = TimeSpan.FromMilliseconds(300);
+            animation.InsertKeyFrame(0.0f, new Vector3(0.7f, 0.7f, 0f));
+            animation.InsertKeyFrame(1.0f, new Vector3(1f, 1f, 0f), _compositor.CreateLinearEasingFunction());
+            animation.Duration = TimeSpan.FromMilliseconds(600);
             animation.DelayTime = TimeSpan.FromMilliseconds(delay);
-            animation.DelayBehavior = AnimationDelayBehavior.SetInitialValueAfterDelay;
             animation.Target = "Scale";
         }
 
         private void OpacityAnimationSetting(ScalarKeyFrameAnimation animation, double delay)
         {
-            animation.InsertKeyFrame(0.0f, 0.0f);
+            animation.InsertKeyFrame(0.6f, 0.0f);
             animation.InsertKeyFrame(1.0f, 1.0f, _compositor.CreateLinearEasingFunction());
             animation.Duration = TimeSpan.FromMilliseconds(450);
             animation.DelayTime = TimeSpan.FromMilliseconds(delay);

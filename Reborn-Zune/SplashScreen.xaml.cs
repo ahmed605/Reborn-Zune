@@ -51,8 +51,8 @@ namespace Reborn_Zune
                 int id = rnd.Next(uniqueSongs.Count);
                 Tile tile = new Tile()
                 {
-                    Width = factor * 75,
-                    Height = factor * 75,
+                    Width = factor * 70,
+                    Height = factor * 70,
                     Thumbnail = uniqueSongs[id],
                     Index = i
                 };
