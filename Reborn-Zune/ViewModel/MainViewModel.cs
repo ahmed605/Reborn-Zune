@@ -14,6 +14,10 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.ViewModel
@@ -24,16 +28,24 @@ namespace Reborn_Zune.ViewModel
         private ObservableCollection<LocalArtistModel> _artists;
         private ObservableCollection<LocalAlbumModel> _albums;
         private ObservableCollection<LocalMusicModel> _musics;
-        private MediaPlayer _player = PlaybackService.Instance.Player;
+        private CoreDispatcher dispatcher;
+        private PlayerViewModel _playerViewModel;
 
-        public MainViewModel()
+        public MediaPlayer _player = PlaybackService.Instance.Player;
+
+        public MainViewModel(CoreDispatcher dispatcher)
         {
+            this.dispatcher = dispatcher;
             _artistsDict = new Dictionary<string, LocalArtistModel>();
             Artists = new ObservableCollection<LocalArtistModel>();
             Albums = new ObservableCollection<LocalAlbumModel>();
             Musics = new ObservableCollection<LocalMusicModel>();
+            
             GetSong();
+
+            PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
         }
+
 
         private async void GetSong()
         {
@@ -60,14 +72,14 @@ namespace Reborn_Zune.ViewModel
             String strArtist;
             String strTitle;
             WriteableBitmap strThumbnail;
+            StorageItemThumbnail thumgnailStream;
 
-
-            
             MusicProperties property = await item.Properties.GetMusicPropertiesAsync();
             strTitle = property.Title;
             strAlbum = property.Album;
             strArtist = property.Artist;
             strThumbnail = await GetThumbnail(item);
+            thumgnailStream = await GetThumbnailStream(item);
 
             LocalMusicModel music = new LocalMusicModel()
             {
@@ -75,7 +87,8 @@ namespace Reborn_Zune.ViewModel
                 Album = strAlbum,
                 Artist = strArtist,
                 Thumbnail = strThumbnail,
-                Music = item
+                Music = item,
+                MusicID = Guid.NewGuid().ToString()
             };
 
             if (_artistsDict.ContainsKey(strArtist))
@@ -93,6 +106,16 @@ namespace Reborn_Zune.ViewModel
             GetAllAlbums();
             Musics.Add(music);
             
+        }
+
+        private async Task<StorageItemThumbnail> GetThumbnailStream(StorageFile item)
+        {
+            const ThumbnailMode thumbnailMode = ThumbnailMode.MusicView;
+            const uint size = 100;
+            using (StorageItemThumbnail thumbnail = await item.GetThumbnailAsync(thumbnailMode, size))
+            {
+                return thumbnail;
+            }
         }
 
         private void GetAllAlbums()
@@ -116,6 +139,7 @@ namespace Reborn_Zune.ViewModel
             BitmapDecoder decoder = null;
             using(StorageItemThumbnail thumbnail = await item.GetThumbnailAsync(thumbnailMode, size))
             {
+
                 decoder = await BitmapDecoder.CreateAsync(thumbnail);
 
                 // Get the first frame
@@ -196,6 +220,48 @@ namespace Reborn_Zune.ViewModel
                     RaisePropertyChanged(() => Musics);
                 }
             }
+        }
+
+        public PlayerViewModel PlayerViewModel
+        {
+            get
+            {
+                return _playerViewModel;
+            }
+            set
+            {
+                Set<PlayerViewModel>(() => this.PlayerViewModel, ref _playerViewModel, value);
+            }
+        }
+
+        MediaPlaybackList PlaybackList
+        {
+            get { return _player.Source as MediaPlaybackList; }
+            set { _player.Source = value; }
+        }
+
+        public void DoubleTapped_Music(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            int selectedIndex = (sender as ListView).SelectedIndex;
+            if (PlaybackList == null)
+                PlaybackList = ToPlayBackList(Musics);
+
+            PlayerViewModel.MediaList = new MediaListViewModel(Musics, PlaybackList, dispatcher);
+            PlayerViewModel.SetCurrentItem(selectedIndex);
+        }
+
+        private MediaPlaybackList ToPlayBackList(ObservableCollection<LocalMusicModel> musics)
+        {
+            var playbackList = new MediaPlaybackList();
+            
+
+            // Add playback items to the list
+            foreach (var mediaItem in musics)
+            {
+                playbackList.Items.Add(mediaItem.ToPlaybackItem());
+            }
+
+            return playbackList;
         }
     }
 }

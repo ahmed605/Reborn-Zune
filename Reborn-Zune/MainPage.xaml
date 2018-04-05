@@ -160,6 +160,7 @@
                             x:Name="SongList"
                             Margin="30,10,0,0"
                             controls:DockPanel.Dock="Top"
+                            DoubleTapped="{x:Bind viewModel.DoubleTapped_Music}"
                             ItemsSource="{x:Bind viewModel.Musics}">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">

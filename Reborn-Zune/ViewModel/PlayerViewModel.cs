@@ -10,7 +10,7 @@ using Windows.UI.Core;
 
 namespace Reborn_Zune.ViewModel
 {
-    class PlayerViewModel : ViewModelBase, IDisposable
+    public class PlayerViewModel : ViewModelBase, IDisposable
     {
         bool disposed;
         MediaPlayer player;
@@ -93,24 +93,48 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
-        private void HandlePlaybackListChanges(IObservableVector<MediaPlaybackItem> items)
+        private void HandlePlaybackListChanges(IObservableVector<MediaPlaybackItem> vector)
         {
-            throw new NotImplementedException();
+            if (vector.Count > 0)
+            {
+                CanSkipNext = true;
+                CanSkipPrevious = true;
+            }
+            else
+            {
+                CanSkipNext = false;
+                CanSkipPrevious = false;
+            }
         }
 
-        private void Items_VectorChanged(IObservableVector<MediaPlaybackItem> sender, IVectorChangedEventArgs @event)
+        private async void Items_VectorChanged(IObservableVector<MediaPlaybackItem> sender, IVectorChangedEventArgs @event)
         {
-            throw new NotImplementedException();
+            if (disposed) return;
+            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (disposed) return;
+                HandlePlaybackListChanges(sender);
+            });
         }
 
-        private void SubscribedPlaybackList_CurrentItemChanged(MediaPlaybackList sender, CurrentMediaPlaybackItemChangedEventArgs args)
+        private async void SubscribedPlaybackList_CurrentItemChanged(MediaPlaybackList sender, CurrentMediaPlaybackItemChangedEventArgs args)
         {
-            throw new NotImplementedException();
+            if (disposed) return;
+            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (disposed) return;
+                HandlePlaybackListChanges(sender.Items);
+            });
         }
 
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        internal void SetCurrentItem(int selectedIndex)
+        {
+            MediaList.CurrentItemIndex = selectedIndex;
         }
     }
 }

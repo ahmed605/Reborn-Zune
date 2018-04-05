@@ -1,5 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
+using Reborn_Zune.Model;
 using System.ComponentModel;
+using System.Linq;
 using Windows.Media.Playback;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -10,15 +12,15 @@ namespace Reborn_Zune.ViewModel
         MediaListViewModel listViewModel;
         MediaPlaybackItem playbackItem;
 
-        BitmapImage previewImage;
+        WriteableBitmap previewImage;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public MediaItem MediaItem { get; private set; }
+        public LocalMusicModel MediaItem { get; private set; }
 
         public string Title => MediaItem.Title;
 
-        public BitmapImage PreviewImage
+        public WriteableBitmap PreviewImage
         {
             get { return previewImage; }
 
@@ -42,7 +44,7 @@ namespace Reborn_Zune.ViewModel
 
                 // Don't have one, try to rebind to one in the list
                 playbackItem = listViewModel.PlaybackList.Items.SingleOrDefault(pi =>
-                    (string)pi.Source.CustomProperties[MediaItem.MediaItemIdKey] == MediaItem.ItemId);
+                    (string)pi.Source.CustomProperties[MediaItem.GetMediaItemIdKey] == MediaItem.MusicID);
 
                 if (playbackItem != null)
                     return playbackItem;
@@ -54,7 +56,7 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
-        public MediaItemViewModel(MediaListViewModel listViewModel, MediaItem mediaItem)
+        public MediaItemViewModel(MediaListViewModel listViewModel, LocalMusicModel mediaItem)
         {
             this.listViewModel = listViewModel;
             MediaItem = mediaItem;
@@ -68,13 +70,9 @@ namespace Reborn_Zune.ViewModel
             //
             // The reason we cache here is to avoid audio gaps 
             // between tracks on transitions when changing artwork.
-            PreviewImage = new BitmapImage();
-            PreviewImage.UriSource = mediaItem.PreviewImageUri;
+            
+            PreviewImage = mediaItem.Thumbnail;
         }
-
-        private void RaisePropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        
     }
 }

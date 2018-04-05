@@ -2,9 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.Model
@@ -16,13 +21,16 @@ namespace Reborn_Zune.Model
             
         }
 
+
+        public const String MediaItemIdKey = "mediaItemId";
+
         private StorageFile _music;
         private String _title;
         private String _album;
         private String _artist;
         private WriteableBitmap _thumbnail;
-
-
+        private String _musicID;
+        private StorageItemThumbnail _thumbanailStream;
 
         public StorageFile Music
         {
@@ -82,6 +90,68 @@ namespace Reborn_Zune.Model
             {
                 Set<String>(() => this.Artist, ref _artist, value);
             }
+        }
+
+        public String MusicID
+        {
+            get
+            {
+                return _musicID;
+            }
+            set
+            {
+                Set<String>(() => this.MusicID, ref _musicID, value);
+            }
+        }
+        
+        public String GetMediaItemIdKey
+        {
+            get
+            {
+                return MediaItemIdKey;
+            }
+        }
+
+        public StorageItemThumbnail ThumbnailStream
+        {
+            get
+            {
+                return _thumbanailStream;
+            }
+            set
+            {
+                Set<StorageItemThumbnail>(() => this.ThumbnailStream, ref _thumbanailStream, value);
+            }
+        }
+
+        public MediaPlaybackItem ToPlaybackItem()
+        {
+            // Create the media source from the Uri
+            var source = MediaSource.CreateFromStorageFile(Music);
+
+            // Create a configurable playback item backed by the media source
+            var playbackItem = new MediaPlaybackItem(source);
+
+            // Populate display properties for the item that will be used
+            // to automatically update SystemMediaTransportControls when
+            // the item is playing.
+            var displayProperties = playbackItem.GetDisplayProperties();
+
+            //displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromStream(ThumbnailStream);
+
+            // Apply properties to the playback item
+            playbackItem.ApplyDisplayProperties(displayProperties);
+
+            // It's often useful to save a reference or ID to correlate
+            // a particular MediaPlaybackItem with the item from the
+            // backing data model. CustomProperties stores serializable
+            // types, so here we use the media item's URI as the
+            // playback item's unique ID. You are also free to use your own
+            // external dictionary if you want to reference non-serializable
+            // types.
+            source.CustomProperties[GetMediaItemIdKey] = MusicID;
+
+            return playbackItem;
         }
 
     }

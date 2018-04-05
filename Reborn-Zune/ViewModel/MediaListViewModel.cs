@@ -1,5 +1,9 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using Reborn_Zune.Model;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Windows.Media.Playback;
 using Windows.UI.Core;
 
 namespace Reborn_Zune.ViewModel
@@ -11,12 +15,7 @@ namespace Reborn_Zune.ViewModel
         bool disposed;
         bool initializing;
 
-        public MediaList MediaList { get; private set; }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+        public ObservableCollection<LocalMusicModel> MediaList { get; private set; }
 
         public MediaItemViewModel CurrentItem
         {
@@ -62,26 +61,23 @@ namespace Reborn_Zune.ViewModel
                         // Most likely the playlist had not been bound to a player so set start index
                         PlaybackList.StartingItem = CurrentItem.PlaybackItem;
                     }
-
-                    OnPropertyChanged(new PropertyChangedEventArgs("CurrentItemIndex"));
-                    OnPropertyChanged(new PropertyChangedEventArgs("CurrentItem"));
                 }
             }
         }
 
         public MediaPlaybackList PlaybackList { get; private set; }
 
-        public MediaListViewModel(MediaList mediaList, MediaPlaybackList playbackList, CoreDispatcher dispatcher)
+        public MediaListViewModel(ObservableCollection<LocalMusicModel> mediaList, MediaPlaybackList playbackList, CoreDispatcher dispatcher)
         {
             MediaList = mediaList;
             PlaybackList = playbackList;
             this.dispatcher = dispatcher;
 
             // Verify consistency of the lists that were passed in
-            var mediaListIds = mediaList.Select(i => i.ItemId);
+            var mediaListIds = mediaList.Select(i => i.MusicID);
             var playbackListIds = playbackList.Items.Select(
                 i => (string)i.Source.CustomProperties.SingleOrDefault(
-                    p => p.Key == MediaItem.MediaItemIdKey).Value);
+                    p => p.Key == LocalMusicModel.MediaItemIdKey).Value);
 
             if (!mediaListIds.SequenceEqual(playbackListIds))
                 throw new ArgumentException("The passed in data model and playback model did not have the same sequence of items");
@@ -177,12 +173,12 @@ namespace Reborn_Zune.ViewModel
 
         public void Dispose()
         {
-            if (disposed)
-                return;
+            //if (disposed)
+            //    return;
 
-            PlaybackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
+            //PlaybackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
 
-            disposed = true;
+            //disposed = true;
         }
     }
 }

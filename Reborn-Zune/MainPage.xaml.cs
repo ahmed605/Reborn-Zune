@@ -1,6 +1,7 @@
 ﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Reborn_Zune.Model;
 using Reborn_Zune.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -35,7 +37,8 @@ namespace Reborn_Zune
             this.InitializeComponent();
             this.NavigationCacheMode = NavigationCacheMode.Disabled;
 
-            viewModel = new MainViewModel();
+            viewModel = new MainViewModel(Dispatcher);
+            mediaPlayer.SetMediaPlayer(viewModel._player);
             TitleBarSetting();
 
         }
