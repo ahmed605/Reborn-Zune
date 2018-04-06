@@ -245,8 +245,8 @@ namespace Reborn_Zune.ViewModel
             int selectedIndex = (sender as ListView).SelectedIndex;
             if (PlaybackList == null)
                 PlaybackList = ToPlayBackList(Musics);
-
-            PlayerViewModel.MediaList = new MediaListViewModel(Musics, PlaybackList, dispatcher);
+            if(PlayerViewModel.MediaList == null)
+                PlayerViewModel.MediaList = new MediaListViewModel(Musics, PlaybackList, dispatcher);
             PlayerViewModel.SetCurrentItem(selectedIndex);
         }
 

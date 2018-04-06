@@ -129,7 +129,18 @@ namespace Reborn_Zune.ViewModel
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            if (disposed)
+                return;
+
+            if (MediaList != null)
+            {
+                MediaList.Dispose();
+                MediaList = null; // Setter triggers vector unsubscribe logic
+            }
+
+            PlaybackSession.Dispose();
+
+            disposed = true;
         }
 
         internal void SetCurrentItem(int selectedIndex)

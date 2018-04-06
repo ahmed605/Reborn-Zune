@@ -173,12 +173,12 @@ namespace Reborn_Zune.ViewModel
 
         public void Dispose()
         {
-            //if (disposed)
-            //    return;
+            if (disposed)
+                return;
 
-            //PlaybackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
+            PlaybackList.CurrentItemChanged -= PlaybackList_CurrentItemChanged;
 
-            //disposed = true;
+            disposed = true;
         }
     }
 }
