@@ -5,9 +5,14 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:custom_controls="using:Reborn_Zune.Control"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Reborn_Zune"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Reborn_Zune.Model"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <local:BooleanToVisibilityConverter x:Key="bool2VisConvert" />
+    </Page.Resources>
 
     <Grid x:Name="rootPanel" Background="White">
 
@@ -72,7 +77,9 @@
                             x:Name="ArtistList"
                             Margin="55,12,0,0"
                             controls:DockPanel.Dock="Top"
-                            ItemsSource="{x:Bind viewModel.Artists}">
+                            ItemsSource="{x:Bind viewModel.Artists}"
+                            Tapped="{x:Bind viewModel.ArtistTapped}"
+                            DoubleTapped="{x:Bind viewModel.ArtistDoubleTapped}">
 
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
@@ -113,7 +120,9 @@
                             Margin="0,12,0,0"
                             Padding="0,0,25,0"
                             controls:DockPanel.Dock="Top"
-                            ItemsSource="{x:Bind viewModel.Albums}">
+                            ItemsSource="{x:Bind viewModel.SecondPanelList, Mode=OneWay}"
+                            Tapped="{x:Bind viewModel.AlbumTapped}"
+                            DoubleTapped="{x:Bind viewModel.AlbumDoubleTapped}">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
                                     <Setter Property="Margin" Value="27,0,0,25" />
@@ -156,12 +165,18 @@
                             FontWeight="Bold"
                             Foreground="Black"
                             Text="141 SONGS BY RATING" />
+                        <TextBlock
+                            Margin="30,10,0,0"
+                            controls:DockPanel.Dock="Top"
+                            FontSize="20"
+                            Text="{x:Bind viewModel.ThirdPanelTitle, Mode=OneWay}"
+                            Visibility="{x:Bind viewModel.IsThirdPanelAltShown, Converter={StaticResource bool2VisConvert}, Mode=OneWay}" />
                         <ListView
                             x:Name="SongList"
                             Margin="30,10,0,0"
                             controls:DockPanel.Dock="Top"
                             DoubleTapped="{x:Bind viewModel.DoubleTapped_Music}"
-                            ItemsSource="{x:Bind viewModel.Musics}">
+                            ItemsSource="{x:Bind viewModel.ThirdPanelList, Mode=OneWay}">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="Margin" Value="-10,0,0,0" />
@@ -182,178 +197,6 @@
                         </ListView>
                     </controls:DockPanel>
                 </Grid>
-            </PivotItem>
-            <PivotItem Header="GENRES">
-                <Grid>
-                    <!--<Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="210" MaxWidth="480" />
-                        <ColumnDefinition MinWidth="265" MaxWidth="910" />
-                        <ColumnDefinition MinWidth="240" />
-                    </Grid.ColumnDefinitions>
-
-                    <Border
-                        Grid.Column="0"
-                        Width="1"
-                        Height="800"
-                        Margin="0,25,0,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Background="DarkGray" />
-                    <controls:DockPanel Grid.Column="0">
-                        <TextBlock
-                            Margin="55,5,0,0"
-                            controls:DockPanel.Dock="Top"
-                            FontSize="11"
-                            FontWeight="Bold"
-                            Foreground="Black"
-                            Text="16 ARTISTS" />
-                        <ListView
-                            x:Name="ArtistList"
-                            Margin="55,12,0,0"
-                            controls:DockPanel.Dock="Top">
-
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="Margin" Value="-10,0,0,0" />
-                                    <Setter Property="MinHeight" Value="26" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <TextBlock
-                                            FontFamily="Microsoft YaHei UI"
-                                            FontSize="13"
-                                            Text="{Binding}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </controls:DockPanel>
-                    <Border
-                        Grid.Column="1"
-                        Width="1"
-                        Height="800"
-                        Margin="0,25,0,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Background="DarkGray" />
-                    <controls:DockPanel Grid.Column="1">
-                        <TextBlock
-                            Margin="20,5,0,0"
-                            controls:DockPanel.Dock="Top"
-                            FontSize="11"
-                            FontWeight="Bold"
-                            Foreground="Black"
-                            Text="25 ALBUMS BY DATE ADDED" />
-                        <GridView
-                            x:Name="AlbumList"
-                            Margin="0,12,0,0"
-                            Padding="0,0,25,0"
-                            controls:DockPanel.Dock="Top">
-                            <GridView.ItemContainerStyle>
-                                <Style TargetType="GridViewItem">
-                                    <Setter Property="Margin" Value="27,0,0,25" />
-                                    <Setter Property="MinHeight" Value="26" />
-                                </Style>
-                            </GridView.ItemContainerStyle>
-                            <GridView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <Image Width="80" Source="{Binding}" />
-                                        <TextBlock
-                                            Margin="0,3,0,0"
-                                            FontSize="12"
-                                            FontWeight="Medium"
-                                            Text="Hahahaha" />
-                                        <TextBlock
-                                            Margin="0,-3,0,0"
-                                            FontSize="12"
-                                            FontWeight="Medium"
-                                            Text="jijiji" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                        </GridView>
-                    </controls:DockPanel>
-                    <Border
-                        Grid.Column="3"
-                        Width="1"
-                        Height="800"
-                        Margin="0,25,43,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Background="DarkGray" />
-                    <controls:DockPanel Grid.Column="2" Margin="0,0,43,0">
-                        <TextBlock
-                            Margin="30,5,0,0"
-                            controls:DockPanel.Dock="Top"
-                            FontSize="11"
-                            FontWeight="Bold"
-                            Foreground="Black"
-                            Text="141 SONGS BY RATING" />
-                        <ListView
-                            x:Name="SongList"
-                            Margin="30,10,0,0"
-                            controls:DockPanel.Dock="Top">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="Margin" Value="-10,0,0,0" />
-                                    <Setter Property="MinHeight" Value="26" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <TextBlock
-                                            FontFamily="Microsoft YaHei UI"
-                                            FontSize="13"
-                                            Text="{Binding}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </controls:DockPanel>-->
-
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="50"
-                        FontWeight="Bold"
-                        Text="Need Implementation" />
-                </Grid>
-            </PivotItem>
-            <PivotItem Header="ALBUMS">
-                <Grid>
-                    <!--<Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.8*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Border
-                        Grid.Column="0"
-                        Width="1"
-                        Height="800"
-                        Margin="0,25,0,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Background="DarkGray" />-->
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="50"
-                        FontWeight="Bold"
-                        Text="Need Implementation" />
-                </Grid>
-            </PivotItem>
-            <PivotItem Header="SONGS">
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="50"
-                    FontWeight="Bold"
-                    Text="Need Implementation" />
             </PivotItem>
             <PivotItem Header="PLAYLISTS">
                 <TextBlock

@@ -57,6 +57,7 @@ namespace Reborn_Zune
         private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             isInBackgroundMode = true;
+            GC.Collect();
         }
 
         private void MemoryManager_AppMemoryUsageIncreased(object sender, object e)

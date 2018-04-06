@@ -28,8 +28,12 @@ namespace Reborn_Zune.ViewModel
         private ObservableCollection<LocalArtistModel> _artists;
         private ObservableCollection<LocalAlbumModel> _albums;
         private ObservableCollection<LocalMusicModel> _musics;
+        private ObservableCollection<LocalMusicModel> _thirdPanelList;
+        private ObservableCollection<LocalAlbumModel> _secondPanelList;
         private CoreDispatcher dispatcher;
         private PlayerViewModel _playerViewModel;
+        private String _thirdPanelTitle;
+        private bool _isThirdPanelAltShown;
 
         public MediaPlayer _player = PlaybackService.Instance.Player;
 
@@ -42,6 +46,12 @@ namespace Reborn_Zune.ViewModel
             Musics = new ObservableCollection<LocalMusicModel>();
             
             GetSong();
+
+            ThirdPanelList = new ObservableCollection<LocalMusicModel>();
+            SecondPanelList = new ObservableCollection<LocalAlbumModel>();
+
+
+            IsThirdPanelAltShown = false;
 
             PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
         }
@@ -64,6 +74,7 @@ namespace Reborn_Zune.ViewModel
             {
                 ProcessSongs(item);
             }
+            
         }
 
         private async void ProcessSongs(StorageFile item)
@@ -105,7 +116,7 @@ namespace Reborn_Zune.ViewModel
 
             GetAllAlbums();
             Musics.Add(music);
-            
+            ThirdPanelList.Add(music);
         }
 
         private async Task<StorageItemThumbnail> GetThumbnailStream(StorageFile item)
@@ -127,6 +138,7 @@ namespace Reborn_Zune.ViewModel
                     if (!Albums.Contains(item))
                     {
                         Albums.Add(item);
+                        SecondPanelList.Add(item);
                     }
                 }
             }
@@ -222,6 +234,32 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
+        public ObservableCollection<LocalMusicModel> ThirdPanelList
+        {
+            get
+            {
+                return _thirdPanelList;
+            }
+            set
+            {
+                _thirdPanelList = value;
+                RaisePropertyChanged(() => ThirdPanelList);
+            }
+        }
+
+        public ObservableCollection<LocalAlbumModel> SecondPanelList
+        {
+            get
+            {
+                return _secondPanelList;
+            }
+            set
+            {
+                _secondPanelList = value;
+                RaisePropertyChanged(() => SecondPanelList);
+            }
+        }
+
         public PlayerViewModel PlayerViewModel
         {
             get
@@ -230,7 +268,34 @@ namespace Reborn_Zune.ViewModel
             }
             set
             {
-                Set<PlayerViewModel>(() => this.PlayerViewModel, ref _playerViewModel, value);
+                _playerViewModel = value;
+                RaisePropertyChanged(() => PlayerViewModel);
+            }
+        }
+
+        public String ThirdPanelTitle
+        {
+            get
+            {
+                return _thirdPanelTitle;
+            }
+            set
+            {
+                _thirdPanelTitle = value;
+                RaisePropertyChanged(() => ThirdPanelTitle);
+            }
+        }
+
+        public bool IsThirdPanelAltShown
+        {
+            get
+            {
+                return _isThirdPanelAltShown;
+            }
+            set
+            {
+                _isThirdPanelAltShown = value;
+                RaisePropertyChanged(() => IsThirdPanelAltShown);
             }
         }
 
@@ -240,14 +305,67 @@ namespace Reborn_Zune.ViewModel
             set { _player.Source = value; }
         }
 
+        public void AlbumTapped(object sender, TappedRoutedEventArgs e)
+        {
+            IsThirdPanelAltShown = true;
+            var album = (e.OriginalSource as FrameworkElement).DataContext as LocalAlbumModel;
+            if (album == null)
+                return;
+            var title = album.AlbumTitle;
+            ThirdPanelTitle = title;
+
+            ThirdPanelList.Clear();
+            ThirdPanelList = new ObservableCollection<LocalMusicModel>(album.Musics);
+
+            GC.Collect();
+        }
+
+        public void ArtistTapped(object sender, TappedRoutedEventArgs e)
+        {
+            var artist = (e.OriginalSource as FrameworkElement).DataContext as LocalArtistModel;
+            if (artist == null)
+                return;
+            SecondPanelList = new ObservableCollection<LocalAlbumModel>(artist.Albums);
+
+            ThirdPanelList = new ObservableCollection<LocalMusicModel>(artist.Musics);
+
+            GC.Collect();
+        }
+
+
         public void DoubleTapped_Music(object sender, DoubleTappedRoutedEventArgs e)
         {
             int selectedIndex = (sender as ListView).SelectedIndex;
-            if (PlaybackList == null)
-                PlaybackList = ToPlayBackList(Musics);
-            if(PlayerViewModel.MediaList == null)
-                PlayerViewModel.MediaList = new MediaListViewModel(Musics, PlaybackList, dispatcher);
+            if (PlayBackListConsistencyDetect(ThirdPanelList))
+                PlaybackList = ToPlayBackList(ThirdPanelList);
+            PlayerViewModel.MediaList = new MediaListViewModel(ThirdPanelList, PlaybackList, dispatcher);
+
             PlayerViewModel.SetCurrentItem(selectedIndex);
+
+            GC.Collect();
+        }
+
+        public void AlbumDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            UpdateThirdPanelList();
+        }
+
+        public void ArtistDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            if (PlayBackListConsistencyDetect(ThirdPanelList))
+                PlaybackList = ToPlayBackList(ThirdPanelList);
+            PlayerViewModel.MediaList = new MediaListViewModel(ThirdPanelList, PlaybackList, dispatcher);
+
+            GC.Collect();
+        }
+
+        private void UpdateThirdPanelList()
+        {
+            if (PlayBackListConsistencyDetect(ThirdPanelList))
+                PlaybackList = ToPlayBackList(ThirdPanelList);
+            PlayerViewModel.MediaList = new MediaListViewModel(ThirdPanelList, PlaybackList, dispatcher);
+
+            GC.Collect();
         }
 
         private MediaPlaybackList ToPlayBackList(ObservableCollection<LocalMusicModel> musics)
@@ -263,5 +381,24 @@ namespace Reborn_Zune.ViewModel
 
             return playbackList;
         }
+
+        private bool PlayBackListConsistencyDetect(ObservableCollection<LocalMusicModel> currentList)
+        {
+            if (PlaybackList == null)
+                return true;
+            
+            // Verify consistency of the lists that were passed in
+            var mediaListIds = currentList.Select(i => i.MusicID);
+            var playbackListIds = PlaybackList.Items.Select(
+                i => (string)i.Source.CustomProperties.SingleOrDefault(
+                    p => p.Key == LocalMusicModel.MediaItemIdKey).Value);
+
+            if (!mediaListIds.SequenceEqual(playbackListIds))
+                return true;
+
+            return false;
+
+        }
+
     }
 }

@@ -96,6 +96,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BackgroundApp.cs" />
+    <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="Control\CustomMediaTransportControl.cs" />
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="Utilities\FluidBitMatrix.cs" />

@@ -14,6 +14,7 @@ namespace Reborn_Zune.Model
         {
             Albums = new ObservableCollection<LocalAlbumModel>();
             albumsDict = new Dictionary<string, LocalAlbumModel>();
+            Musics = new ObservableCollection<LocalMusicModel>();
         }
 
         public LocalArtistModel(string strArtist)
@@ -21,6 +22,7 @@ namespace Reborn_Zune.Model
             Name = strArtist;
             Albums = new ObservableCollection<LocalAlbumModel>();
             albumsDict = new Dictionary<string, LocalAlbumModel>();
+            Musics = new ObservableCollection<LocalMusicModel>();
         }
 
         public void AddSong(LocalMusicModel music)
@@ -38,11 +40,13 @@ namespace Reborn_Zune.Model
                 albumsDict[music.Album] = newAlbum;
                 Albums.Add(newAlbum);
             }
+            Musics.Add(music);
         }
 
         private String _name;
         private Dictionary<string, LocalAlbumModel> albumsDict;
         private ObservableCollection<LocalAlbumModel> _albums;
+        private ObservableCollection<LocalMusicModel> _musics;
 
         public String Name
         {
@@ -65,6 +69,18 @@ namespace Reborn_Zune.Model
             set
             {
                 Set<ObservableCollection<LocalAlbumModel>>(() => this.Albums, ref _albums, value);
+            }
+        }
+
+        public ObservableCollection<LocalMusicModel> Musics
+        {
+            get
+            {
+                return _musics;
+            }
+            set
+            {
+                Set<ObservableCollection<LocalMusicModel>>(() => this.Musics, ref _musics, value);
             }
         }
     }
