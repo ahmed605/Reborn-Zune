@@ -2,6 +2,7 @@
 using Reborn_Zune.Model;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using Windows.Media.Playback;
 using Windows.UI.Core;
@@ -61,6 +62,8 @@ namespace Reborn_Zune.ViewModel
                         // Most likely the playlist had not been bound to a player so set start index
                         PlaybackList.StartingItem = CurrentItem.PlaybackItem;
                     }
+                    OnPropertyChanged(new PropertyChangedEventArgs("CurrentItemIndex"));
+                    OnPropertyChanged(new PropertyChangedEventArgs("CurrentItem"));
                 }
             }
         }
@@ -168,6 +171,7 @@ namespace Reborn_Zune.ViewModel
                     // matching the one we just received the event for.
                     CurrentItem = this.Single(mediaItemViewModel => mediaItemViewModel.PlaybackItem == playbackItem);
                 }
+                
             });
         }
 

@@ -77,9 +77,9 @@
                             x:Name="ArtistList"
                             Margin="55,12,0,0"
                             controls:DockPanel.Dock="Top"
+                            DoubleTapped="{x:Bind viewModel.ArtistDoubleTapped}"
                             ItemsSource="{x:Bind viewModel.Artists}"
-                            Tapped="{x:Bind viewModel.ArtistTapped}"
-                            DoubleTapped="{x:Bind viewModel.ArtistDoubleTapped}">
+                            Tapped="{x:Bind viewModel.ArtistTapped}">
 
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
@@ -120,9 +120,9 @@
                             Margin="0,12,0,0"
                             Padding="0,0,25,0"
                             controls:DockPanel.Dock="Top"
+                            DoubleTapped="{x:Bind viewModel.AlbumDoubleTapped}"
                             ItemsSource="{x:Bind viewModel.SecondPanelList, Mode=OneWay}"
-                            Tapped="{x:Bind viewModel.AlbumTapped}"
-                            DoubleTapped="{x:Bind viewModel.AlbumDoubleTapped}">
+                            Tapped="{x:Bind viewModel.AlbumTapped}">
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="GridViewItem">
                                     <Setter Property="Margin" Value="27,0,0,25" />
@@ -214,7 +214,7 @@
             Grid.Row="2"
             AreTransportControlsEnabled="True">
             <MediaPlayerElement.TransportControls>
-                <custom_controls:CustomMediaTransportControl />
+                <custom_controls:CustomMediaTransportControl Title="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Title, Mode=OneWay}" Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}" />
             </MediaPlayerElement.TransportControls>
         </MediaPlayerElement>
 

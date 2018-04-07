@@ -151,38 +151,41 @@ namespace Reborn_Zune.ViewModel
             BitmapDecoder decoder = null;
             using(StorageItemThumbnail thumbnail = await item.GetThumbnailAsync(thumbnailMode, size))
             {
+                //if (thumbnail != null && thumbnail.Type == ThumbnailType.Image)
+                //{
+                    decoder = await BitmapDecoder.CreateAsync(thumbnail);
 
-                decoder = await BitmapDecoder.CreateAsync(thumbnail);
+                    // Get the first frame
+                    BitmapFrame bitmapFrame = await decoder.GetFrameAsync(0);
 
-                // Get the first frame
-                BitmapFrame bitmapFrame = await decoder.GetFrameAsync(0);
+                    // Save the resolution (will be used for saving the file later)
+                    var dpiX = bitmapFrame.DpiX;
+                    var dpiY = bitmapFrame.DpiY;
 
-                // Save the resolution (will be used for saving the file later)
-                var dpiX = bitmapFrame.DpiX;
-                var dpiY = bitmapFrame.DpiY;
+                    // Get the pixels
+                    PixelDataProvider dataProvider =
+                        await bitmapFrame.GetPixelDataAsync(BitmapPixelFormat.Bgra8,
+                                                            BitmapAlphaMode.Premultiplied,
+                                                            new BitmapTransform(),
+                                                            ExifOrientationMode.RespectExifOrientation,
+                                                            ColorManagementMode.ColorManageToSRgb);
 
-                // Get the pixels
-                PixelDataProvider dataProvider =
-                    await bitmapFrame.GetPixelDataAsync(BitmapPixelFormat.Bgra8,
-                                                        BitmapAlphaMode.Premultiplied,
-                                                        new BitmapTransform(),
-                                                        ExifOrientationMode.RespectExifOrientation,
-                                                        ColorManagementMode.ColorManageToSRgb);
+                    byte[] pixels = dataProvider.DetachPixelData();
 
-                byte[] pixels = dataProvider.DetachPixelData();
+                    // Create WriteableBitmap and set the pixels
+                    WriteableBitmap bitmap = new WriteableBitmap((int)bitmapFrame.PixelWidth,
+                                                                 (int)bitmapFrame.PixelHeight);
 
-                // Create WriteableBitmap and set the pixels
-                WriteableBitmap bitmap = new WriteableBitmap((int)bitmapFrame.PixelWidth,
-                                                             (int)bitmapFrame.PixelHeight);
+                    using (Stream pixelStream = bitmap.PixelBuffer.AsStream())
+                    {
+                        await pixelStream.WriteAsync(pixels, 0, pixels.Length);
+                    }
 
-                using (Stream pixelStream = bitmap.PixelBuffer.AsStream())
-                {
-                    await pixelStream.WriteAsync(pixels, 0, pixels.Length);
-                }
-
-                // Invalidate the WriteableBitmap and set as Image source
-                bitmap.Invalidate();
-                return bitmap;
+                    // Invalidate the WriteableBitmap and set as Image source
+                    bitmap.Invalidate();
+                    return bitmap;
+                //}
+                //return null ;
             }
         }
 
