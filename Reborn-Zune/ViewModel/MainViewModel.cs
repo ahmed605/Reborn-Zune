@@ -4,6 +4,7 @@ using Reborn_Zune.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -90,7 +91,6 @@ namespace Reborn_Zune.ViewModel
             strAlbum = property.Album;
             strArtist = property.Artist;
             strThumbnail = await GetThumbnail(item);
-            thumgnailStream = await GetThumbnailStream(item);
 
             LocalMusicModel music = new LocalMusicModel()
             {
@@ -151,8 +151,8 @@ namespace Reborn_Zune.ViewModel
             BitmapDecoder decoder = null;
             using(StorageItemThumbnail thumbnail = await item.GetThumbnailAsync(thumbnailMode, size))
             {
-                //if (thumbnail != null && thumbnail.Type == ThumbnailType.Image)
-                //{
+                if (thumbnail != null && thumbnail.Type == ThumbnailType.Image)
+                {
                     decoder = await BitmapDecoder.CreateAsync(thumbnail);
 
                     // Get the first frame
@@ -184,8 +184,8 @@ namespace Reborn_Zune.ViewModel
                     // Invalidate the WriteableBitmap and set as Image source
                     bitmap.Invalidate();
                     return bitmap;
-                //}
-                //return null ;
+                }
+                return null;
             }
         }
 

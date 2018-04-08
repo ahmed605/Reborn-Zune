@@ -133,7 +133,9 @@
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="model:LocalAlbumModel">
                                     <StackPanel>
-                                        <Image Width="95" Source="{x:Bind Thumbnail}" />
+                                        <Image Width="95" 
+                                               Height="95"
+                                               Source="{x:Bind Thumbnail}" />
                                         <TextBlock
                                             Margin="0,3,0,0"
                                             FontSize="12"
@@ -215,7 +217,10 @@
             Grid.Row="2"
             AreTransportControlsEnabled="True">
             <MediaPlayerElement.TransportControls>
-                <custom_controls:CustomMediaTransportControl Title="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Title, Mode=OneWay}" Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}" />
+                <custom_controls:CustomMediaTransportControl Title="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Title, Mode=OneWay}" 
+                                                             Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}"
+                                                             IsPreviousTrackButtonVisible="True"
+                                                             IsNextTrackButtonVisible="True"/>
             </MediaPlayerElement.TransportControls>
         </MediaPlayerElement>
 

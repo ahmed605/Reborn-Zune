@@ -142,21 +142,25 @@
                                     Grid.Column="2"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    Margin="0,0,40,0">
+                                    Margin="0,0,40,20">
                                     <Button
-                                        Width="50"
-                                        Height="50"
-                                        controls:DockPanel.Dock="Left" />
+                                        Width="20"
+                                        Height="20"
+                                        controls:DockPanel.Dock="Left">
+                                        <SymbolIcon Symbol="RepeatAll"/>
+                                    </Button>
                                     <Button
-                                        Width="50"
-                                        Height="50"
+                                        Width="20"
+                                        Height="20"
                                         Margin="5,0,0,0"
-                                        controls:DockPanel.Dock="Left" />
+                                        controls:DockPanel.Dock="Left">
+                                        <SymbolIcon Symbol="Shuffle"/>
+                                    </Button>
 
                                     <Button
                                         x:Name="PreviousTrackButton"
-                                        Width="40"
-                                        Height="40"
+                                        Width="30"
+                                        Height="30"
                                         Margin="5,0,0,0"
                                         controls:DockPanel.Dock="Left"
                                         BorderBrush="Black"
@@ -169,21 +173,7 @@
                                         </Grid>
                                     </Button>
                                     <Button
-                                        Width="50"
-                                        Height="50"
-                                        Margin="5,0,0,0"
-                                        controls:DockPanel.Dock="Left"
-                                        BorderBrush="Black"
-                                        BorderThickness=".5"
-                                        Style="{StaticResource CircleButtonStyle}">
-                                        <Grid>
-                                            <TextBlock FontFamily="Segoe MDL2 Assets" 
-                                                       Text="&#xE768;"
-                                                       FontSize="28"/>
-                                        </Grid>
-                                    </Button>
-                                    <Button
-                                        x:Name="NextTrackButton"
+                                        x:Name="PlayPauseButton"
                                         Width="40"
                                         Height="40"
                                         Margin="5,0,0,0"
@@ -192,12 +182,56 @@
                                         BorderThickness=".5"
                                         Style="{StaticResource CircleButtonStyle}">
                                         <Grid>
+                                            <TextBlock x:Name="PlayPauseSymbol"
+                                                       FontFamily="Segoe MDL2 Assets" 
+                                                       Text="&#xE768;"
+                                                       FontSize="28"/>
+                                        </Grid>
+                                    </Button>
+                                    <Button
+                                        x:Name="NextTrackButton"
+                                        Width="30"
+                                        Height="30"
+                                        Margin="5,0,0,0"
+                                        controls:DockPanel.Dock="Left"
+                                        BorderBrush="Black"
+                                        BorderThickness=".5"
+                                        Visibility="Visible"
+                                        Style="{StaticResource CircleButtonStyle}">
+                                        <Grid>
                                             <TextBlock FontFamily="Segoe MDL2 Assets" 
                                                        Text="&#xE893;"
                                                        FontSize="24"/>
                                         </Grid>
                                     </Button>
+                                    <Button
+                                        Width="30"
+                                        Height="30"
+                                        Margin="5,0,0,0"
+                                        controls:DockPanel.Dock="Left">
+                                        <SymbolIcon Symbol="XboxOneConsole"/>
+                                    </Button>
                                 </controls:DockPanel>
+
+                                <Grid Grid.Column="2"
+                                      HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Margin="0,0,40,0">
+                                    <StackPanel Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center">
+                                        <TextBlock Text="Volume"/>
+                                        <TextBlock Text="{Binding ElementName=VolumeSlider,Path=Value}"
+                                                   Margin="10,0,0,0"/>
+                                    </StackPanel>
+                                        <Slider x:Name='VolumeSlider'
+                                    Value='50'
+                                    IsThumbToolTipEnabled='False'
+                                    Width='{ThemeResource MTCHorizontalVolumeSliderWidth}'
+                                    VerticalAlignment='Center'
+                                    HorizontalAlignment='Center'
+                                    Margin='0'/>
+                                </Grid>
 
                                 <!--<Border
                                     x:Name="MediaTransportControls_Command_Border"
@@ -384,8 +418,8 @@
                                 </Border>-->
                             </Grid>
                         </Border>
-                        <!--<VisualStateManager.VisualStateGroups>
-                        -->
+                        <VisualStateManager.VisualStateGroups>
+                        
                         <!--  ControlPanel Visibility states  -->
                         <!--
                             <VisualStateGroup x:Name="ControlPanelVisibilityStates">
@@ -566,21 +600,18 @@
                             </VisualStateGroup>
                         -->
                         <!--  PlayPause states  -->
-                        <!--
+                        
                             <VisualStateGroup x:Name="PlayPauseStates">
                                 <VisualState x:Name="PlayState" />
                                 <VisualState x:Name="PauseState">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlayPauseSymbolLeft" Storyboard.TargetProperty="Symbol">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Pause" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlayPauseSymbol" Storyboard.TargetProperty="Symbol">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Pause" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlayPauseSymbol" Storyboard.TargetProperty="Text">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="&#xE769;" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
-                        -->
+                        
                         <!--  VolumeMute states  -->
                         <!--
                             <VisualStateGroup x:Name="VolumeMuteStates">
@@ -598,8 +629,8 @@
                             </VisualStateGroup>
                         -->
                         <!--  FullWindow states  -->
-                        <!--
-                            <VisualStateGroup x:Name="FullWindowStates">
+                        
+                            <!--<VisualStateGroup x:Name="FullWindowStates">
                                 <VisualState x:Name="NonFullWindowState" />
                                 <VisualState x:Name="FullWindowState">
                                     <Storyboard>
@@ -608,8 +639,8 @@
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>-->
+                            </VisualStateGroup>-->
+                        </VisualStateManager.VisualStateGroups>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
