@@ -12,7 +12,7 @@ namespace Reborn_Zune.ViewModel
         MediaListViewModel listViewModel;
         MediaPlaybackItem playbackItem;
 
-        WriteableBitmap previewImage;
+        BitmapImage previewImage;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -20,7 +20,7 @@ namespace Reborn_Zune.ViewModel
 
         public string Title => MediaItem.Title;
 
-        public WriteableBitmap PreviewImage
+        public BitmapImage PreviewImage
         {
             get { return previewImage; }
 

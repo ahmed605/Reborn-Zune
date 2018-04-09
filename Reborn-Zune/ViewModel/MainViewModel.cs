@@ -83,14 +83,15 @@ namespace Reborn_Zune.ViewModel
             String strAlbum;
             String strArtist;
             String strTitle;
-            WriteableBitmap strThumbnail;
-            StorageItemThumbnail thumgnailStream;
+            BitmapImage strThumbnail;
 
+            strThumbnail = await GetThumbnail(item);
             MusicProperties property = await item.Properties.GetMusicPropertiesAsync();
             strTitle = property.Title;
             strAlbum = property.Album;
             strArtist = property.Artist;
-            strThumbnail = await GetThumbnail(item);
+            
+
 
             LocalMusicModel music = new LocalMusicModel()
             {
@@ -99,7 +100,8 @@ namespace Reborn_Zune.ViewModel
                 Artist = strArtist,
                 Thumbnail = strThumbnail,
                 Music = item,
-                MusicID = Guid.NewGuid().ToString()
+                MusicID = Guid.NewGuid().ToString(),
+                ThumbnailAvailable = (strThumbnail.PixelHeight == 0) ? false : true
             };
 
             if (_artistsDict.ContainsKey(strArtist))
@@ -119,16 +121,6 @@ namespace Reborn_Zune.ViewModel
             ThirdPanelList.Add(music);
         }
 
-        private async Task<StorageItemThumbnail> GetThumbnailStream(StorageFile item)
-        {
-            const ThumbnailMode thumbnailMode = ThumbnailMode.MusicView;
-            const uint size = 100;
-            using (StorageItemThumbnail thumbnail = await item.GetThumbnailAsync(thumbnailMode, size))
-            {
-                return thumbnail;
-            }
-        }
-
         private void GetAllAlbums()
         {
             foreach(LocalArtistModel artist in Artists)
@@ -144,7 +136,7 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
-        private async Task<WriteableBitmap> GetThumbnail(StorageFile item)
+        private async Task<BitmapImage> GetThumbnail(StorageFile item)
         {
             const ThumbnailMode thumbnailMode = ThumbnailMode.MusicView;
             const uint size = 100;
@@ -153,40 +145,44 @@ namespace Reborn_Zune.ViewModel
             {
                 if (thumbnail != null && thumbnail.Type == ThumbnailType.Image)
                 {
-                    decoder = await BitmapDecoder.CreateAsync(thumbnail);
+                    //decoder = await BitmapDecoder.CreateAsync(thumbnail);
 
-                    // Get the first frame
-                    BitmapFrame bitmapFrame = await decoder.GetFrameAsync(0);
+                    //// Get the first frame
+                    //BitmapFrame bitmapFrame = await decoder.GetFrameAsync(0);
 
-                    // Save the resolution (will be used for saving the file later)
-                    var dpiX = bitmapFrame.DpiX;
-                    var dpiY = bitmapFrame.DpiY;
+                    //// Save the resolution (will be used for saving the file later)
+                    //var dpiX = bitmapFrame.DpiX;
+                    //var dpiY = bitmapFrame.DpiY;
 
-                    // Get the pixels
-                    PixelDataProvider dataProvider =
-                        await bitmapFrame.GetPixelDataAsync(BitmapPixelFormat.Bgra8,
-                                                            BitmapAlphaMode.Premultiplied,
-                                                            new BitmapTransform(),
-                                                            ExifOrientationMode.RespectExifOrientation,
-                                                            ColorManagementMode.ColorManageToSRgb);
+                    //// Get the pixels
+                    //PixelDataProvider dataProvider =
+                    //    await bitmapFrame.GetPixelDataAsync(BitmapPixelFormat.Bgra8,
+                    //                                        BitmapAlphaMode.Premultiplied,
+                    //                                        new BitmapTransform(),
+                    //                                        ExifOrientationMode.RespectExifOrientation,
+                    //                                        ColorManagementMode.ColorManageToSRgb);
 
-                    byte[] pixels = dataProvider.DetachPixelData();
+                    //byte[] pixels = dataProvider.DetachPixelData();
 
-                    // Create WriteableBitmap and set the pixels
-                    WriteableBitmap bitmap = new WriteableBitmap((int)bitmapFrame.PixelWidth,
-                                                                 (int)bitmapFrame.PixelHeight);
+                    //// Create WriteableBitmap and set the pixels
+                    //WriteableBitmap bitmap = new WriteableBitmap((int)bitmapFrame.PixelWidth,
+                    //                                             (int)bitmapFrame.PixelHeight);
 
-                    using (Stream pixelStream = bitmap.PixelBuffer.AsStream())
-                    {
-                        await pixelStream.WriteAsync(pixels, 0, pixels.Length);
-                    }
+                    //using (Stream pixelStream = bitmap.PixelBuffer.AsStream())
+                    //{
+                    //    await pixelStream.WriteAsync(pixels, 0, pixels.Length);
+                    //}
 
-                    // Invalidate the WriteableBitmap and set as Image source
-                    bitmap.Invalidate();
+                    //// Invalidate the WriteableBitmap and set as Image source
+                    //bitmap.Invalidate();
+                    //return bitmap;
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.SetSource(thumbnail);
                     return bitmap;
                 }
-                return null;
+                return new BitmapImage();
             }
+           
         }
 
         public ObservableCollection<LocalArtistModel> Artists
@@ -310,10 +306,11 @@ namespace Reborn_Zune.ViewModel
 
         public void AlbumTapped(object sender, TappedRoutedEventArgs e)
         {
-            IsThirdPanelAltShown = true;
+            
             var album = (e.OriginalSource as FrameworkElement).DataContext as LocalAlbumModel;
             if (album == null)
                 return;
+            IsThirdPanelAltShown = true;
             var title = album.AlbumTitle;
             ThirdPanelTitle = title;
 

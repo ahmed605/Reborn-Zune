@@ -28,9 +28,9 @@ namespace Reborn_Zune.Model
         private String _title;
         private String _album;
         private String _artist;
-        private WriteableBitmap _thumbnail;
+        private BitmapImage _thumbnail;
         private String _musicID;
-        private StorageItemThumbnail _thumbanailStream;
+        private bool _thumbnailAvailable;
 
         public StorageFile Music
         {
@@ -68,7 +68,7 @@ namespace Reborn_Zune.Model
             }
         }
 
-        public WriteableBitmap Thumbnail
+        public BitmapImage Thumbnail
         {
             get
             {
@@ -76,7 +76,7 @@ namespace Reborn_Zune.Model
             }
             set
             {
-                Set<WriteableBitmap>(() => this.Thumbnail, ref _thumbnail, value);
+                Set<BitmapImage>(() => this.Thumbnail, ref _thumbnail, value);
             }
         }
 
@@ -112,15 +112,15 @@ namespace Reborn_Zune.Model
             }
         }
 
-        public StorageItemThumbnail ThumbnailStream
+        public bool ThumbnailAvailable
         {
             get
             {
-                return _thumbanailStream;
+                return _thumbnailAvailable;
             }
             set
             {
-                Set<StorageItemThumbnail>(() => this.ThumbnailStream, ref _thumbanailStream, value);
+                Set<bool>(() => this.ThumbnailAvailable, ref _thumbnailAvailable, value);
             }
         }
 
