@@ -6,6 +6,7 @@
     RequestedTheme="Light">
 
     <Application.Resources>
+        <BitmapImage x:Key="myImage" UriSource="/Assets/Vap-logo-placeholder.jpg" />
         <Style x:Key="MusicPlayButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource ButtonBackground}" />
             <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}" />
@@ -436,6 +437,5 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
     </Application.Resources>
 </Application>

@@ -218,7 +218,6 @@
             </PivotItem>
         </Pivot>
 
-
         <MediaPlayerElement
             x:Name="mediaPlayer"
             Grid.Row="2"
@@ -226,6 +225,7 @@
             <MediaPlayerElement.TransportControls>
                 <custom_controls:CustomMediaTransportControl
                     Title="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Title, Mode=OneWay}"
+                    Clicked="CustomMediaTransportControl_Clicked"
                     IsNextTrackButtonVisible="True"
                     IsPreviousTrackButtonVisible="True"
                     Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}" />

@@ -58,5 +58,9 @@ namespace Reborn_Zune
             titleBar.ButtonPressedForegroundColor = Colors.Black;
         }
 
+        private void CustomMediaTransportControl_Clicked(object sender, EventArgs e)
+        {
+            Frame.Navigate(typeof(TilePage));
+        }
     }
 }

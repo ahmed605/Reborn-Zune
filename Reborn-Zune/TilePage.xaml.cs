@@ -56,8 +56,8 @@ namespace Reborn_Zune
         {
             
             base.OnNavigatedTo(e);
-            var items = e.Parameter as List<UIElement>;
-            _items = new ObservableCollection<UIElement>(items);
+            //var items = e.Parameter as List<UIElement>;
+            //_items = new ObservableCollection<UIElement>(items);
         }
 
         private void rootPanel_Loaded(object sender, RoutedEventArgs e)
@@ -108,7 +108,7 @@ namespace Reborn_Zune
             _secondPointLight.Targets.Add(_root);
             _ambientLight.Targets.Add(_root);
 
-            panel.ItemsSource = _items;
+            //panel.ItemsSource = _items;
 
             #region First light animation
             Vector3KeyFrameAnimation lightPositionAnimation;
