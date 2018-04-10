@@ -32,6 +32,11 @@ namespace Reborn_Zune.ViewModel
             this.player.AudioCategory = MediaPlayerAudioCategory.Media;
         }
 
+        public MediaPlayer GetPlayer()
+        {
+            return player;
+        }
+
         public bool CanSkipNext
         {
             get { return canSkipNext; }

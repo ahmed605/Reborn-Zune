@@ -112,6 +112,8 @@ namespace Reborn_Zune
 
                             // Invalidate the WriteableBitmap and set as Image source
                             bitmap.Invalidate();
+
+
                             byte[] srcPixels = new byte[4 * bitmap.PixelWidth * bitmap.PixelHeight];
                             using (Stream pixelStream = bitmap.PixelBuffer.AsStream())
                             {

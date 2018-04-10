@@ -12,7 +12,7 @@ namespace Reborn_Zune.ViewModel
         MediaListViewModel listViewModel;
         MediaPlaybackItem playbackItem;
 
-        BitmapImage previewImage;
+        WriteableBitmap previewImage;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -20,7 +20,7 @@ namespace Reborn_Zune.ViewModel
 
         public string Title => MediaItem.Title;
 
-        public BitmapImage PreviewImage
+        public WriteableBitmap PreviewImage
         {
             get { return previewImage; }
 
@@ -63,7 +63,7 @@ namespace Reborn_Zune.ViewModel
 
             RaisePropertyChanged("Title");
 
-            // This app caches all images by loading the BitmapImage
+            // This app caches all images by loading the WriteableBitmap
             // when the item is created, but production apps would
             // use a more resource friendly paging mechanism or
             // just use PreviewImageUri directly.

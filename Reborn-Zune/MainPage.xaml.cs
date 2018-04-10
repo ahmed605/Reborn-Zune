@@ -58,9 +58,15 @@ namespace Reborn_Zune
             titleBar.ButtonPressedForegroundColor = Colors.Black;
         }
 
-        private void CustomMediaTransportControl_Clicked(object sender, EventArgs e)
+        private async void CustomMediaTransportControl_Clicked(object sender, EventArgs e)
         {
-            Frame.Navigate(typeof(TilePage));
+            ObservableCollection<WriteableBitmap> thumblist = await viewModel.GetThumbnails();
+            TileViewModel tileViewModel = new TileViewModel()
+            {
+                BitmapList = thumblist,
+                PlayerViewModel = viewModel.PlayerViewModel
+            };
+            Frame.Navigate(typeof(TilePage), tileViewModel);
         }
     }
 }

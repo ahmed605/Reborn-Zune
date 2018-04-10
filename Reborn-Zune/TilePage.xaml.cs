@@ -1,6 +1,7 @@
 ﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Reborn_Zune.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,7 +35,7 @@ namespace Reborn_Zune
     /// </summary>
     public sealed partial class TilePage : Page
     {
-
+        private TileViewModel viewModel;
         private ObservableCollection<UIElement> _items;
         private const float lightDepth = 200f;
         private const int animationDelay = 600;
@@ -53,43 +54,7 @@ namespace Reborn_Zune
             this.InitializeComponent();
 
             TitleBarSetting();
-            List<String> list = new List<String>
-            {
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-                "AAAAAAAAAAAAAAAAAAAAAAAA",
-            };
-            listview.ItemsSource = list;
+            
         }
 
         private static void TitleBarSetting()
@@ -110,10 +75,10 @@ namespace Reborn_Zune
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            
             base.OnNavigatedTo(e);
-            //var items = e.Parameter as List<UIElement>;
-            //_items = new ObservableCollection<UIElement>(items);
+            viewModel = e.Parameter as TileViewModel;
+            viewModel.CreateTiles();
+            mediaElement.SetMediaPlayer(viewModel.PlayerViewModel.GetPlayer());
         }
 
         private void rootPanel_Loaded(object sender, RoutedEventArgs e)

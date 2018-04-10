@@ -24,7 +24,7 @@ namespace Reborn_Zune.Model
 
         private String _artist;
         private String _albumTitle;
-        private BitmapImage _thumbnail;
+        private WriteableBitmap _thumbnail;
         private ObservableCollection<LocalMusicModel> _musics;
 
         public String Artist
@@ -51,7 +51,7 @@ namespace Reborn_Zune.Model
             }
         }
 
-        public BitmapImage Thumbnail
+        public WriteableBitmap Thumbnail
         {
             get
             {
@@ -59,7 +59,7 @@ namespace Reborn_Zune.Model
             }
             set
             {
-                Set<BitmapImage>(() => this.Thumbnail, ref _thumbnail, value);
+                Set<WriteableBitmap>(() => this.Thumbnail, ref _thumbnail, value);
             }
         }
 

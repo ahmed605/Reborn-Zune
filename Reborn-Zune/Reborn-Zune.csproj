@@ -124,6 +124,7 @@
     <Compile Include="ViewModel\MediaListViewModel.cs" />
     <Compile Include="ViewModel\PlaybackSessionViewModel.cs" />
     <Compile Include="ViewModel\PlayerViewModel.cs" />
+    <Compile Include="ViewModel\TileViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
