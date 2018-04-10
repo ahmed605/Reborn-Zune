@@ -127,29 +127,31 @@ namespace Reborn_Zune.ViewModel
 
         private async void ProcessSongs(StorageFile item)
         {
+            var p = item;
             String strAlbum;
             String strArtist;
             String strTitle;
             WriteableBitmap strThumbnail;
 
+
+            
+            MusicProperties property = await p.Properties.GetMusicPropertiesAsync();
             strThumbnail = await GetThumbnail(item);
-            MusicProperties property = await item.Properties.GetMusicPropertiesAsync();
             strTitle = property.Title;
             strAlbum = property.Album;
             strArtist = property.Artist;
-            
-
 
             LocalMusicModel music = new LocalMusicModel()
             {
                 Title = strTitle,
                 Album = strAlbum,
                 Artist = strArtist,
-                Thumbnail = strThumbnail,
                 Music = item,
                 MusicID = Guid.NewGuid().ToString(),
+                Thumbnail = strThumbnail,
                 ThumbnailAvailable = (strThumbnail.PixelHeight == 0) ? false : true
-            };
+        };
+        
 
             if (_artistsDict.ContainsKey(strArtist))
             {
