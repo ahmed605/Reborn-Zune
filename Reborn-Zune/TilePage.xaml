@@ -9,9 +9,14 @@
     xmlns:local="using:Reborn_Zune"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Page.Resources>
+    </Page.Resources>
 
-    <Grid x:Name="rootPanel" Background="DarkGray">
-        <controls:VariableSizedWrapPanel
+    <Grid x:Name="rootPanel">
+
+
+        <Grid x:Name="tilesPanel"  Background="DarkGray">
+            <controls:VariableSizedWrapPanel
             x:Name="panel"
             Width="2580"
             Height="1200"
@@ -23,5 +28,77 @@
             ItemWidth="70"
             Loaded="rootPanel_Loaded"
             Orientation="Vertical" />
+        </Grid>
+
+
+        <StackPanel HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+                    Orientation="Horizontal"
+                    Margin="105,0,0,135">
+            <Border Width="153"
+                    Height="153"
+                BorderThickness="6"
+                    BorderBrush="White" 
+                    HorizontalAlignment="Left">
+                <Image Height="142"
+               Width="142"
+               Source="/Assets/aaa.jpg"/>
+            </Border>
+            
+            <StackPanel Margin="20,10,0,0">
+                <TextBlock Text="程璧"
+                       FontSize="29"
+                       Foreground="White"
+                       HorizontalAlignment="Left"/>
+                <TextBlock Text="程璧的DEMO"
+                       FontSize="24"
+                       Foreground="White" 
+                       HorizontalAlignment="Left"
+                           Margin="0,-4,0,0"/>
+                <TextBlock Text="恋恋风尘"
+                       FontSize="24"
+                       Foreground="White" 
+                       HorizontalAlignment="Left"
+                           Margin="0,9,0,0"/>
+            </StackPanel>
+        </StackPanel>
+        
+
+        <Grid Margin="0,0,36,80"
+            Background="Black"
+              Height="627"
+              Width="313"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Bottom">
+            <ListView x:Name="listview"
+                      Margin="20,20,0,47"
+                      HorizontalAlignment="Right">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0,0,0,15"
+                                    HorizontalAlignment="Left"
+                                    Width="300">
+                            <TextBlock Text="Is This Love"
+                                       Foreground="White"
+                                       FontSize="20"
+                                       HorizontalAlignment="Left"/>
+                            <TextBlock Text="逃跑计划"
+                                       Foreground="DarkGray"
+                                       FontSize="12"
+                                       HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+        <MediaPlayerElement Height="80"
+                            VerticalAlignment="Bottom"
+                            AreTransportControlsEnabled="True">
+            <MediaPlayerElement.TransportControls>
+                <controls:CustomMediaTransportControl Style="{StaticResource TilePageMTCStyle}"
+                                                      IsPreviousTrackButtonVisible="True"
+                                                      IsNextTrackButtonVisible="True"/>
+            </MediaPlayerElement.TransportControls>
+        </MediaPlayerElement>
     </Grid>
 </Page>

@@ -15,6 +15,7 @@ using Windows.Graphics.Effects;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Composition.Effects;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -50,7 +51,62 @@ namespace Reborn_Zune
         public TilePage()
         {
             this.InitializeComponent();
+
+            TitleBarSetting();
+            List<String> list = new List<String>
+            {
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+                "AAAAAAAAAAAAAAAAAAAAAAAA",
+            };
+            listview.ItemsSource = list;
         }
+
+        private static void TitleBarSetting()
+        {
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.InactiveBackgroundColor = Windows.UI.Colors.Transparent;
+            titleBar.InactiveForegroundColor = Colors.White;
+            titleBar.ButtonBackgroundColor = "#00000000".ToColor();
+            titleBar.ButtonForegroundColor = Colors.DarkGray;
+            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            titleBar.ButtonInactiveForegroundColor = Colors.DarkGray;
+            titleBar.ButtonHoverBackgroundColor = "#a3a3a3".ToColor();
+            titleBar.ButtonHoverForegroundColor = Colors.LightGray;
+            titleBar.ButtonPressedBackgroundColor = "#adadad".ToColor();
+            titleBar.ButtonPressedForegroundColor = Colors.Black;
+        }
+
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -67,7 +123,7 @@ namespace Reborn_Zune
                                       (int)displayInformation.ScreenHeightInRawPixels);
             Vector2 sizeLightBounds = new Vector2((float)screenSize.Width, (float)screenSize.Height);
             _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
-            _root = ElementCompositionPreview.GetElementVisual(rootPanel);
+            _root = ElementCompositionPreview.GetElementVisual(tilesPanel);
             _pointLight = _compositor.CreatePointLight();
             _secondPointLight = _compositor.CreatePointLight();
             _pointLight.Offset = new Vector3(-2500f, -2500f, 300f);

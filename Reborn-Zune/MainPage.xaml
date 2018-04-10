@@ -224,6 +224,7 @@
             AreTransportControlsEnabled="True">
             <MediaPlayerElement.TransportControls>
                 <custom_controls:CustomMediaTransportControl
+                    
                     Title="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Title, Mode=OneWay}"
                     Clicked="CustomMediaTransportControl_Clicked"
                     IsNextTrackButtonVisible="True"
