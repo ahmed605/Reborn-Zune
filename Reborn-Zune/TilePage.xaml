@@ -15,7 +15,6 @@
 
     <Grid x:Name="rootPanel">
 
-
         <Grid x:Name="tilesPanel"  Background="DarkGray">
             <controls:VariableSizedWrapPanel
             x:Name="panel"
@@ -65,7 +64,8 @@
         </StackPanel>
         
 
-        <Grid Margin="0,0,36,80"
+        <Grid x:Name="ListGrid"
+            Margin="0,0,36,80"
             Background="Black"
               Height="627"
               Width="313"
@@ -74,6 +74,7 @@
             <ListView x:Name="listview"
                       Margin="20,20,0,47"
                       HorizontalAlignment="Right"
+                      DoubleTapped="{x:Bind viewModel.CurrentListDoubleTapped}"
                       ItemsSource="{x:Bind viewModel.PlayerViewModel.MediaList.MediaList, Mode=OneWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="model:LocalMusicModel">
@@ -98,9 +99,18 @@
                             VerticalAlignment="Bottom"
                             AreTransportControlsEnabled="True">
             <MediaPlayerElement.TransportControls>
-                <controls:CustomMediaTransportControl Style="{StaticResource TilePageMTCStyle}"
+                <controls:CustomMediaTransportControl x:Name="CustomMTC"
+                    Style="{StaticResource TilePageMTCStyle}"
                                                       IsPreviousTrackButtonVisible="True"
-                                                      IsNextTrackButtonVisible="True"/>
+                                                      IsNextTrackButtonVisible="True"
+                                                      ListViewGridChecked="CustomMTC_ListViewGridChecked"
+                                                      ListViewGridUnChecked="CustomMTC_ListViewGridUnChecked"
+                                                      RepeatCheckBoxChecked="CustomMTC_RepeatCheckBoxChecked"
+                                                      RepeatCheckBoxUnchecked="CustomMTC_RepeatCheckBoxUnchecked"
+                                                      ShuffleCheckBoxChecked="CustomMTC_ShuffleCheckBoxChecked"
+                                                      ShuffleCheckBoxUnchecked="CustomMTC_ShuffleCheckBoxUnchecked"
+                                                      FullScreenButtonClicked="CustomMTC_FullScreenButtonClicked"
+                                                      ExitButtonClicked="CustomMTC_ExitButtonClicked"/>
             </MediaPlayerElement.TransportControls>
         </MediaPlayerElement>
     </Grid>

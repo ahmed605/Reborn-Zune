@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Reborn_Zune.ViewModel;
 using System;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,7 @@ using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Core;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -52,7 +54,6 @@ namespace Reborn_Zune
         public TilePage()
         {
             this.InitializeComponent();
-
             TitleBarSetting();
             
         }
@@ -190,6 +191,66 @@ namespace Reborn_Zune
             _secondPointLight.StartAnimation("Offset", secondLightPositionAnimation);
             _secondPointLight.StartAnimation("Color", secondLightColorAnimation);
             #endregion
+        }
+
+        private void CustomMTC_ListViewGridChecked(object sender, EventArgs e)
+        {
+            ListGrid.Fade(1, 700).StartAsync();
+        }
+
+        private void CustomMTC_ListViewGridUnChecked(object sender, EventArgs e)
+        {
+            ListGrid.Fade(0, 700).StartAsync();
+        }
+
+        private void CustomMTC_RepeatCheckBoxChecked(object sender, EventArgs e)
+        {
+            viewModel.PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = true;
+            App.Repeated = true;
+        }
+
+        private void CustomMTC_RepeatCheckBoxUnchecked(object sender, EventArgs e)
+        {
+            viewModel.PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = false;
+            App.Repeated = false;
+        }
+
+        private void CustomMTC_ShuffleCheckBoxChecked(object sender, EventArgs e)
+        {
+            viewModel.PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = true;
+            App.Shuffled = true;
+        }
+
+        private void CustomMTC_ShuffleCheckBoxUnchecked(object sender, EventArgs e)
+        {
+            viewModel.PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = false;
+            App.Shuffled = false;
+        }
+
+        private void CustomMTC_FullScreenButtonClicked(object sender, EventArgs e)
+        {
+            var view = ApplicationView.GetForCurrentView();
+            if (view.IsFullScreenMode)
+            {
+                view.ExitFullScreenMode();
+            }
+            else
+            {
+                if (view.TryEnterFullScreenMode())
+                {
+                    
+                }
+                else
+                {
+                    
+                }
+            }
+        }
+
+        private void CustomMTC_ExitButtonClicked(object sender, EventArgs e)
+        {
+            Frame.Navigate(typeof(MainPage), viewModel.PlayerViewModel);
+            GC.Collect();
         }
     }
 }

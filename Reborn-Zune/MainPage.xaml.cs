@@ -35,12 +35,23 @@ namespace Reborn_Zune
         public MainPage()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Disabled;
+            this.NavigationCacheMode = NavigationCacheMode.Required;
 
             viewModel = new MainViewModel(Dispatcher);
             mediaPlayer.SetMediaPlayer(viewModel._player);
             TitleBarSetting();
 
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            var para = e.Parameter as PlayerViewModel;
+            if(para != null)
+            {
+                viewModel.PlayerViewModel = para;
+                mediaPlayer.SetMediaPlayer(viewModel.PlayerViewModel.GetPlayer());
+            }
+            base.OnNavigatedTo(e);
         }
 
         private static void TitleBarSetting()
@@ -67,6 +78,30 @@ namespace Reborn_Zune
                 PlayerViewModel = viewModel.PlayerViewModel
             };
             Frame.Navigate(typeof(TilePage), tileViewModel);
+        }
+
+        private void CustomMTC_RepeatCheckBoxChecked(object sender, EventArgs e)
+        {
+            viewModel.PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = true;
+            App.Repeated = true;
+        }
+
+        private void CustomMTC_RepeatCheckBoxUnchecked(object sender, EventArgs e)
+        {
+            viewModel.PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = false;
+            App.Repeated = false;
+        }
+
+        private void CustomMTC_ShuffleCheckBoxChecked(object sender, EventArgs e)
+        {
+            viewModel.PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = true;
+            App.Shuffled = true;
+        }
+
+        private void CustomMTC_ShuffleCheckBoxUnchecked(object sender, EventArgs e)
+        {
+            viewModel.PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = false;
+            App.Shuffled = false;
         }
     }
 }

@@ -16,6 +16,14 @@ namespace Reborn_Zune.Control
     public sealed class CustomMediaTransportControl : MediaTransportControls
     {
         public event EventHandler<EventArgs> Clicked;
+        public event EventHandler<EventArgs> ListViewGridChecked;
+        public event EventHandler<EventArgs> ListViewGridUnChecked;
+        public event EventHandler<EventArgs> RepeatCheckBoxChecked;
+        public event EventHandler<EventArgs> RepeatCheckBoxUnchecked;
+        public event EventHandler<EventArgs> ShuffleCheckBoxChecked;
+        public event EventHandler<EventArgs> ShuffleCheckBoxUnchecked;
+        public event EventHandler<EventArgs> FullScreenButtonClicked;
+        public event EventHandler<EventArgs> ExitButtonClicked;
 
         Image ThumbnailImage;
         TextBlock MusicTitle;
@@ -24,6 +32,16 @@ namespace Reborn_Zune.Control
         Slider VolumeSlider;
         DockPanel MediaTransportControlsTimelineGrid;
         Button TilePageButton;
+        CheckBox ListCheckBox;
+        CheckBox RepeatCheckBox;
+        CheckBox ShuffleCheckBox;
+        Button FullScreenButton;
+        Button ExitButton;
+
+        bool RefreshAgain { get; set; }
+        string MusicTitleStr { get; set; }
+
+
         public CustomMediaTransportControl()
         {
             DefaultStyleKey = typeof(CustomMediaTransportControl);
@@ -39,14 +57,96 @@ namespace Reborn_Zune.Control
             VolumeSlider = GetTemplateChild("VolumeSlider") as Slider;
             MediaTransportControlsTimelineGrid = GetTemplateChild("MediaTransportControlsTimelineGrid") as DockPanel;
             TilePageButton = GetTemplateChild("TilePageButton") as Button;
+            ListCheckBox = GetTemplateChild("ListCheckBox") as CheckBox;
+            RepeatCheckBox = GetTemplateChild("RepeatCheckBox") as CheckBox;
+            ShuffleCheckBox = GetTemplateChild("ShuffleCheckBox") as CheckBox;
+            FullScreenButton = GetTemplateChild("FullScreenButton") as Button;
+            ExitButton = GetTemplateChild("ExitButton") as Button;
 
+            if (ListCheckBox != null)
+            {
+                ListCheckBox.Checked += ListCheckBox_Checked;
+                ListCheckBox.Unchecked += ListCheckBox_Unchecked;
+                ListCheckBox.IsChecked = true;
+            }
+            
+            if(RepeatCheckBox != null)
+            {
+                RepeatCheckBox.Checked += RepeatCheckBox_Checked;
+                RepeatCheckBox.Unchecked += RepeatCheckBox_Unchecked;
+            }
+
+            if(ShuffleCheckBox != null)
+            {
+                ShuffleCheckBox.Checked += ShuffleCheckBox_Checked;
+                ShuffleCheckBox.Unchecked += ShuffleCheckBox_Unchecked;
+            }
+
+            if(FullScreenButton != null)
+            {
+                FullScreenButton.Click += FullScreenButton_Clicked;
+            }
+
+            if(ExitButton != null)
+            {
+                ExitButton.Click += ExitButton_Clicked;
+            }
+
+            UpdateUI();
 
             VolumeSliderGrid.PointerEntered += Grid_PointerEntered;
             VolumeSliderGrid.PointerExited += Grid_PointerExited;
             MediaTransportControlsTimelineGrid.Loaded += DockPanel_Loaded;
             TilePageButton.Click += Button_Clicked;
+            
 
             base.OnApplyTemplate();
+        }
+
+        private void UpdateUI()
+        {
+            RepeatCheckBox.IsChecked = App.Repeated;
+            ShuffleCheckBox.IsChecked = App.Shuffled;
+        }
+
+        private void ExitButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            ExitButtonClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void FullScreenButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            FullScreenButtonClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ShuffleCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ShuffleCheckBoxUnchecked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ShuffleCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            ShuffleCheckBoxChecked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void RepeatCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            RepeatCheckBoxUnchecked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void RepeatCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            RepeatCheckBoxChecked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ListCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ListViewGridUnChecked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ListCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            ListViewGridChecked?.Invoke(this, EventArgs.Empty);
         }
 
         private void Button_Clicked(object sender, RoutedEventArgs e)
@@ -117,7 +217,16 @@ namespace Reborn_Zune.Control
 
         private void TitlePropertyChanged(string v)
         {
-            MusicTitle.Text = v;
+            if(MusicTitle != null)
+            {
+                MusicTitle.Text = v;
+            }
+            else
+            {
+                RefreshAgain = true;
+                MusicTitleStr = v;
+            }
+
         }
 
         public BitmapSource Thumbnail 
@@ -138,7 +247,71 @@ namespace Reborn_Zune.Control
 
         private void ThumbnailPropertyChanged(BitmapSource bitmapSource)
         {
-            ThumbnailImage.Source = bitmapSource;
+            if(ThumbnailImage != null)
+                ThumbnailImage.Source = bitmapSource;
+            else
+            {
+                RefreshAgain = true;
+                Thumbnail = bitmapSource;
+            }
+        }
+        
+        public bool Repeat
+        {
+            get { return (bool)GetValue(RepeatProperty); }
+            set { SetValue(RepeatProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for RepeatCheckBoxCheck.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RepeatProperty =
+            DependencyProperty.Register("Repeat", typeof(bool), typeof(CustomMediaTransportControl), new PropertyMetadata(false, onRepeatCheckBoxChanged));
+
+        private static void onRepeatCheckBoxChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((CustomMediaTransportControl)d).RepeatCheckBoxPropertyChanged(Convert.ToBoolean(e.NewValue));
+        }
+
+        private void RepeatCheckBoxPropertyChanged(bool v)
+        {
+            if (RepeatCheckBox != null)
+            {
+                RepeatCheckBox.IsChecked = v;
+                return;
+            }
+            else
+            {
+                RefreshAgain = true;
+                App.Repeated = v;
+            }
+        }
+        
+        public bool Shuffle
+        {
+            get { return (bool)GetValue(ShuffleProperty); }
+            set { SetValue(ShuffleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Shuffle.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShuffleProperty =
+            DependencyProperty.Register("Shuffle", typeof(bool), typeof(CustomMediaTransportControl), new PropertyMetadata(false, onShuffleChanged));
+
+        private static void onShuffleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((CustomMediaTransportControl)d).ShuffleCheckBoxPropertyChanged(Convert.ToBoolean(e.NewValue));
+        }
+
+        private void ShuffleCheckBoxPropertyChanged(bool v)
+        {
+            if (ShuffleCheckBox != null)
+            {
+                ShuffleCheckBox.IsChecked = v;
+                return;
+            }
+            else
+            {
+                RefreshAgain = true;
+                App.Shuffled = v;
+            }
         }
     }
 }

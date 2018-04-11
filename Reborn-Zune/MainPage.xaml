@@ -229,6 +229,10 @@
                     Clicked="CustomMediaTransportControl_Clicked"
                     IsNextTrackButtonVisible="True"
                     IsPreviousTrackButtonVisible="True"
+                    RepeatCheckBoxChecked="CustomMTC_RepeatCheckBoxChecked"
+                                                      RepeatCheckBoxUnchecked="CustomMTC_RepeatCheckBoxUnchecked"
+                                                      ShuffleCheckBoxChecked="CustomMTC_ShuffleCheckBoxChecked"
+                                                      ShuffleCheckBoxUnchecked="CustomMTC_ShuffleCheckBoxUnchecked"
                     Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}" />
             </MediaPlayerElement.TransportControls>
         </MediaPlayerElement>

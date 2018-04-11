@@ -491,7 +491,7 @@
                                                             <VisualState x:Name="PointerOver">
                                                                 <Storyboard>
                                                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderCircle" Storyboard.TargetProperty="Stroke">
-                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Black" />
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="White" />
                                                                     </ObjectAnimationUsingKeyFrames>
                                                                     <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
                                                                 </Storyboard>
@@ -669,7 +669,7 @@
                                                             <VisualState x:Name="UncheckedPointerOver">
                                                                 <Storyboard>
                                                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Black" />
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="LightGray" />
                                                                     </ObjectAnimationUsingKeyFrames>
                                                                 </Storyboard>
                                                             </VisualState>

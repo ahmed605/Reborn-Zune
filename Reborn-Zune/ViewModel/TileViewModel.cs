@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.ViewModel
@@ -71,6 +73,12 @@ namespace Reborn_Zune.ViewModel
                     RaisePropertyChanged(() => Tiles);
                 }
             }
+        }
+
+        public void CurrentListDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            int selectedIndex = (sender as ListView).SelectedIndex;
+            PlayerViewModel.SetCurrentItem(selectedIndex);
         }
 
         public void CreateTiles()
