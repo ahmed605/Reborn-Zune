@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using TagLib;
 using Windows.Graphics.Imaging;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -127,19 +128,22 @@ namespace Reborn_Zune.ViewModel
 
         private async void ProcessSongs(StorageFile item)
         {
-            var p = item;
             String strAlbum;
             String strArtist;
             String strTitle;
             WriteableBitmap strThumbnail;
 
+            var fileStream = await item.OpenStreamForReadAsync();
 
+            var tagFile = TagLib.File.Create(new StreamFileAbstraction(item.Name,
+                             fileStream, fileStream));
+
+            var tags = tagFile.Tag;
             
-            MusicProperties property = await p.Properties.GetMusicPropertiesAsync();
             strThumbnail = await GetThumbnail(item);
-            strTitle = property.Title;
-            strAlbum = property.Album;
-            strArtist = property.Artist;
+            strTitle = tags.Title;
+            strAlbum = tags.Album;
+            strArtist = tags.Performers[0];
 
             LocalMusicModel music = new LocalMusicModel()
             {
