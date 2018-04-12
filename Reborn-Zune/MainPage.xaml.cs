@@ -71,13 +71,13 @@ namespace Reborn_Zune
 
         private async void CustomMediaTransportControl_Clicked(object sender, EventArgs e)
         {
-            ObservableCollection<WriteableBitmap> thumblist = await viewModel.GetThumbnails();
-            TileViewModel tileViewModel = new TileViewModel()
-            {
-                BitmapList = thumblist,
-                PlayerViewModel = viewModel.PlayerViewModel
-            };
-            Frame.Navigate(typeof(TilePage), tileViewModel);
+            //ObservableCollection<WriteableBitmap> thumblist = await viewModel.GetThumbnails();
+            //TileViewModel tileViewModel = new TileViewModel()
+            //{
+            //    BitmapList = thumblist,
+            //    PlayerViewModel = viewModel.PlayerViewModel
+            //};
+            //Frame.Navigate(typeof(TilePage), tileViewModel);
         }
 
         private void CustomMTC_RepeatCheckBoxChecked(object sender, EventArgs e)

@@ -79,7 +79,7 @@
                             Margin="55,12,0,0"
                             controls:DockPanel.Dock="Top"
                             DoubleTapped="{x:Bind viewModel.ArtistDoubleTapped}"
-                            ItemsSource="{x:Bind viewModel.Artists}"
+                            ItemsSource="{x:Bind viewModel.FirstPanelList, Mode=OneWay}"
                             Tapped="{x:Bind viewModel.ArtistTapped}">
 
                             <ListView.ItemContainerStyle>
@@ -224,15 +224,14 @@
             AreTransportControlsEnabled="True">
             <MediaPlayerElement.TransportControls>
                 <custom_controls:CustomMediaTransportControl
-                    
                     Title="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Title, Mode=OneWay}"
                     Clicked="CustomMediaTransportControl_Clicked"
                     IsNextTrackButtonVisible="True"
                     IsPreviousTrackButtonVisible="True"
                     RepeatCheckBoxChecked="CustomMTC_RepeatCheckBoxChecked"
-                                                      RepeatCheckBoxUnchecked="CustomMTC_RepeatCheckBoxUnchecked"
-                                                      ShuffleCheckBoxChecked="CustomMTC_ShuffleCheckBoxChecked"
-                                                      ShuffleCheckBoxUnchecked="CustomMTC_ShuffleCheckBoxUnchecked"
+                    RepeatCheckBoxUnchecked="CustomMTC_RepeatCheckBoxUnchecked"
+                    ShuffleCheckBoxChecked="CustomMTC_ShuffleCheckBoxChecked"
+                    ShuffleCheckBoxUnchecked="CustomMTC_ShuffleCheckBoxUnchecked"
                     Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}" />
             </MediaPlayerElement.TransportControls>
         </MediaPlayerElement>

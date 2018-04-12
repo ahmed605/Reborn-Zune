@@ -11,22 +11,27 @@ namespace Reborn_Zune.Model
 {
     public class LocalAlbumModel : ObservableObject
     {
+        #region Constructors
         public LocalAlbumModel()
         {
-            Musics = new ObservableCollection<LocalMusicModel>();
+            MusicDict = new Dictionary<string, LocalMusicModel>();
         }
 
         public LocalAlbumModel(string album)
         {
             AlbumTitle = album;
-            Musics = new ObservableCollection<LocalMusicModel>();
+            MusicDict = new Dictionary<string, LocalMusicModel>();
         }
+        #endregion
 
+        #region Fields
         private String _artist;
         private String _albumTitle;
         private WriteableBitmap _thumbnail;
-        private ObservableCollection<LocalMusicModel> _musics;
-
+        private Dictionary<String, LocalMusicModel> _musicDict;
+        #endregion
+        
+        #region Properties
         public String Artist
         {
             get
@@ -63,21 +68,38 @@ namespace Reborn_Zune.Model
             }
         }
 
-        public ObservableCollection<LocalMusicModel> Musics
+        public Dictionary<String, LocalMusicModel> MusicDict
         {
             get
             {
-                return _musics;
+                return _musicDict;
             }
             set
             {
-                Set<ObservableCollection<LocalMusicModel>>(() => this.Musics, ref _musics, value);
+                if(_musicDict != value)
+                {
+                    _musicDict = value;
+                    RaisePropertyChanged(() => MusicDict);
+                }
             }
         }
 
+        public ObservableCollection<LocalMusicModel> GetMusics
+        {
+            get
+            {
+                return new ObservableCollection<LocalMusicModel>(MusicDict.Values.OrderBy(x => x.Title));
+            }
+        }
+        #endregion
+        
+        #region Helpers
         public void AddSong(LocalMusicModel music)
         {
-            Musics.Add(music);
+            MusicDict[music.Title] = music;
         }
+        #endregion
+
+
     }
 }

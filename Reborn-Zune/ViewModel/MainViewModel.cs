@@ -27,68 +27,149 @@ namespace Reborn_Zune.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private Dictionary<String, LocalArtistModel> _artistsDict;
-        private ObservableCollection<LocalArtistModel> _artists;
-        private ObservableCollection<LocalAlbumModel> _albums;
-        private ObservableCollection<LocalMusicModel> _musics;
-        private ObservableCollection<LocalMusicModel> _thirdPanelList;
+        #region Fields
+        private ObservableCollection<LocalArtistModel> _firstPanelList;
         private ObservableCollection<LocalAlbumModel> _secondPanelList;
+        private ObservableCollection<LocalMusicModel> _thirdPanelList;
+        
         private CoreDispatcher dispatcher;
+        private MusicsViewModel _musicsViewModel;
         private PlayerViewModel _playerViewModel;
         private String _thirdPanelTitle;
         private bool _isThirdPanelAltShown;
-
         public MediaPlayer _player = PlaybackService.Instance.Player;
+        #endregion
 
+        #region Constructor
         public MainViewModel(CoreDispatcher dispatcher)
         {
             this.dispatcher = dispatcher;
-            _artistsDict = new Dictionary<string, LocalArtistModel>();
-            Artists = new ObservableCollection<LocalArtistModel>();
-            Albums = new ObservableCollection<LocalAlbumModel>();
-            Musics = new ObservableCollection<LocalMusicModel>();
-            
-            GetSong();
+            MusicsViewModel = new MusicsViewModel();
+            PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
 
-            ThirdPanelList = new ObservableCollection<LocalMusicModel>();
+            BuildMusicDataBaseAsync();
+
+            FirstPanelList = new ObservableCollection<LocalArtistModel>();
             SecondPanelList = new ObservableCollection<LocalAlbumModel>();
-
+            ThirdPanelList = new ObservableCollection<LocalMusicModel>();
 
             IsThirdPanelAltShown = false;
-
-            PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
         }
-        
-        private async void GetSong()
+        #endregion
+
+        #region Properties
+        public ObservableCollection<LocalArtistModel> FirstPanelList
         {
-            List<StorageFile> result = new List<StorageFile>();
-            QueryOptions queryOption = new QueryOptions
-                (CommonFileQuery.OrderByTitle, new string[] { ".mp3", ".mp4", ".m4a" });
-
-            queryOption.FolderDepth = FolderDepth.Shallow;
-
-            Queue<IStorageFolder> folders = new Queue<IStorageFolder>();
-
-            var files = await KnownFolders.MusicLibrary.CreateFileQueryWithOptions
-              (queryOption).GetFilesAsync();
-
-            foreach(var item in files)
+            get
             {
-                ProcessSongs(item);
+                return _firstPanelList;
             }
-            
+            set
+            {
+                if (_firstPanelList != value)
+                {
+                    _firstPanelList = value;
+                    RaisePropertyChanged(() => FirstPanelList);
+                }
+            }
         }
 
-        public async Task<ObservableCollection<WriteableBitmap>> GetThumbnails()
+        public ObservableCollection<LocalAlbumModel> SecondPanelList
         {
-            ObservableCollection<WriteableBitmap> result = new ObservableCollection<WriteableBitmap>();
-            foreach (LocalAlbumModel item in Albums)
+            get
             {
-                WriteableBitmap ProcessBitmap = await GrayScaleBitmap(item.Thumbnail);
-                result.Add(ProcessBitmap);
+                return _secondPanelList;
             }
+            set
+            {
+                _secondPanelList = value;
+                RaisePropertyChanged(() => SecondPanelList);
+            }
+        }
 
-            return result;
+        public ObservableCollection<LocalMusicModel> ThirdPanelList
+        {
+            get
+            {
+                return _thirdPanelList;
+            }
+            set
+            {
+                _thirdPanelList = value;
+                RaisePropertyChanged(() => ThirdPanelList);
+            }
+        }
+
+        public PlayerViewModel PlayerViewModel
+        {
+            get
+            {
+                return _playerViewModel;
+            }
+            set
+            {
+                _playerViewModel = value;
+                RaisePropertyChanged(() => PlayerViewModel);
+            }
+        }
+
+        public MusicsViewModel MusicsViewModel
+        {
+            get
+            {
+                return _musicsViewModel;
+            }
+            set
+            {
+                if (_musicsViewModel != value)
+                {
+                    _musicsViewModel = value;
+                    RaisePropertyChanged(() => MusicsViewModel);
+                }
+            }
+        }
+
+        public String ThirdPanelTitle
+        {
+            get
+            {
+                return _thirdPanelTitle;
+            }
+            set
+            {
+                _thirdPanelTitle = value;
+                RaisePropertyChanged(() => ThirdPanelTitle);
+            }
+        }
+
+        public bool IsThirdPanelAltShown
+        {
+            get
+            {
+                return _isThirdPanelAltShown;
+            }
+            set
+            {
+                _isThirdPanelAltShown = value;
+                RaisePropertyChanged(() => IsThirdPanelAltShown);
+            }
+        }
+
+        MediaPlaybackList PlaybackList
+        {
+            get { return _player.Source as MediaPlaybackList; }
+            set { _player.Source = value; }
+        }
+        #endregion
+
+        #region Helpers
+        private async void BuildMusicDataBaseAsync()
+        {
+            await MusicsViewModel.BuildMusicDataBaseAsync();
+            FirstPanelList = new ObservableCollection<LocalArtistModel>(MusicsViewModel.GetArtists);
+            SecondPanelList = new ObservableCollection<LocalAlbumModel>(MusicsViewModel.GetAlbums);
+            ThirdPanelList = new ObservableCollection<LocalMusicModel>(MusicsViewModel.GetMusics);
+
         }
 
         private async Task<WriteableBitmap> GrayScaleBitmap(WriteableBitmap thumbnail)
@@ -126,237 +207,52 @@ namespace Reborn_Zune.ViewModel
             return dstBitmap;
         }
 
-        private async void ProcessSongs(StorageFile item)
+        private void UpdateThirdPanelList()
         {
-            String strAlbum;
-            String strArtist;
-            String strTitle;
-            WriteableBitmap strThumbnail;
+            if (PlayBackListConsistencyDetect(ThirdPanelList))
+                PlaybackList = ToPlayBackList(ThirdPanelList);
+            PlayerViewModel.MediaList = new MediaListViewModel(ThirdPanelList, PlaybackList, dispatcher);
 
-            var fileStream = await item.OpenStreamForReadAsync();
-
-            var tagFile = TagLib.File.Create(new StreamFileAbstraction(item.Name,
-                             fileStream, fileStream));
-
-            var tags = tagFile.Tag;
-            
-            strThumbnail = await GetThumbnail(item);
-            strTitle = tags.Title;
-            strAlbum = tags.Album;
-            strArtist = tags.Performers[0];
-
-            LocalMusicModel music = new LocalMusicModel()
-            {
-                Title = strTitle,
-                Album = strAlbum,
-                Artist = strArtist,
-                Music = item,
-                MusicID = Guid.NewGuid().ToString(),
-                Thumbnail = strThumbnail,
-                ThumbnailAvailable = (strThumbnail.PixelHeight == 0) ? false : true
-        };
-        
-
-            if (_artistsDict.ContainsKey(strArtist))
-            {
-                _artistsDict[strArtist].AddSong(music);
-            }
-            else
-            {
-                var newArtist = new LocalArtistModel(strArtist);
-                newArtist.AddSong(music);
-                _artistsDict[strArtist] = newArtist;
-                Artists.Add(newArtist);
-            }
-
-            GetAllAlbums();
-            Musics.Add(music);
-            ThirdPanelList.Add(music);
+            GC.Collect();
         }
 
-        private void GetAllAlbums()
+        private MediaPlaybackList ToPlayBackList(ObservableCollection<LocalMusicModel> musics)
         {
-            foreach(LocalArtistModel artist in Artists)
+            var playbackList = new MediaPlaybackList();
+
+
+            // Add playback items to the list
+            foreach (var mediaItem in musics)
             {
-                foreach(var item in artist.Albums)
-                {
-                    if (!Albums.Contains(item))
-                    {
-                        Albums.Add(item);
-                        SecondPanelList.Add(item);
-                    }
-                }
+                playbackList.Items.Add(mediaItem.ToPlaybackItem());
             }
+
+            return playbackList;
         }
 
-        private async Task<WriteableBitmap> GetThumbnail(StorageFile item)
+        private bool PlayBackListConsistencyDetect(ObservableCollection<LocalMusicModel> currentList)
         {
-            const ThumbnailMode thumbnailMode = ThumbnailMode.MusicView;
-            const uint size = 100;
-            BitmapDecoder decoder = null;
-            using(StorageItemThumbnail thumbnail = await item.GetThumbnailAsync(thumbnailMode, size))
-            {
-                if (thumbnail != null && thumbnail.Type == ThumbnailType.Image)
-                {
-                    decoder = await BitmapDecoder.CreateAsync(thumbnail);
+            if (PlaybackList == null)
+                return true;
 
-                    // Get the first frame
-                    BitmapFrame bitmapFrame = await decoder.GetFrameAsync(0);
+            // Verify consistency of the lists that were passed in
+            var mediaListIds = currentList.Select(i => i.MusicID);
+            var playbackListIds = PlaybackList.Items.Select(
+                i => (string)i.Source.CustomProperties.SingleOrDefault(
+                    p => p.Key == LocalMusicModel.MediaItemIdKey).Value);
 
-                    // Save the resolution (will be used for saving the file later)
-                    var dpiX = bitmapFrame.DpiX;
-                    var dpiY = bitmapFrame.DpiY;
+            if (!mediaListIds.SequenceEqual(playbackListIds))
+                return true;
 
-                    // Get the pixels
-                    PixelDataProvider dataProvider =
-                        await bitmapFrame.GetPixelDataAsync(BitmapPixelFormat.Bgra8,
-                                                            BitmapAlphaMode.Premultiplied,
-                                                            new BitmapTransform(),
-                                                            ExifOrientationMode.RespectExifOrientation,
-                                                            ColorManagementMode.ColorManageToSRgb);
+            return false;
 
-                    byte[] pixels = dataProvider.DetachPixelData();
-
-                    // Create WriteableBitmap and set the pixels
-                    WriteableBitmap bitmap = new WriteableBitmap((int)bitmapFrame.PixelWidth,
-                                                                 (int)bitmapFrame.PixelHeight);
-
-                    using (Stream pixelStream = bitmap.PixelBuffer.AsStream())
-                    {
-                        await pixelStream.WriteAsync(pixels, 0, pixels.Length);
-                    }
-
-                    // Invalidate the WriteableBitmap and set as Image source
-                    bitmap.Invalidate();
-                    return bitmap;
-                }
-                return null;
-            }
-           
         }
+        #endregion
 
-        public ObservableCollection<LocalArtistModel> Artists
-        {
-            get
-            {
-                return _artists;
-            }
-            set
-            {
-                if(_artists != value)
-                {
-                    _artists = value;
-                    RaisePropertyChanged(() => Artists);
-                }
-            }
-        }
-
-        public ObservableCollection<LocalAlbumModel> Albums
-        {
-            get
-            {
-                return _albums;
-            }
-            set
-            {
-                if(_albums != value)
-                {
-                    _albums = value;
-                    RaisePropertyChanged(() => Albums);
-                }
-            }
-        }
-
-        public ObservableCollection<LocalMusicModel> Musics
-        {
-            get
-            {
-                return _musics;
-            }
-            set
-            {
-                if(_musics != value)
-                {
-                    _musics = value;
-                    RaisePropertyChanged(() => Musics);
-                }
-            }
-        }
-
-        public ObservableCollection<LocalMusicModel> ThirdPanelList
-        {
-            get
-            {
-                return _thirdPanelList;
-            }
-            set
-            {
-                _thirdPanelList = value;
-                RaisePropertyChanged(() => ThirdPanelList);
-            }
-        }
-
-        public ObservableCollection<LocalAlbumModel> SecondPanelList
-        {
-            get
-            {
-                return _secondPanelList;
-            }
-            set
-            {
-                _secondPanelList = value;
-                RaisePropertyChanged(() => SecondPanelList);
-            }
-        }
-
-        public PlayerViewModel PlayerViewModel
-        {
-            get
-            {
-                return _playerViewModel;
-            }
-            set
-            {
-                _playerViewModel = value;
-                RaisePropertyChanged(() => PlayerViewModel);
-            }
-        }
-
-        public String ThirdPanelTitle
-        {
-            get
-            {
-                return _thirdPanelTitle;
-            }
-            set
-            {
-                _thirdPanelTitle = value;
-                RaisePropertyChanged(() => ThirdPanelTitle);
-            }
-        }
-
-        public bool IsThirdPanelAltShown
-        {
-            get
-            {
-                return _isThirdPanelAltShown;
-            }
-            set
-            {
-                _isThirdPanelAltShown = value;
-                RaisePropertyChanged(() => IsThirdPanelAltShown);
-            }
-        }
-
-        MediaPlaybackList PlaybackList
-        {
-            get { return _player.Source as MediaPlaybackList; }
-            set { _player.Source = value; }
-        }
-
+        #region Events
         public void AlbumTapped(object sender, TappedRoutedEventArgs e)
         {
-            
+
             var album = (e.OriginalSource as FrameworkElement).DataContext as LocalAlbumModel;
             if (album == null)
                 return;
@@ -365,19 +261,21 @@ namespace Reborn_Zune.ViewModel
             ThirdPanelTitle = title;
 
             ThirdPanelList.Clear();
-            ThirdPanelList = new ObservableCollection<LocalMusicModel>(album.Musics);
+            ThirdPanelList = album.GetMusics;
 
             GC.Collect();
         }
 
         public void ArtistTapped(object sender, TappedRoutedEventArgs e)
         {
+            if (IsThirdPanelAltShown)
+                IsThirdPanelAltShown = false;
             var artist = (e.OriginalSource as FrameworkElement).DataContext as LocalArtistModel;
             if (artist == null)
                 return;
-            SecondPanelList = new ObservableCollection<LocalAlbumModel>(artist.Albums);
+            SecondPanelList = MusicsViewModel.ArtistsDict[artist.Name].GetAlbums;
 
-            ThirdPanelList = new ObservableCollection<LocalMusicModel>(artist.Musics);
+            ThirdPanelList = MusicsViewModel.ArtistsDict[artist.Name].GetMusics;
 
             GC.Collect();
         }
@@ -407,47 +305,6 @@ namespace Reborn_Zune.ViewModel
 
             GC.Collect();
         }
-
-        private void UpdateThirdPanelList()
-        {
-            if (PlayBackListConsistencyDetect(ThirdPanelList))
-                PlaybackList = ToPlayBackList(ThirdPanelList);
-            PlayerViewModel.MediaList = new MediaListViewModel(ThirdPanelList, PlaybackList, dispatcher);
-
-            GC.Collect();
-        }
-
-        private MediaPlaybackList ToPlayBackList(ObservableCollection<LocalMusicModel> musics)
-        {
-            var playbackList = new MediaPlaybackList();
-            
-
-            // Add playback items to the list
-            foreach (var mediaItem in musics)
-            {
-                playbackList.Items.Add(mediaItem.ToPlaybackItem());
-            }
-
-            return playbackList;
-        }
-
-        private bool PlayBackListConsistencyDetect(ObservableCollection<LocalMusicModel> currentList)
-        {
-            if (PlaybackList == null)
-                return true;
-            
-            // Verify consistency of the lists that were passed in
-            var mediaListIds = currentList.Select(i => i.MusicID);
-            var playbackListIds = PlaybackList.Items.Select(
-                i => (string)i.Source.CustomProperties.SingleOrDefault(
-                    p => p.Key == LocalMusicModel.MediaItemIdKey).Value);
-
-            if (!mediaListIds.SequenceEqual(playbackListIds))
-                return true;
-
-            return false;
-
-        }
-
+        #endregion
     }
 }

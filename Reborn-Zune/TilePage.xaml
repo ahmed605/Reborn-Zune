@@ -10,107 +10,119 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Reborn_Zune.Model"
     mc:Ignorable="d">
-    <Page.Resources>
-    </Page.Resources>
+    <Page.Resources />
 
     <Grid x:Name="rootPanel">
 
-        <Grid x:Name="tilesPanel"  Background="DarkGray">
+        <Grid x:Name="tilesPanel" Background="DarkGray">
             <controls:VariableSizedWrapPanel
-            x:Name="panel"
-            Width="2580"
-            Height="1200"
-            Margin="-20,-20,-1784,-100"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            IsComposing="True"
-            ItemHeight="70"
-            ItemWidth="70"
-            Loaded="rootPanel_Loaded"
-            Orientation="Vertical"
-                ItemsSource="{x:Bind viewModel.Tiles, Mode=OneWay}"/>
+                x:Name="panel"
+                Width="2580"
+                Height="1200"
+                Margin="-20,-20,-1784,-100"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                IsComposing="True"
+                ItemHeight="70"
+                ItemWidth="70"
+                ItemsSource="{x:Bind viewModel.Tiles, Mode=OneWay}"
+                Loaded="rootPanel_Loaded"
+                Orientation="Vertical" />
         </Grid>
 
-        <StackPanel HorizontalAlignment="Left"
-               VerticalAlignment="Bottom"
-                    Orientation="Horizontal"
-                    Margin="105,0,0,135">
-            <Border Width="153"
-                    Height="153"
-                BorderThickness="6"
-                    BorderBrush="White" 
-                    HorizontalAlignment="Left">
-                <Image Height="142"
-               Width="142"
-               Source="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}"/>
+        <StackPanel
+            Margin="105,0,0,135"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Orientation="Horizontal">
+            <Border
+                Width="153"
+                Height="153"
+                HorizontalAlignment="Left"
+                BorderBrush="White"
+                BorderThickness="6">
+                <Image
+                    Width="142"
+                    Height="142"
+                    Source="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}" />
             </Border>
-            
+
             <StackPanel Margin="20,10,0,0">
-                <TextBlock Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Artist, Mode=OneWay}"
-                       FontSize="29"
-                       Foreground="White"
-                       HorizontalAlignment="Left"/>
-                <TextBlock Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Album, Mode=OneWay}"
-                       FontSize="24"
-                       Foreground="White" 
-                       HorizontalAlignment="Left"
-                           Margin="0,-4,0,0"/>
-                <TextBlock Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Title, Mode=OneWay}"
-                       FontSize="24"
-                       Foreground="White" 
-                       HorizontalAlignment="Left"
-                           Margin="0,9,0,0"/>
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    FontSize="29"
+                    Foreground="White"
+                    Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Artist, Mode=OneWay}" />
+                <TextBlock
+                    Margin="0,-4,0,0"
+                    HorizontalAlignment="Left"
+                    FontSize="24"
+                    Foreground="White"
+                    Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Album, Mode=OneWay}" />
+                <TextBlock
+                    Margin="0,9,0,0"
+                    HorizontalAlignment="Left"
+                    FontSize="24"
+                    Foreground="White"
+                    Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Title, Mode=OneWay}" />
             </StackPanel>
         </StackPanel>
-        
 
-        <Grid x:Name="ListGrid"
+
+        <Grid
+            x:Name="ListGrid"
+            Width="313"
+            Height="627"
             Margin="0,0,36,80"
-            Background="Black"
-              Height="627"
-              Width="313"
-              HorizontalAlignment="Right"
-              VerticalAlignment="Bottom">
-            <ListView x:Name="listview"
-                      Margin="20,20,0,47"
-                      HorizontalAlignment="Right"
-                      DoubleTapped="{x:Bind viewModel.CurrentListDoubleTapped}"
-                      ItemsSource="{x:Bind viewModel.PlayerViewModel.MediaList.MediaList, Mode=OneWay}">
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Background="Black">
+            <ListView
+                x:Name="listview"
+                Margin="20,20,0,47"
+                HorizontalAlignment="Right"
+                DoubleTapped="{x:Bind viewModel.CurrentListDoubleTapped}"
+                ItemsSource="{x:Bind viewModel.PlayerViewModel.MediaList.MediaList, Mode=OneWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="model:LocalMusicModel">
-                        <StackPanel Margin="0,0,0,15"
-                                    HorizontalAlignment="Left"
-                                    Width="300">
-                            <TextBlock Text="{x:Bind Title, Mode=OneWay}"
-                                       Foreground="White"
-                                       FontSize="20"
-                                       HorizontalAlignment="Left"/>
-                            <TextBlock Text="{x:Bind Artist, Mode=OneWay}"
-                                       Foreground="DarkGray"
-                                       FontSize="12"
-                                       HorizontalAlignment="Left"/>
+                        <StackPanel
+                            Width="300"
+                            Margin="0,0,0,15"
+                            HorizontalAlignment="Left">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                FontSize="20"
+                                Foreground="White"
+                                Text="{x:Bind Title, Mode=OneWay}" />
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                FontSize="12"
+                                Foreground="DarkGray"
+                                Text="{x:Bind Artist, Mode=OneWay}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </Grid>
-        <MediaPlayerElement x:Name="mediaElement"
+        <MediaPlayerElement
+            x:Name="mediaElement"
             Height="80"
-                            VerticalAlignment="Bottom"
-                            AreTransportControlsEnabled="True">
+            VerticalAlignment="Bottom"
+            AreTransportControlsEnabled="True">
             <MediaPlayerElement.TransportControls>
-                <controls:CustomMediaTransportControl x:Name="CustomMTC"
-                    Style="{StaticResource TilePageMTCStyle}"
-                                                      IsPreviousTrackButtonVisible="True"
-                                                      IsNextTrackButtonVisible="True"
-                                                      ListViewGridChecked="CustomMTC_ListViewGridChecked"
-                                                      ListViewGridUnChecked="CustomMTC_ListViewGridUnChecked"
-                                                      RepeatCheckBoxChecked="CustomMTC_RepeatCheckBoxChecked"
-                                                      RepeatCheckBoxUnchecked="CustomMTC_RepeatCheckBoxUnchecked"
-                                                      ShuffleCheckBoxChecked="CustomMTC_ShuffleCheckBoxChecked"
-                                                      ShuffleCheckBoxUnchecked="CustomMTC_ShuffleCheckBoxUnchecked"
-                                                      FullScreenButtonClicked="CustomMTC_FullScreenButtonClicked"
-                                                      ExitButtonClicked="CustomMTC_ExitButtonClicked"/>
+                <controls:CustomMediaTransportControl
+                    x:Name="CustomMTC"
+                    ExitButtonClicked="CustomMTC_ExitButtonClicked"
+                    FullScreenButtonClicked="CustomMTC_FullScreenButtonClicked"
+                    IsNextTrackButtonVisible="True"
+                    IsPreviousTrackButtonVisible="True"
+                    ListViewGridChecked="CustomMTC_ListViewGridChecked"
+                    ListViewGridUnChecked="CustomMTC_ListViewGridUnChecked"
+                    RepeatCheckBoxChecked="CustomMTC_RepeatCheckBoxChecked"
+                    RepeatCheckBoxUnchecked="CustomMTC_RepeatCheckBoxUnchecked"
+                    ShuffleCheckBoxChecked="CustomMTC_ShuffleCheckBoxChecked"
+                    ShuffleCheckBoxUnchecked="CustomMTC_ShuffleCheckBoxUnchecked"
+                    Style="{StaticResource TilePageMTCStyle}" />
             </MediaPlayerElement.TransportControls>
         </MediaPlayerElement>
     </Grid>

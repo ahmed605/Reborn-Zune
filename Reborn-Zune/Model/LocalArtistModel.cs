@@ -10,26 +10,25 @@ namespace Reborn_Zune.Model
 {
     public class LocalArtistModel : ObservableObject
     {
+        #region Constructor
         public LocalArtistModel()
         {
-            Albums = new ObservableCollection<LocalAlbumModel>();
-            albumsDict = new Dictionary<string, LocalAlbumModel>();
-            Musics = new ObservableCollection<LocalMusicModel>();
+            AlbumDict = new Dictionary<string, LocalAlbumModel>();
         }
 
         public LocalArtistModel(string strArtist)
         {
             Name = strArtist;
-            Albums = new ObservableCollection<LocalAlbumModel>();
-            albumsDict = new Dictionary<string, LocalAlbumModel>();
-            Musics = new ObservableCollection<LocalMusicModel>();
+            AlbumDict = new Dictionary<string, LocalAlbumModel>();
         }
-
+        #endregion
+        
+        #region Helper
         public void AddSong(LocalMusicModel music)
         {
-            if (albumsDict.ContainsKey(music.Album))
+            if (AlbumDict.ContainsKey(music.Album))
             {
-                albumsDict[music.Album].AddSong(music);
+                AlbumDict[music.Album].AddSong(music);
             }
             else
             {
@@ -37,16 +36,14 @@ namespace Reborn_Zune.Model
                 newAlbum.AddSong(music);
                 newAlbum.Artist = Name;
                 newAlbum.Thumbnail = music.Thumbnail;
-                albumsDict[music.Album] = newAlbum;
-                Albums.Add(newAlbum);
+                AlbumDict[music.Album] = newAlbum;
             }
-            Musics.Add(music);
         }
+        #endregion
 
+        #region Properties
         private String _name;
-        private Dictionary<string, LocalAlbumModel> albumsDict;
-        private ObservableCollection<LocalAlbumModel> _albums;
-        private ObservableCollection<LocalMusicModel> _musics;
+        private Dictionary<string, LocalAlbumModel> _albumsDict;
 
         public String Name
         {
@@ -59,29 +56,38 @@ namespace Reborn_Zune.Model
                 Set<String>(() => this.Name, ref _name, value);
             }
         }
-
-        public ObservableCollection<LocalAlbumModel> Albums
+        public Dictionary<string, LocalAlbumModel> AlbumDict
         {
             get
             {
-                return _albums;
+                return _albumsDict;
             }
             set
             {
-                Set<ObservableCollection<LocalAlbumModel>>(() => this.Albums, ref _albums, value);
+                if(_albumsDict != value)
+                {
+                    _albumsDict = value;
+                    RaisePropertyChanged(() => AlbumDict);
+                }
             }
         }
 
-        public ObservableCollection<LocalMusicModel> Musics
+        public ObservableCollection<LocalMusicModel> GetMusics
         {
             get
             {
-                return _musics;
-            }
-            set
-            {
-                Set<ObservableCollection<LocalMusicModel>>(() => this.Musics, ref _musics, value);
+                return new ObservableCollection<LocalMusicModel>(AlbumDict.Values.SelectMany(album => album.MusicDict.Values.OrderBy(music => music.Title)));
             }
         }
+
+        public ObservableCollection<LocalAlbumModel> GetAlbums
+        {
+            get
+            {
+                return new ObservableCollection<LocalAlbumModel>(AlbumDict.Values.OrderBy(x => x.AlbumTitle));
+            }
+        }
+
+        #endregion
     }
 }
