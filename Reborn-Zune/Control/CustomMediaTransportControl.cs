@@ -15,7 +15,7 @@ namespace Reborn_Zune.Control
 {
     public sealed class CustomMediaTransportControl : MediaTransportControls
     {
-        public event EventHandler<EventArgs> Clicked;
+        public event EventHandler<EventArgs> TilePageClicked;
         public event EventHandler<EventArgs> ListViewGridChecked;
         public event EventHandler<EventArgs> ListViewGridUnChecked;
         public event EventHandler<EventArgs> RepeatCheckBoxChecked;
@@ -37,11 +37,7 @@ namespace Reborn_Zune.Control
         CheckBox ShuffleCheckBox;
         Button FullScreenButton;
         Button ExitButton;
-
-        bool RefreshAgain { get; set; }
-        string MusicTitleStr { get; set; }
-
-
+        
         public CustomMediaTransportControl()
         {
             DefaultStyleKey = typeof(CustomMediaTransportControl);
@@ -91,22 +87,14 @@ namespace Reborn_Zune.Control
             {
                 ExitButton.Click += ExitButton_Clicked;
             }
-
-            UpdateUI();
-
+            
             VolumeSliderGrid.PointerEntered += Grid_PointerEntered;
             VolumeSliderGrid.PointerExited += Grid_PointerExited;
             MediaTransportControlsTimelineGrid.Loaded += DockPanel_Loaded;
-            TilePageButton.Click += Button_Clicked;
+            TilePageButton.Click += TilePageButton_Clicked;
             
 
             base.OnApplyTemplate();
-        }
-
-        private void UpdateUI()
-        {
-            RepeatCheckBox.IsChecked = App.Repeated;
-            ShuffleCheckBox.IsChecked = App.Shuffled;
         }
 
         private void ExitButton_Clicked(object sender, RoutedEventArgs e)
@@ -149,9 +137,9 @@ namespace Reborn_Zune.Control
             ListViewGridChecked?.Invoke(this, EventArgs.Empty);
         }
 
-        private void Button_Clicked(object sender, RoutedEventArgs e)
+        private void TilePageButton_Clicked(object sender, RoutedEventArgs e)
         {
-            Clicked?.Invoke(this, EventArgs.Empty);
+            TilePageClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private async void DockPanel_Loaded(object sender, RoutedEventArgs e)
@@ -217,16 +205,7 @@ namespace Reborn_Zune.Control
 
         private void TitlePropertyChanged(string v)
         {
-            if(MusicTitle != null)
-            {
-                MusicTitle.Text = v;
-            }
-            else
-            {
-                RefreshAgain = true;
-                MusicTitleStr = v;
-            }
-
+            MusicTitle.Text = v;
         }
 
         public BitmapSource Thumbnail 
@@ -247,13 +226,7 @@ namespace Reborn_Zune.Control
 
         private void ThumbnailPropertyChanged(BitmapSource bitmapSource)
         {
-            if(ThumbnailImage != null)
-                ThumbnailImage.Source = bitmapSource;
-            else
-            {
-                RefreshAgain = true;
-                Thumbnail = bitmapSource;
-            }
+            ThumbnailImage.Source = bitmapSource;
         }
         
         public bool Repeat
@@ -273,16 +246,7 @@ namespace Reborn_Zune.Control
 
         private void RepeatCheckBoxPropertyChanged(bool v)
         {
-            if (RepeatCheckBox != null)
-            {
-                RepeatCheckBox.IsChecked = v;
-                return;
-            }
-            else
-            {
-                RefreshAgain = true;
-                App.Repeated = v;
-            }
+            RepeatCheckBox.IsChecked = v;
         }
         
         public bool Shuffle
@@ -302,16 +266,7 @@ namespace Reborn_Zune.Control
 
         private void ShuffleCheckBoxPropertyChanged(bool v)
         {
-            if (ShuffleCheckBox != null)
-            {
-                ShuffleCheckBox.IsChecked = v;
-                return;
-            }
-            else
-            {
-                RefreshAgain = true;
-                App.Shuffled = v;
-            }
+            ShuffleCheckBox.IsChecked = v;
         }
     }
 }

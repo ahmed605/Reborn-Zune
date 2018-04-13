@@ -68,7 +68,11 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
-        public MediaPlaybackList PlaybackList { get; private set; }
+        public MediaPlaybackList PlaybackList
+        {
+            get;
+            private set;
+        }
 
         public MediaListViewModel(ObservableCollection<LocalMusicModel> mediaList, MediaPlaybackList playbackList, CoreDispatcher dispatcher)
         {

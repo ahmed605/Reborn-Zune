@@ -2,27 +2,14 @@
 using Reborn_Zune.Model;
 using Reborn_Zune.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
-using TagLib;
-using Windows.Graphics.Imaging;
 using Windows.Media.Playback;
-using Windows.Storage;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Search;
-using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
-
+#pragma warning disable 0169
 namespace Reborn_Zune.ViewModel
 {
     public class MainViewModel : ViewModelBase
@@ -35,8 +22,11 @@ namespace Reborn_Zune.ViewModel
         private CoreDispatcher dispatcher;
         private MusicsViewModel _musicsViewModel;
         private PlayerViewModel _playerViewModel;
+        private TileViewModel _tileViewModel;
         private String _thirdPanelTitle;
         private bool _isThirdPanelAltShown;
+        private bool _isRepeated;
+        private bool _isShuffled;
         public MediaPlayer _player = PlaybackService.Instance.Player;
         #endregion
 
@@ -46,9 +36,10 @@ namespace Reborn_Zune.ViewModel
             this.dispatcher = dispatcher;
             MusicsViewModel = new MusicsViewModel();
             PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
+            TileViewModel = new TileViewModel();
 
             BuildMusicDataBaseAsync();
-
+            
             FirstPanelList = new ObservableCollection<LocalArtistModel>();
             SecondPanelList = new ObservableCollection<LocalAlbumModel>();
             ThirdPanelList = new ObservableCollection<LocalMusicModel>();
@@ -73,7 +64,7 @@ namespace Reborn_Zune.ViewModel
                 }
             }
         }
-
+        
         public ObservableCollection<LocalAlbumModel> SecondPanelList
         {
             get
@@ -129,6 +120,22 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
+        public TileViewModel TileViewModel
+        {
+            get
+            {
+                return _tileViewModel;
+            }
+            set
+            {
+                if(_tileViewModel != value)
+                {
+                    _tileViewModel = value;
+                    RaisePropertyChanged(() => TileViewModel);
+                }
+            }
+        }
+
         public String ThirdPanelTitle
         {
             get
@@ -155,6 +162,38 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
+        public bool IsRepeated
+        {
+            get
+            {
+                return _isRepeated;
+            }
+            set
+            {
+                if(_isRepeated != value)
+                {
+                    _isRepeated = value;
+                    RaisePropertyChanged(() => IsRepeated);
+                }
+            }
+        }
+
+        public bool IsShuffled
+        {
+            get
+            {
+                return _isShuffled;
+            }
+            set
+            {
+                if(_isShuffled != value)
+                {
+                    _isShuffled = value;
+                    RaisePropertyChanged(() => IsShuffled);
+                }
+            }
+        }
+
         MediaPlaybackList PlaybackList
         {
             get { return _player.Source as MediaPlaybackList; }
@@ -172,41 +211,11 @@ namespace Reborn_Zune.ViewModel
 
         }
 
-        private async Task<WriteableBitmap> GrayScaleBitmap(WriteableBitmap thumbnail)
+        public void CreatTiles()
         {
-            byte[] srcPixels = new byte[4 * thumbnail.PixelWidth * thumbnail.PixelHeight];
-            using (Stream pixelStream = thumbnail.PixelBuffer.AsStream())
-            {
-                await pixelStream.ReadAsync(srcPixels, 0, srcPixels.Length);
-            }
-            WriteableBitmap dstBitmap =
-               new WriteableBitmap(thumbnail.PixelWidth, thumbnail.PixelHeight);
-            byte[] dstPixels = new byte[4 * dstBitmap.PixelWidth * dstBitmap.PixelHeight];
-            for (int i = 0; i < srcPixels.Length; i += 4)
-            {
-                double b = (double)srcPixels[i] / 255.0;
-                double g = (double)srcPixels[i + 1] / 255.0;
-                double r = (double)srcPixels[i + 2] / 255.0;
-
-                byte a = srcPixels[i + 3];
-
-                double e = (0.21 * r + 0.71 * g + 0.07 * b) * 255;
-                byte f = Convert.ToByte(e);
-
-                dstPixels[i] = f;
-                dstPixels[i + 1] = f;
-                dstPixels[i + 2] = f;
-                dstPixels[i + 3] = a;
-            }
-            // Move the pixels into the destination bitmap
-            using (Stream pixelStream = dstBitmap.PixelBuffer.AsStream())
-            {
-                await pixelStream.WriteAsync(dstPixels, 0, dstPixels.Length);
-            }
-            dstBitmap.Invalidate();
-            return dstBitmap;
+            TileViewModel.CreateTiles(MusicsViewModel.GetThumbnails);
         }
-
+        
         private void UpdateThirdPanelList()
         {
             if (PlayBackListConsistencyDetect(ThirdPanelList))
@@ -246,6 +255,11 @@ namespace Reborn_Zune.ViewModel
 
             return false;
 
+        }
+
+        public void ClearTiles()
+        {
+            TileViewModel.ClearTiles();
         }
         #endregion
 
@@ -304,6 +318,30 @@ namespace Reborn_Zune.ViewModel
             PlayerViewModel.MediaList = new MediaListViewModel(ThirdPanelList, PlaybackList, dispatcher);
 
             GC.Collect();
+        }
+
+        public void MTC_RepeatCheckBoxChecked(object sender, EventArgs e)
+        {
+            PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = true;
+            IsRepeated = true;
+        }
+
+        public void MTC_RepeatCheckBoxUnchecked(object sender, EventArgs e)
+        {
+            PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = false;
+            IsRepeated = false;
+        }
+
+        public void MTC_ShuffleCheckBoxChecked(object sender, EventArgs e)
+        {
+            PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = true;
+            IsShuffled = true;
+        }
+
+        public void MTC_ShuffleCheckBoxUnchecked(object sender, EventArgs e)
+        {
+            PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = false;
+            IsShuffled = false;
         }
         #endregion
     }

@@ -34,7 +34,7 @@ namespace Reborn_Zune.ViewModel
         public async Task BuildMusicDataBaseAsync()
         {
             GetSong();
-            await Task.Delay(1200);
+            await Task.Delay(2500);
         }
 
         private async void GetSong()
@@ -181,7 +181,10 @@ namespace Reborn_Zune.ViewModel
         {
             get
             {
-                return new List<LocalAlbumModel>(ArtistsDict.Values.SelectMany(artist => artist.AlbumDict.Values.Select(x => x)).OrderBy(x=>x.AlbumTitle));
+                return new List<LocalAlbumModel>(ArtistsDict.Values.SelectMany(
+                    artist => artist.AlbumDict.Values.Select(
+                        album => album)).OrderBy(
+                    x=>x.AlbumTitle));
             }
         }
 
@@ -193,6 +196,16 @@ namespace Reborn_Zune.ViewModel
                     artist => artist.AlbumDict.Values.SelectMany(
                         album => album.MusicDict.Values.Select(
                             x => x).OrderBy(x=>x.Title))));
+            }
+        }
+
+        public List<WriteableBitmap> GetThumbnails
+        {
+            get
+            {
+                return new List<WriteableBitmap>(ArtistsDict.Values.SelectMany(
+                    artist => artist.AlbumDict.Values.Select(
+                        album => album.Thumbnail)));
             }
         }
         #endregion

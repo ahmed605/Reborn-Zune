@@ -1,6 +1,7 @@
 ﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 using Reborn_Zune.Model;
 using Reborn_Zune.ViewModel;
 using System;
@@ -21,6 +22,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
+#pragma warning disable 0169
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Reborn_Zune
@@ -30,30 +32,30 @@ namespace Reborn_Zune
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private const float lightDepth = 200f;
+        private const int animationDelay = 600;
+        private const int animationDuration = 70;
+        private CompositionEffectFactory _effectFactory;
+        private Random _random = new Random();
+        private Compositor _compositor;
+        private PointLight _pointLight;
+        private PointLight _secondPointLight;
+        private AmbientLight _ambientLight;
+        private Visual _root;
+
+
         private MainViewModel viewModel;
 
         public MainPage()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Required;
 
             viewModel = new MainViewModel(Dispatcher);
-            mediaPlayer.SetMediaPlayer(viewModel._player);
+            MainMediaElement.SetMediaPlayer(viewModel._player);
+            TileMediaElement.SetMediaPlayer(viewModel._player);
             TitleBarSetting();
-
+            
         }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            var para = e.Parameter as PlayerViewModel;
-            if(para != null)
-            {
-                viewModel.PlayerViewModel = para;
-                mediaPlayer.SetMediaPlayer(viewModel.PlayerViewModel.GetPlayer());
-            }
-            base.OnNavigatedTo(e);
-        }
-
         private static void TitleBarSetting()
         {
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
@@ -69,39 +71,168 @@ namespace Reborn_Zune
             titleBar.ButtonPressedForegroundColor = Colors.Black;
         }
 
-        private async void CustomMediaTransportControl_Clicked(object sender, EventArgs e)
+        private void MainPageMTC_TilePageClicked(object sender, EventArgs e)
         {
-            //ObservableCollection<WriteableBitmap> thumblist = await viewModel.GetThumbnails();
-            //TileViewModel tileViewModel = new TileViewModel()
-            //{
-            //    BitmapList = thumblist,
-            //    PlayerViewModel = viewModel.PlayerViewModel
-            //};
-            //Frame.Navigate(typeof(TilePage), tileViewModel);
+            viewModel.CreatTiles();
+            MainRoot.Fade(0, 500).StartAsync();
+            MainRoot.Visibility = Visibility.Collapsed;
+            TileRoot.Visibility = Visibility.Visible;
+            TileRoot.Fade(1, 500).StartAsync();
+            GC.Collect();
         }
 
-        private void CustomMTC_RepeatCheckBoxChecked(object sender, EventArgs e)
+        
+
+        private void TileRoot_Loaded(object sender, RoutedEventArgs e)
         {
-            viewModel.PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = true;
-            App.Repeated = true;
+            TileRoot.Visibility = Visibility.Collapsed;
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            var screenSize = new Size((int)displayInformation.ScreenWidthInRawPixels,
+                                      (int)displayInformation.ScreenHeightInRawPixels);
+            Vector2 sizeLightBounds = new Vector2((float)screenSize.Width, (float)screenSize.Height);
+            _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
+            _root = ElementCompositionPreview.GetElementVisual(tilesPanel);
+            _pointLight = _compositor.CreatePointLight();
+            _secondPointLight = _compositor.CreatePointLight();
+            _pointLight.Offset = new Vector3(-2500f, -2500f, 300f);
+            _secondPointLight.Offset = new Vector3(-2500f, -2500f, 300f);
+            _pointLight.Intensity = 1.3f;
+            _secondPointLight.Intensity = 1.3f;
+            _ambientLight = _compositor.CreateAmbientLight();
+            _ambientLight.Intensity = 0.1f;
+            _ambientLight.Color = "#d3d3d3".ToColor();
+            IGraphicsEffect graphicsEffect = new CompositeEffect()
+            {
+                Mode = CanvasComposite.DestinationIn,
+                Sources =
+                            {
+                                new CompositeEffect()
+                                {
+                                    Mode = CanvasComposite.Add,
+                                    Sources =
+                                    {
+                                        new CompositionEffectSourceParameter("ImageSource"),
+                                        new SceneLightingEffect()
+                                        {
+                                            AmbientAmount = 0,
+                                            DiffuseAmount = 30f,
+                                            SpecularAmount = 0,
+                                            NormalMapSource = new CompositionEffectSourceParameter("NormalMap"),
+                                        }
+                                    }
+                                },
+                                new CompositionEffectSourceParameter("NormalMap"),
+                            }
+            };
+
+            _effectFactory = _compositor.CreateEffectFactory(graphicsEffect);
+            _pointLight.CoordinateSpace = _root;
+            _pointLight.Targets.Add(_root);
+            _secondPointLight.CoordinateSpace = _root;
+            _secondPointLight.Targets.Add(_root);
+            _ambientLight.Targets.Add(_root);
+
+            //panel.ItemsSource = _items;
+
+            #region First light animation
+            Vector3KeyFrameAnimation lightPositionAnimation;
+            lightPositionAnimation = _compositor.CreateVector3KeyFrameAnimation();
+            lightPositionAnimation.InsertKeyFrame(.0f, new Vector3(200f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
+            lightPositionAnimation.InsertKeyFrame(.16f, new Vector3(825f, 70f, lightDepth), _compositor.CreateLinearEasingFunction());
+            lightPositionAnimation.InsertKeyFrame(.32f, new Vector3(2100f, 40f, lightDepth), _compositor.CreateLinearEasingFunction());
+            lightPositionAnimation.InsertKeyFrame(.48f, new Vector3(825f, 70f, lightDepth), _compositor.CreateLinearEasingFunction());
+            lightPositionAnimation.InsertKeyFrame(.64f, new Vector3(200f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
+            lightPositionAnimation.InsertKeyFrame(.8f, new Vector3(200f, 100f, lightDepth), _compositor.CreateLinearEasingFunction());
+            lightPositionAnimation.InsertKeyFrame(1f, new Vector3(200f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
+            lightPositionAnimation.DelayTime = TimeSpan.FromMilliseconds(animationDelay);
+            lightPositionAnimation.Duration = TimeSpan.FromSeconds(animationDuration);
+            lightPositionAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
+
+            ColorKeyFrameAnimation lightColorAnimation;
+            lightColorAnimation = _compositor.CreateColorKeyFrameAnimation();
+            lightColorAnimation.InsertKeyFrame(0f, "#865c2a".ToColor());
+            lightColorAnimation.InsertKeyFrame(.2f, "#955a21".ToColor());
+            lightColorAnimation.InsertKeyFrame(.4f, "#6c891b".ToColor());
+            lightColorAnimation.InsertKeyFrame(.6f, "#62962c".ToColor());
+            lightColorAnimation.InsertKeyFrame(.8f, "#6c401b".ToColor());
+            lightColorAnimation.InsertKeyFrame(1f, "#865c2a".ToColor());
+            lightColorAnimation.DelayTime = TimeSpan.FromMilliseconds(animationDelay);
+            lightColorAnimation.Duration = TimeSpan.FromSeconds(animationDuration);
+            lightColorAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
+
+            _pointLight.StartAnimation("Offset", lightPositionAnimation);
+            _pointLight.StartAnimation("Color", lightColorAnimation);
+            #endregion
+
+            #region Second light animation
+            Vector3KeyFrameAnimation secondLightPositionAnimation;
+            secondLightPositionAnimation = _compositor.CreateVector3KeyFrameAnimation();
+            secondLightPositionAnimation.InsertKeyFrame(.0f, new Vector3(2300f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
+            secondLightPositionAnimation.InsertKeyFrame(.16f, new Vector3(1800f, 900f, lightDepth), _compositor.CreateLinearEasingFunction());
+            secondLightPositionAnimation.InsertKeyFrame(.32f, new Vector3(400f, 1200f, lightDepth), _compositor.CreateLinearEasingFunction());
+            secondLightPositionAnimation.InsertKeyFrame(.48f, new Vector3(1800f, 900f, lightDepth), _compositor.CreateLinearEasingFunction());
+            secondLightPositionAnimation.InsertKeyFrame(.64f, new Vector3(2300f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
+            secondLightPositionAnimation.InsertKeyFrame(.8f, new Vector3(2300f, 100f, lightDepth), _compositor.CreateLinearEasingFunction());
+            secondLightPositionAnimation.InsertKeyFrame(1f, new Vector3(2300f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
+            secondLightPositionAnimation.Duration = TimeSpan.FromSeconds(animationDuration);
+            secondLightPositionAnimation.DelayTime = TimeSpan.FromMilliseconds(animationDelay);
+            secondLightPositionAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
+
+            ColorKeyFrameAnimation secondLightColorAnimation;
+            secondLightColorAnimation = _compositor.CreateColorKeyFrameAnimation();
+            secondLightColorAnimation.InsertKeyFrame(0f, "#81268b".ToColor());
+            secondLightColorAnimation.InsertKeyFrame(.2f, "#68446c".ToColor());
+            secondLightColorAnimation.InsertKeyFrame(.4f, "#368843".ToColor());
+            secondLightColorAnimation.InsertKeyFrame(.6f, "#315b8a".ToColor());
+            secondLightColorAnimation.InsertKeyFrame(.8f, "#7d2185".ToColor());
+            secondLightColorAnimation.InsertKeyFrame(1f, "#81268b".ToColor());
+            secondLightColorAnimation.Duration = TimeSpan.FromSeconds(animationDuration);
+            secondLightColorAnimation.DelayTime = TimeSpan.FromMilliseconds(animationDelay);
+            secondLightColorAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
+
+            _secondPointLight.StartAnimation("Offset", secondLightPositionAnimation);
+            _secondPointLight.StartAnimation("Color", secondLightColorAnimation);
+            #endregion
         }
 
-        private void CustomMTC_RepeatCheckBoxUnchecked(object sender, EventArgs e)
+        private void CustomMTC_FullScreenButtonClicked(object sender, EventArgs e)
         {
-            viewModel.PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = false;
-            App.Repeated = false;
+            var view = ApplicationView.GetForCurrentView();
+            if (view.IsFullScreenMode)
+            {
+                view.ExitFullScreenMode();
+            }
+            else
+            {
+                if (view.TryEnterFullScreenMode())
+                {
+
+                }
+                else
+                {
+
+                }
+            }
         }
 
-        private void CustomMTC_ShuffleCheckBoxChecked(object sender, EventArgs e)
+        private void CustomMTC_ExitButtonClicked(object sender, EventArgs e)
         {
-            viewModel.PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = true;
-            App.Shuffled = true;
+            viewModel.ClearTiles();
+            TileRoot.Fade(0, 500).StartAsync();
+            TileRoot.Visibility = Visibility.Collapsed;
+            MainRoot.Visibility = Visibility.Visible;
+            MainRoot.Fade(1, 500).StartAsync();
+            GC.Collect();
         }
 
-        private void CustomMTC_ShuffleCheckBoxUnchecked(object sender, EventArgs e)
+        private async void CustomMTC_ListViewGridChecked(object sender, EventArgs e)
         {
-            viewModel.PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = false;
-            App.Shuffled = false;
+            await ListGrid.Fade(1, 700).StartAsync();
+        }
+
+        private async void CustomMTC_ListViewGridUnChecked(object sender, EventArgs e)
+        {
+            await ListGrid.Fade(0, 700).StartAsync();
         }
     }
 }

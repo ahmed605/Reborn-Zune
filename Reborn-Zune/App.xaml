@@ -735,7 +735,8 @@
                                                         BorderThickness="{TemplateBinding BorderThickness}"
                                                         Content="{TemplateBinding Content}"
                                                         ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                        ContentTransitions="{TemplateBinding ContentTransitions}" />
+                                                        ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                        Foreground="{TemplateBinding Foreground}" />
                                                     <VisualStateManager.VisualStateGroups>
                                                         <VisualStateGroup x:Name="CommonStates">
                                                             <VisualState x:Name="Normal">
@@ -745,40 +746,18 @@
                                                             </VisualState>
                                                             <VisualState x:Name="PointerOver">
                                                                 <Storyboard>
-                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseMediumLowBrush}" />
-                                                                    </ObjectAnimationUsingKeyFrames>
                                                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="LightGray" />
                                                                     </ObjectAnimationUsingKeyFrames>
                                                                     <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
                                                                 </Storyboard>
                                                             </VisualState>
                                                             <VisualState x:Name="Pressed">
                                                                 <Storyboard>
-                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
-                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}" />
-                                                                    </ObjectAnimationUsingKeyFrames>
-                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                                    </ObjectAnimationUsingKeyFrames>
                                                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightBaseHighBrush}" />
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="#9a9a9a" />
                                                                     </ObjectAnimationUsingKeyFrames>
                                                                     <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
-                                                                </Storyboard>
-                                                            </VisualState>
-                                                            <VisualState x:Name="Disabled">
-                                                                <Storyboard>
-                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
-                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
-                                                                    </ObjectAnimationUsingKeyFrames>
-                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
-                                                                    </ObjectAnimationUsingKeyFrames>
-                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
-                                                                    </ObjectAnimationUsingKeyFrames>
                                                                 </Storyboard>
                                                             </VisualState>
                                                         </VisualStateGroup>
@@ -801,8 +780,9 @@
 
                                     <controls:DockPanel
                                         x:Name="MediaTransportControlsTimelineGrid"
-                                        Grid.Column="1"
-                                        Margin="135,0,0,23"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Margin="0,0,0,23"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         Opacity="0">
@@ -823,7 +803,6 @@
                                                     Foreground="#707070"
                                                     Visibility="Collapsed" />
                                             </Grid>
-
                                             <Slider
                                                 x:Name="ProgressSlider"
                                                 Width="260"
@@ -997,13 +976,13 @@
                                             x:Name="FullScreenButton"
                                             Margin="0,0,9,0"
                                             controls:DockPanel.Dock="Left"
+                                            Foreground="DarkGray"
                                             Style="{StaticResource RightSmallButtonStyle}">
                                             <Grid>
                                                 <TextBlock
                                                     FontFamily="Segoe MDL2 Assets"
                                                     FontSize="13"
                                                     FontWeight="Bold"
-                                                    Foreground="DarkGray"
                                                     Text="&#xE8B2;" />
                                             </Grid>
                                         </Button>
@@ -1011,13 +990,13 @@
                                             x:Name="ExitButton"
                                             Margin="0,0,3,0"
                                             controls:DockPanel.Dock="Left"
+                                            Foreground="DarkGray"
                                             Style="{StaticResource RightSmallButtonStyle}">
                                             <Grid>
                                                 <TextBlock
                                                     FontFamily="Segoe MDL2 Assets"
                                                     FontSize="14"
                                                     FontWeight="Bold"
-                                                    Foreground="DarkGray"
                                                     Text="&#xE711;" />
                                             </Grid>
                                         </Button>

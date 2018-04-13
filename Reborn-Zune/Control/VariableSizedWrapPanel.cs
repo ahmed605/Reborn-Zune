@@ -236,7 +236,7 @@ namespace Reborn_Zune.Control
         /// </summary>
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register("ItemsSource", typeof(IEnumerable), typeof(VariableSizedWrapPanel),
-                new PropertyMetadata(null, OnItemsSourceChanged));
+                new PropertyMetadata(null, new PropertyChangedCallback(OnItemsSourceChanged)));
 
         /// <summary>
         /// Gets or sets the ItemsSource property. This dependency property 
@@ -277,7 +277,7 @@ namespace Reborn_Zune.Control
             }
 
             // Refresh Layout
-            InvalidateMeasure();
+            //InvalidateMeasure();
         }
 
         #endregion
