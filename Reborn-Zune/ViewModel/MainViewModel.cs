@@ -322,26 +322,42 @@ namespace Reborn_Zune.ViewModel
 
         public void MTC_RepeatCheckBoxChecked(object sender, EventArgs e)
         {
-            PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = true;
-            IsRepeated = true;
+            if(PlayerViewModel.MediaList != null)
+            {
+                PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = true;
+                IsRepeated = true;
+            }
+            
         }
 
         public void MTC_RepeatCheckBoxUnchecked(object sender, EventArgs e)
         {
-            PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = false;
-            IsRepeated = false;
+            if (PlayerViewModel.MediaList != null)
+            {
+                PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = false;
+                IsRepeated = false;
+            }
+            
         }
 
         public void MTC_ShuffleCheckBoxChecked(object sender, EventArgs e)
         {
-            PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = true;
-            IsShuffled = true;
+            if (PlayerViewModel.MediaList != null)
+            {
+                PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = true;
+                IsShuffled = true;
+            }
+            
         }
 
         public void MTC_ShuffleCheckBoxUnchecked(object sender, EventArgs e)
         {
-            PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = false;
-            IsShuffled = false;
+            if (PlayerViewModel.MediaList != null)
+            {
+                PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = false;
+                IsShuffled = false;
+            }
+            
         }
         #endregion
     }

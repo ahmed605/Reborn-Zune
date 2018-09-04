@@ -11,7 +11,7 @@
     <AssemblyName>Reborn-Zune</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -21,7 +21,7 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>52304C9A078E1526C8E2A476BF45DD6E8C9BB7AF</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>99AB4679380C217E9209106E22C2935005231866</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
@@ -132,8 +132,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="Reborn-Zune_StoreKey.pfx" />
-    <None Include="Reborn-Zune_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\aaa.jpg" />
@@ -188,6 +186,7 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <None Include="Reborn-Zune_StoreKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

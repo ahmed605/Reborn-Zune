@@ -79,7 +79,7 @@ namespace Reborn_Zune.ViewModel
             LocalMusicModel music = new LocalMusicModel()
             {
                 Title = strTitle,
-                Album = strAlbum,
+                Album = (strAlbum != null) ? strAlbum: "Unkown Album",
                 Artist = strArtist,
                 Music = item,
                 MusicID = Guid.NewGuid().ToString(),
