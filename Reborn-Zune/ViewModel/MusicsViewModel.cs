@@ -71,7 +71,7 @@ namespace Reborn_Zune.ViewModel
 
             var tags = tagFile.Tag;
 
-            strThumbnail = await GetThumbnail(item);
+            strThumbnail = await GetThumbnail(item); 
             strTitle = (tags.Title != null) ? tags.Title : "Unkown Song";
             strAlbum = (tags.Album != null) ? tags.Album : "Unkown Album";
             strArtist = (tags.Performers.Length != 0) ? tags.Performers[0] : "Unknown Artist";
