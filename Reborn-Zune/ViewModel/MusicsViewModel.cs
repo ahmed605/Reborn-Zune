@@ -72,19 +72,19 @@ namespace Reborn_Zune.ViewModel
             var tags = tagFile.Tag;
 
             strThumbnail = await GetThumbnail(item);
-            strTitle = tags.Title;
-            strAlbum = tags.Album;
-            strArtist = tags.Performers[0];
+            strTitle = (tags.Title != null) ? tags.Title : "Unkown Song";
+            strAlbum = (tags.Album != null) ? tags.Album : "Unkown Album";
+            strArtist = (tags.Performers.Length != 0) ? tags.Performers[0] : "Unknown Artist";
 
             LocalMusicModel music = new LocalMusicModel()
             {
                 Title = strTitle,
-                Album = (strAlbum != null) ? strAlbum: "Unkown Album",
+                Album = strAlbum,
                 Artist = strArtist,
                 Music = item,
                 MusicID = Guid.NewGuid().ToString(),
                 Thumbnail = strThumbnail,
-                ThumbnailAvailable = (strThumbnail.PixelHeight == 0) ? false : true
+                ThumbnailAvailable = (strThumbnail == null ||strThumbnail.PixelHeight == 0) ? false : true
             };
 
             MusicInsert(music);
