@@ -337,7 +337,7 @@ namespace Reborn_Zune.ViewModel
                 PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = false;
                 IsRepeated = false;
             }
-            
+
         }
 
         public void MTC_ShuffleCheckBoxChecked(object sender, EventArgs e)

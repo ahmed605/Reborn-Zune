@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.Helpers;
+﻿using Microsoft.HockeyApp;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,6 +34,17 @@ namespace Reborn_Zune
         /// </summary>
         public App()
         {
+            HockeyClient.Current.Configure("e89efe217f71403cb92ac0fc2ff658df",
+
+                new TelemetryConfiguration() { EnableDiagnostics = true })
+
+                .SetExceptionDescriptionLoader((Exception ex) =>
+
+                {
+
+                    return "Exception HResult: " + ex.HResult.ToString();
+
+                });
             this.InitializeComponent();
             this.Construct();
             this.UnhandledException += App_UnhandledException;
