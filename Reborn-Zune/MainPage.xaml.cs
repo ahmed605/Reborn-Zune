@@ -96,10 +96,10 @@ namespace Reborn_Zune
             _secondPointLight = _compositor.CreatePointLight();
             _pointLight.Offset = new Vector3(-2500f, -2500f, 300f);
             _secondPointLight.Offset = new Vector3(-2500f, -2500f, 300f);
-            _pointLight.Intensity = 1.3f;
-            _secondPointLight.Intensity = 1.3f;
+            _pointLight.Intensity = 1.5f;
+            _secondPointLight.Intensity = 1.5f;
             _ambientLight = _compositor.CreateAmbientLight();
-            _ambientLight.Intensity = 0.1f;
+            _ambientLight.Intensity = 0.25f;
             _ambientLight.Color = "#d3d3d3".ToColor();
             IGraphicsEffect graphicsEffect = new CompositeEffect()
             {

@@ -8,7 +8,7 @@ namespace Reborn_Zune.Control
 {
     public sealed partial class Tile : UserControl
     {
-        private WriteableBitmap _bitmapImage;
+        private BitmapImage _bitmapImage;
 
         public int Index
         {
@@ -20,9 +20,9 @@ namespace Reborn_Zune.Control
         public static readonly DependencyProperty IndexProperty =
             DependencyProperty.Register("Index", typeof(int), typeof(Tile), new PropertyMetadata(0));
 
-        public WriteableBitmap Thumbnail
+        public BitmapImage Thumbnail
         {
-            get { return (WriteableBitmap)GetValue(ThumbnailProperty); }
+            get { return (BitmapImage)GetValue(ThumbnailProperty); }
             set { SetValue(ThumbnailProperty, value);
                 _bitmapImage = value;
             }
@@ -30,7 +30,7 @@ namespace Reborn_Zune.Control
 
         // Using a DependencyProperty as the backing store for Thumbnail.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ThumbnailProperty =
-            DependencyProperty.Register("Thumbnail", typeof(WriteableBitmap), typeof(Tile), new PropertyMetadata(null));
+            DependencyProperty.Register("Thumbnail", typeof(BitmapImage), typeof(Tile), new PropertyMetadata(null));
 
 
         public Tile()
