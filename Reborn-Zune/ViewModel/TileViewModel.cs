@@ -22,20 +22,20 @@ namespace Reborn_Zune.ViewModel
         #region Fields
         private CoreDispatcher dispatcher;
         private PlayerViewModel _playerViewModel;
-        private ObservableCollection<WriteableBitmap> _bitmapList;
+        private ObservableCollection<BitmapImage> _bitmapList;
         private ObservableCollection<UIElement> _tiles;
         #endregion
 
         #region Constructor
         public TileViewModel()
         {
-            BitmapList = new ObservableCollection<WriteableBitmap>();
+            BitmapList = new ObservableCollection<BitmapImage>();
             Tiles = new ObservableCollection<UIElement>();
         }
         #endregion
 
         #region Properties
-        public ObservableCollection<WriteableBitmap> BitmapList
+        public ObservableCollection<BitmapImage> BitmapList
         {
             get
             {
@@ -158,12 +158,12 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
-        public async void CreateTiles(List<WriteableBitmap> getThumbnails)
+        public async void CreateTiles(List<BitmapImage> getThumbnails)
         {
             foreach (var item in getThumbnails)
             {
-                var grayBitmap = await GrayScaleBitmap(item);
-                BitmapList.Add(grayBitmap);
+                //var grayBitmap = await GrayScaleBitmap(item);
+                BitmapList.Add(item);
             }
 
             CreateTile();

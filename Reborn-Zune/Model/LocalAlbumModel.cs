@@ -27,7 +27,7 @@ namespace Reborn_Zune.Model
         #region Fields
         private String _artist;
         private String _albumTitle;
-        private WriteableBitmap _thumbnail;
+        private BitmapImage _thumbnail;
         private Dictionary<String, LocalMusicModel> _musicDict;
         #endregion
         
@@ -56,7 +56,7 @@ namespace Reborn_Zune.Model
             }
         }
 
-        public WriteableBitmap Thumbnail
+        public BitmapImage Thumbnail
         {
             get
             {
@@ -64,7 +64,7 @@ namespace Reborn_Zune.Model
             }
             set
             {
-                Set<WriteableBitmap>(() => this.Thumbnail, ref _thumbnail, value);
+                Set<BitmapImage>(() => this.Thumbnail, ref _thumbnail, value);
             }
         }
 

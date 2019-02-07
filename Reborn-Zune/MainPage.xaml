@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Reborn_Zune"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     xmlns:model="using:Reborn_Zune.Model"
     mc:Ignorable="d">
 
@@ -20,7 +21,9 @@
             Loaded="TileRoot_Loaded"
             Opacity="0"
             Visibility="Visible">
+
             <Grid x:Name="tilesPanel" Background="DarkGray">
+
                 <custom_controls:VariableSizedWrapPanel
                     x:Name="tiles"
                     Width="2580"
@@ -33,6 +36,11 @@
                     ItemWidth="70"
                     ItemsSource="{x:Bind viewModel.TileViewModel.Tiles, Mode=OneWay}"
                     Orientation="Vertical" />
+                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Border.Background>
+                        <media:BackdropSaturationBrush Saturation="0" />
+                    </Border.Background>
+                </Border>
                 <!--<GridView ItemsSource="{x:Bind viewModel.TileViewModel.BitmapList, Mode=OneWay}">
                     <GridView.ItemTemplate>
                         <DataTemplate>
@@ -128,18 +136,19 @@
                         FullScreenButtonClicked="CustomMTC_FullScreenButtonClicked"
                         IsNextTrackButtonVisible="True"
                         IsPreviousTrackButtonVisible="True"
-                        Repeat="{x:Bind viewModel.IsRepeated, Mode=OneWay}"
-                        Shuffle="{x:Bind viewModel.IsShuffled, Mode=OneWay}"
                         ListViewGridChecked="CustomMTC_ListViewGridChecked"
                         ListViewGridUnChecked="CustomMTC_ListViewGridUnChecked"
+                        Repeat="{x:Bind viewModel.IsRepeated, Mode=OneWay}"
                         RepeatCheckBoxChecked="{x:Bind viewModel.MTC_RepeatCheckBoxChecked}"
                         RepeatCheckBoxUnchecked="{x:Bind viewModel.MTC_RepeatCheckBoxUnchecked}"
+                        Shuffle="{x:Bind viewModel.IsShuffled, Mode=OneWay}"
                         ShuffleCheckBoxChecked="{x:Bind viewModel.MTC_ShuffleCheckBoxChecked}"
                         ShuffleCheckBoxUnchecked="{x:Bind viewModel.MTC_ShuffleCheckBoxUnchecked}"
                         Style="{StaticResource TilePageMTCStyle}" />
                 </MediaPlayerElement.TransportControls>
             </MediaPlayerElement>
         </Grid>
+
         <Grid
             x:Name="MainRoot"
             Background="White"
@@ -358,9 +367,9 @@
                         IsNextTrackButtonVisible="True"
                         IsPreviousTrackButtonVisible="True"
                         Repeat="{x:Bind viewModel.IsRepeated, Mode=OneWay}"
-                        Shuffle="{x:Bind viewModel.IsShuffled, Mode=OneWay}"
                         RepeatCheckBoxChecked="{x:Bind viewModel.MTC_RepeatCheckBoxChecked}"
                         RepeatCheckBoxUnchecked="{x:Bind viewModel.MTC_RepeatCheckBoxUnchecked}"
+                        Shuffle="{x:Bind viewModel.IsShuffled, Mode=OneWay}"
                         ShuffleCheckBoxChecked="{x:Bind viewModel.MTC_ShuffleCheckBoxChecked}"
                         ShuffleCheckBoxUnchecked="{x:Bind viewModel.MTC_ShuffleCheckBoxUnchecked}"
                         Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}"

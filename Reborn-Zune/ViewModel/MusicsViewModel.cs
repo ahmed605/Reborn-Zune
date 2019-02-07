@@ -62,7 +62,8 @@ namespace Reborn_Zune.ViewModel
             String strAlbum;
             String strArtist;
             String strTitle;
-            WriteableBitmap strThumbnail;
+            var thumbnail = await item.GetThumbnailAsync(ThumbnailMode.MusicView, 100);
+            BitmapImage strThumbnail = new BitmapImage();
 
             var fileStream = await item.OpenStreamForReadAsync();
 
@@ -71,7 +72,8 @@ namespace Reborn_Zune.ViewModel
 
             var tags = tagFile.Tag;
 
-            strThumbnail = await GetThumbnail(item);
+            //strThumbnail = await GetThumbnail(item);
+            strThumbnail.SetSource(thumbnail);
             strTitle = (tags.Title != null) ? tags.Title : "Unkown Song";
             strAlbum = (tags.Album != null) ? tags.Album : "Unkown Album";
             strArtist = (tags.Performers.Length != 0) ? tags.Performers[0] : "Unknown Artist";
@@ -84,7 +86,7 @@ namespace Reborn_Zune.ViewModel
                 Music = item,
                 MusicID = Guid.NewGuid().ToString(),
                 Thumbnail = strThumbnail,
-                ThumbnailAvailable = (strThumbnail == null ||strThumbnail.PixelHeight == 0) ? false : true
+                ThumbnailAvailable = strThumbnail == null ? false : true
             };
 
             MusicInsert(music);
@@ -199,11 +201,11 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
-        public List<WriteableBitmap> GetThumbnails
+        public List<BitmapImage> GetThumbnails
         {
             get
             {
-                return new List<WriteableBitmap>(ArtistsDict.Values.SelectMany(
+                return new List<BitmapImage>(ArtistsDict.Values.SelectMany(
                     artist => artist.AlbumDict.Values.Select(
                         album => album.Thumbnail)));
             }
