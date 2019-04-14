@@ -187,6 +187,11 @@ namespace MusicLibraryEFCoreModel
                     .HasForeignKey<Music>(m => m.ThumbnailId)
                     .OnDelete(DeleteBehavior.Cascade);
 
+                entity.HasOne<Album>(t => t.Album)
+                    .WithOne(a => a.Thumbnail)
+                    .HasForeignKey<Album>(a => a.ThumbnailId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
             });
         }
     }
@@ -218,6 +223,8 @@ namespace MusicLibraryEFCoreModel
         public string Id { get; set; }
         public string Title { get; set; }
         public string ArtistId { get; set; }
+        public string ThumbnailId { get; set; }
+        public Thumbnail Thumbnail { get; set; }
         public Artist Artist { get; set; }
         public ICollection<Music> Musics { get; set; }
     }
@@ -266,11 +273,6 @@ namespace MusicLibraryEFCoreModel
         public string Id { get; set; }
         public byte[] Image { get; set; }
         public Music Music { get; set; }
+        public Album Album { get; set; }
     }
-
-    
-
-   
-
-    
 }

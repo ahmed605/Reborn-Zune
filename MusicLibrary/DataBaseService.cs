@@ -54,6 +54,7 @@ namespace MusicLibraryService
                 Album Album = new Album
                 {
                     Title = tags.Album != null ? tags.Album : "Unknown Album",
+                    ThumbnailId = Thumbnail.Id,
                     ArtistId = Artist.Id
                 };
                 Debug.WriteLine("Album Succeed");
@@ -200,6 +201,7 @@ namespace MusicLibraryService
                 {
                     album.Artist = artists.Where(a => a.Id == album.ArtistId).First();
                     album.Musics = musics.Where(m => m.AlbumId == album.Id).ToList();
+                    album.Thumbnail = thumbnails.Where(t => t.Id == album.ThumbnailId).First();
                 }
                 foreach(Music music in musics)
                 {
