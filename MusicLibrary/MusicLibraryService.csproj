@@ -133,6 +133,9 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp">
       <Version>5.1.1</Version>
     </PackageReference>
+    <PackageReference Include="MvvmLight">
+      <Version>5.4.1.1</Version>
+    </PackageReference>
     <PackageReference Include="TagLib.Portable">
       <Version>1.0.4</Version>
     </PackageReference>

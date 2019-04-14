@@ -180,16 +180,17 @@ namespace MusicLibraryService
             Debug.WriteLine("Update Succeed");
         }
 
-        public static LibraryViewModel FetchAll()
+        public static Library FetchAll()
         {
-            LibraryViewModel viewModel = new LibraryViewModel();
+            Library viewModel = new Library();
             using(var _context = new MusicLibraryDbContext())
             {
-                var musics = _context.Musics.Select(m => m).ToList();
-                var albums = _context.Albums.Select(m => m).ToList();
-                var artists = _context.Artists.Select(m => m).ToList();
-                var musicplaylists = _context.MusicInPlaylists.Select(m => m).ToList();
-                var playlists = _context.Playlists.Select(m => m).ToList();
+                var musics = _context.Musics.ToList();
+                var albums = _context.Albums.ToList();
+                var artists = _context.Artists.ToList();
+                var musicplaylists = _context.MusicInPlaylists.ToList();
+                var playlists = _context.Playlists.ToList();
+                var thumbnails = _context.Thumbnails.ToList();
                 foreach(Artist artist in artists)
                 {
                     artist.Albums = albums.Where(a => a.ArtistId == artist.Id).ToList();
@@ -204,6 +205,7 @@ namespace MusicLibraryService
                 {
                     music.Album = albums.Where(a => a.Id == music.AlbumId).First();
                     music.Artist = artists.Where(a => a.Id == music.ArtistId).First();
+                    music.Thumbnail = thumbnails.Where(t => t.Id == music.ThumbnailId).First();
                 }
                 foreach(Playlist pl in playlists)
                 {
@@ -220,7 +222,7 @@ namespace MusicLibraryService
         }
     }
 
-    public class LibraryViewModel
+    public class Library
     {
         public List<Music> musics { get; set; }
         public List<Album> albums { get; set; }

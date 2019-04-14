@@ -41,5 +41,10 @@ namespace MusicLibraryService
                 }
             }
         }
+
+        public static Library Fetch()
+        {
+            return DataBaseService.FetchAll();
+        }
     }
 }
