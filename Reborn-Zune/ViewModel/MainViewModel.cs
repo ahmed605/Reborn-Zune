@@ -203,6 +203,7 @@ namespace Reborn_Zune.ViewModel
         #region Helpers
         private async void BuildMusicDataBaseAsync()
         {
+
         }
 
         public void CreatTiles()
@@ -260,7 +261,6 @@ namespace Reborn_Zune.ViewModel
         #region Events
         public void AlbumTapped(object sender, TappedRoutedEventArgs e)
         {
-
             var album = (e.OriginalSource as FrameworkElement).DataContext as LocalAlbumModel;
             if (album == null)
                 return;

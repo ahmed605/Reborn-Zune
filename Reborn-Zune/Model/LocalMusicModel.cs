@@ -1,26 +1,19 @@
 ﻿using GalaSoft.MvvmLight;
+using MusicLibraryEFCoreModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.Model
 {
     public class LocalMusicModel : ObservableObject
     {
-        public LocalMusicModel()
+        public LocalMusicModel(Music music)
         {
-            
-        }
 
+        }
 
         public const String MediaItemIdKey = "mediaItemId";
 

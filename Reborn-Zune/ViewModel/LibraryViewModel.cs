@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GalaSoft.MvvmLight;
 using MusicLibraryService;
 
@@ -8,14 +9,12 @@ namespace Reborn_Zune.ViewModel
     {
         public LibraryViewModel()
         {
-            GetFiles();
-            
+            MusicLibrary.InitializeFinished += MusicLibrary_InitializeFinished;
         }
 
-
-        private void GetFiles()
+        private void MusicLibrary_InitializeFinished(object sender, EventArgs e)
         {
-            _library = MusicLibrary.Fetch();
+            Library = MusicLibrary.FetchAll();
         }
 
         private Library _library;
@@ -28,7 +27,7 @@ namespace Reborn_Zune.ViewModel
 
 
 
-
-
+        
+        
     }
 }
