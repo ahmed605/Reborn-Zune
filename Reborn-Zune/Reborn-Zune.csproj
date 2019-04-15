@@ -119,6 +119,7 @@
     <Compile Include="Control\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="Control\VariableSizedWrapPanel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

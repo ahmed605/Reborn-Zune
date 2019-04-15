@@ -1,6 +1,8 @@
 ﻿using GalaSoft.MvvmLight;
 using MusicLibraryEFCoreModel;
+using Reborn_Zune.Utilities;
 using System;
+using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -12,20 +14,26 @@ namespace Reborn_Zune.Model
     {
         public LocalMusicModel(Music music)
         {
+            Music = music;
+            GetThumbnail();
+            GetStorageFile();
+        }
 
+        private async void GetStorageFile()
+        {
+            StorageFile = await StorageFile.GetFileFromPathAsync(Music.Path);
+        }
+
+        private async void GetThumbnail()
+        {
+            ImageSource = await Utility.ImageFromBytes(Music.Thumbnail.Image);
         }
 
         public const String MediaItemIdKey = "mediaItemId";
 
-        private StorageFile _music;
-        private String _title;
-        private String _album;
-        private String _artist;
-        private BitmapImage _thumbnail;
-        private String _musicID;
-        private bool _thumbnailAvailable;
+        private Music _music;
 
-        public StorageFile Music
+        public Music Music
         {
             get
             {
@@ -33,57 +41,37 @@ namespace Reborn_Zune.Model
             }
             set
             {
-                Set<StorageFile>(() => this.Music, ref _music, value);
-            }
-        }
-        
-        public String Title
-        {
-            get
-            {
-                return _title;
-            }
-            set
-            {
-                Set<String>(() => this.Title, ref _title, value);
+                Set<Music>(() => this.Music, ref _music, value);
             }
         }
 
-        public String Album
+        private BitmapImage _imageSource;
+        public BitmapImage ImageSource
         {
             get
             {
-                return _album;
+                return _imageSource;
             }
             set
             {
-                Set<String>(() => this.Album, ref _album, value);
+                Set<BitmapImage>(() => this.ImageSource, ref _imageSource, value);
             }
         }
 
-        public BitmapImage Thumbnail
+        private StorageFile _storageFile;
+        public StorageFile StorageFile
         {
             get
             {
-                return _thumbnail;
+                return _storageFile;
             }
             set
             {
-                Set<BitmapImage>(() => this.Thumbnail, ref _thumbnail, value);
+                Set<StorageFile>(() => this.StorageFile, ref _storageFile, value);
             }
         }
 
-        public String Artist
-        {
-            get
-            {
-                return _artist;
-            }
-            set
-            {
-                Set<String>(() => this.Artist, ref _artist, value);
-            }
-        }
+        private String _musicID;
 
         public String MusicID
         {
@@ -105,25 +93,12 @@ namespace Reborn_Zune.Model
             }
         }
 
-        public bool ThumbnailAvailable
-        {
-            get
-            {
-                return _thumbnailAvailable;
-            }
-            set
-            {
-                Set<bool>(() => this.ThumbnailAvailable, ref _thumbnailAvailable, value);
-            }
-        }
-
         public MediaPlaybackItem ToPlaybackItem()
         {
-            var source = MediaSource.CreateFromStorageFile(Music);
+            var source = MediaSource.CreateFromStorageFile(StorageFile);
 
             var playbackItem = new MediaPlaybackItem(source);
 
-           
             var displayProperties = playbackItem.GetDisplayProperties();
 
             playbackItem.ApplyDisplayProperties(displayProperties);

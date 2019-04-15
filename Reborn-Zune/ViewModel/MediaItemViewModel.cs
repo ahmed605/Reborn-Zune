@@ -18,7 +18,7 @@ namespace Reborn_Zune.ViewModel
 
         public LocalMusicModel MediaItem { get; private set; }
 
-        public string Title => MediaItem.Title;
+        public string Title => MediaItem.Music.Title;
 
         public BitmapImage PreviewImage
         {
@@ -71,7 +71,7 @@ namespace Reborn_Zune.ViewModel
             // The reason we cache here is to avoid audio gaps 
             // between tracks on transitions when changing artwork.
             
-            PreviewImage = mediaItem.Thumbnail;
+            PreviewImage = mediaItem.ImageSource;
         }
         
     }
