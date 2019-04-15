@@ -9,7 +9,7 @@ using MusicLibraryEFCoreModel;
 namespace MusicLibraryEFCoreModel.Migrations
 {
     [DbContext(typeof(MusicLibraryDbContext))]
-    [Migration("20190414104458_InitialCreate")]
+    [Migration("20190414183451_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,8 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .HasMaxLength(450)
                         .IsUnicode(true);
 
+                    b.Property<string>("ThumbnailId");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnName("Title")
@@ -40,6 +42,9 @@ namespace MusicLibraryEFCoreModel.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ArtistId");
+
+                    b.HasIndex("ThumbnailId")
+                        .IsUnique();
 
                     b.ToTable("Album");
                 });
@@ -83,6 +88,8 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .HasColumnName("Path")
                         .IsUnicode(true);
 
+                    b.Property<string>("PlaylistId");
+
                     b.Property<string>("ThumbnailId")
                         .HasColumnName("ThumbnailId")
                         .IsUnicode(true);
@@ -101,6 +108,8 @@ namespace MusicLibraryEFCoreModel.Migrations
                     b.HasIndex("Id")
                         .IsUnique()
                         .HasName("UQ__Music__AUQKR5RFNOUO6UFR");
+
+                    b.HasIndex("PlaylistId");
 
                     b.HasIndex("ThumbnailId")
                         .IsUnique();
@@ -170,6 +179,11 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .WithMany("Albums")
                         .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MusicLibraryEFCoreModel.Thumbnail", "Thumbnail")
+                        .WithOne("Album")
+                        .HasForeignKey("MusicLibraryEFCoreModel.Album", "ThumbnailId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MusicLibraryEFCoreModel.Music", b =>
@@ -183,6 +197,10 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .WithMany("Musics")
                         .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MusicLibraryEFCoreModel.Playlist")
+                        .WithMany("Musics")
+                        .HasForeignKey("PlaylistId");
 
                     b.HasOne("MusicLibraryEFCoreModel.Thumbnail", "Thumbnail")
                         .WithOne("Music")

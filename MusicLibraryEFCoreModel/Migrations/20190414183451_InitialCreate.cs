@@ -49,7 +49,8 @@ namespace MusicLibraryEFCoreModel.Migrations
                 {
                     Id = table.Column<string>(maxLength: 450, nullable: false),
                     Title = table.Column<string>(nullable: false),
-                    ArtistId = table.Column<string>(maxLength: 450, nullable: false)
+                    ArtistId = table.Column<string>(maxLength: 450, nullable: false),
+                    ThumbnailId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,6 +59,12 @@ namespace MusicLibraryEFCoreModel.Migrations
                         name: "FK_Album_Artist_ArtistId",
                         column: x => x.ArtistId,
                         principalTable: "Artist",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Album_Thumbnail_ThumbnailId",
+                        column: x => x.ThumbnailId,
+                        principalTable: "Thumbnail",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -71,7 +78,8 @@ namespace MusicLibraryEFCoreModel.Migrations
                     Title = table.Column<string>(nullable: false),
                     ThumbnailId = table.Column<string>(nullable: true),
                     AlbumId = table.Column<string>(nullable: true),
-                    ArtistId = table.Column<string>(nullable: true)
+                    ArtistId = table.Column<string>(nullable: true),
+                    PlaylistId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -88,6 +96,12 @@ namespace MusicLibraryEFCoreModel.Migrations
                         principalTable: "Artist",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Music_Playlst_PlaylistId",
+                        column: x => x.PlaylistId,
+                        principalTable: "Playlst",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Music_Thumbnail_ThumbnailId",
                         column: x => x.ThumbnailId,
@@ -126,6 +140,12 @@ namespace MusicLibraryEFCoreModel.Migrations
                 column: "ArtistId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Album_ThumbnailId",
+                table: "Album",
+                column: "ThumbnailId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Music_AlbumId",
                 table: "Music",
                 column: "AlbumId");
@@ -140,6 +160,11 @@ namespace MusicLibraryEFCoreModel.Migrations
                 table: "Music",
                 column: "Id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Music_PlaylistId",
+                table: "Music",
+                column: "PlaylistId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Music_ThumbnailId",
@@ -162,16 +187,16 @@ namespace MusicLibraryEFCoreModel.Migrations
                 name: "Music");
 
             migrationBuilder.DropTable(
-                name: "Playlst");
-
-            migrationBuilder.DropTable(
                 name: "Album");
 
             migrationBuilder.DropTable(
-                name: "Thumbnail");
+                name: "Playlst");
 
             migrationBuilder.DropTable(
                 name: "Artist");
+
+            migrationBuilder.DropTable(
+                name: "Thumbnail");
         }
     }
 }
