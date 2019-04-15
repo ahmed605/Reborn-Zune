@@ -126,29 +126,15 @@ namespace Reborn_Zune.Model
 
         public MediaPlaybackItem ToPlaybackItem()
         {
-            // Create the media source from the Uri
             var source = MediaSource.CreateFromStorageFile(Music);
 
-            // Create a configurable playback item backed by the media source
             var playbackItem = new MediaPlaybackItem(source);
 
-            // Populate display properties for the item that will be used
-            // to automatically update SystemMediaTransportControls when
-            // the item is playing.
+           
             var displayProperties = playbackItem.GetDisplayProperties();
 
-            //displayProperties.Thumbnail = RandomAccessStreamReference.CreateFromStream(ThumbnailStream);
-
-            // Apply properties to the playback item
             playbackItem.ApplyDisplayProperties(displayProperties);
 
-            // It's often useful to save a reference or ID to correlate
-            // a particular MediaPlaybackItem with the item from the
-            // backing data model. CustomProperties stores serializable
-            // types, so here we use the media item's URI as the
-            // playback item's unique ID. You are also free to use your own
-            // external dictionary if you want to reference non-serializable
-            // types.
             source.CustomProperties[GetMediaItemIdKey] = MusicID;
 
             return playbackItem;
