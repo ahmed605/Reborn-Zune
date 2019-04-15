@@ -15,10 +15,18 @@ namespace MusicLibraryService
     {
         public static void Initialize()
         {
-            using (var db = new MusicLibraryDbContext())
+            try
             {
-                db.Database.Migrate();
+                using (var db = new MusicLibraryDbContext())
+                {
+                    db.Database.Migrate();
+                }
             }
+            catch(Exception e)
+            {
+
+            }
+            
         }
 
         public static async Task Add(StorageFile File)
@@ -101,7 +109,7 @@ namespace MusicLibraryService
             }
             catch(Exception e)
             {
-
+                Debug.WriteLine(e.ToString());
             }
         }
 
@@ -164,63 +172,78 @@ namespace MusicLibraryService
             }
             catch(Exception e)
             {
-
+                Debug.WriteLine(e.ToString());
             }
         }
 
         public static void Update(KeyValuePair<string, string> pathChange)
         {
-            Debug.WriteLine("Access into database");
-            using (var _context = new MusicLibraryDbContext())
+            try
             {
-                Music music = _context.Musics.Where(m => m.Path == pathChange.Key).First();
-                music.Path = pathChange.Value;
-                _context.Musics.Update(music);
-                _context.SaveChanges();
+                Debug.WriteLine("Access into database");
+                using (var _context = new MusicLibraryDbContext())
+                {
+                    Music music = _context.Musics.Where(m => m.Path == pathChange.Key).First();
+                    music.Path = pathChange.Value;
+                    _context.Musics.Update(music);
+                    _context.SaveChanges();
+                }
+                Debug.WriteLine("Update Succeed");
             }
-            Debug.WriteLine("Update Succeed");
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
         }
 
         public static Library FetchAll()
         {
             Library viewModel = new Library();
-            using(var _context = new MusicLibraryDbContext())
+            try
             {
-                var musics = _context.Musics.ToList();
-                var albums = _context.Albums.ToList();
-                var artists = _context.Artists.ToList();
-                var musicplaylists = _context.MusicInPlaylists.ToList();
-                var playlists = _context.Playlists.ToList();
-                var thumbnails = _context.Thumbnails.ToList();
-                foreach(Artist artist in artists)
+                using (var _context = new MusicLibraryDbContext())
                 {
-                    artist.Albums = albums.Where(a => a.ArtistId == artist.Id).ToList();
-                    artist.Musics = musics.Where(m => m.ArtistId == artist.Id).ToList();
+                    var musics = _context.Musics.Select(m => m).ToList();
+                    var albums = _context.Albums.Select(a => a).ToList();
+                    var artists = _context.Artists.Select(a => a).ToList();
+                    var musicplaylists = _context.MusicInPlaylists.Select(m => m).ToList();
+                    var playlists = _context.Playlists.Select(p => p).ToList();
+                    var thumbnails = _context.Thumbnails.Select(t => t).ToList();
+                    foreach (Artist artist in artists)
+                    {
+                        artist.Albums = albums.Where(a => a.ArtistId == artist.Id).ToList();
+                        artist.Musics = musics.Where(m => m.ArtistId == artist.Id).ToList();
+                    }
+                    foreach (Album album in albums)
+                    {
+                        album.Artist = artists.Where(a => a.Id == album.ArtistId).First();
+                        album.Musics = musics.Where(m => m.AlbumId == album.Id).ToList();
+                        album.Thumbnail = thumbnails.Where(t => t.Id == album.ThumbnailId).First();
+                    }
+                    foreach (Music music in musics)
+                    {
+                        music.Album = albums.Where(a => a.Id == music.AlbumId).First();
+                        music.Artist = artists.Where(a => a.Id == music.ArtistId).First();
+                        music.Thumbnail = thumbnails.Where(t => t.Id == music.ThumbnailId).First();
+                    }
+                    foreach (Playlist pl in playlists)
+                    {
+                        var something = musicplaylists.Where(m => m.PlaylistId == pl.Id).Select(m => m.MusicId);
+                        var musicsinList = something.SelectMany(s => musics.Where(m => m.Id == s)).ToList();
+                        pl.Musics = musicsinList;
+                    }
+                    viewModel.musics = musics;
+                    viewModel.albums = albums;
+                    viewModel.artists = artists;
+                    viewModel.playlists = playlists;
                 }
-                foreach(Album album in albums)
-                {
-                    album.Artist = artists.Where(a => a.Id == album.ArtistId).First();
-                    album.Musics = musics.Where(m => m.AlbumId == album.Id).ToList();
-                    album.Thumbnail = thumbnails.Where(t => t.Id == album.ThumbnailId).First();
-                }
-                foreach(Music music in musics)
-                {
-                    music.Album = albums.Where(a => a.Id == music.AlbumId).First();
-                    music.Artist = artists.Where(a => a.Id == music.ArtistId).First();
-                    music.Thumbnail = thumbnails.Where(t => t.Id == music.ThumbnailId).First();
-                }
-                foreach(Playlist pl in playlists)
-                {
-                    var something = musicplaylists.Where(m => m.PlaylistId == pl.Id).Select(m => m.MusicId);
-                    var musicsinList = something.SelectMany(s => musics.Where(m => m.Id == s)).ToList();
-                    pl.Musics = musicsinList;
-                }
-                viewModel.musics = musics;
-                viewModel.albums = albums;
-                viewModel.artists = artists;
-                viewModel.playlists = playlists;
+                return viewModel;
             }
-            return viewModel;
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+                return viewModel;
+            }
         }
     }
 
