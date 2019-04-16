@@ -17,12 +17,12 @@ namespace Reborn_Zune.Model
         public LocalAlbumModel(Album album)
         {
             Album = album;
-            GetThumbanail();
         }
 
-        private async void GetThumbanail()
+        public async Task GetThumbanail()
         {
-            Image = await Utility.ImageFromBytes(Album.Musics.First().Thumbnail.Image);
+            Image = await Utility.ImageFromBytes(Album.Thumbnail.Image);
+            
         }
         #endregion
 

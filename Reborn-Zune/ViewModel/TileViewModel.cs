@@ -158,11 +158,10 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
-        public async void CreateTiles(List<BitmapImage> getThumbnails)
+        public void CreateTiles(ObservableCollection<BitmapImage> getThumbnails)
         {
             foreach (var item in getThumbnails)
             {
-                //var grayBitmap = await GrayScaleBitmap(item);
                 BitmapList.Add(item);
             }
 

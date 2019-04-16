@@ -275,7 +275,8 @@
                                                 <Image
                                                     Width="95"
                                                     Height="95"
-                                                    Source="{x:Bind Image}" />
+                                                    Source="{x:Bind Image, Mode=OneWay}"
+                                                    Stretch="Fill"/>
                                             </Grid>
                                             <TextBlock
                                                 Margin="0,3,0,0"

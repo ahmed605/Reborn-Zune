@@ -81,7 +81,7 @@ namespace MusicLibraryEFCoreModel
 
         public string Id { get; set; }
         public byte[] Image { get; set; }
-        public Music Music { get; set; }
+        public ICollection<Music> Musics { get; set; }
         public Album Album { get; set; }
     }
 }

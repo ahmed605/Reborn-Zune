@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using MusicLibraryEFCoreModel;
@@ -15,12 +17,19 @@ namespace Reborn_Zune.ViewModel
         public event EventHandler InitializeFinished;
         public LibraryViewModel()
         {
+            Thumbnails = new ObservableCollection<BitmapImage>();
+            Musics = new ObservableCollection<LocalMusicModel>();
+            Albums = new ObservableCollection<LocalAlbumModel>();
             MusicLibrary.InitializeFinished += MusicLibrary_InitializeFinished;
         }
 
-        private void MusicLibrary_InitializeFinished(object sender, EventArgs e)
+        private async void MusicLibrary_InitializeFinished(object sender, EventArgs e)
         {
             Library = MusicLibrary.FetchAll();
+            await GetThumbnails();
+            await GetLocalMusics();
+            await GetLocalAlbums();
+            
             InitializeFinished?.Invoke(this, EventArgs.Empty);
         }
 
@@ -32,24 +41,64 @@ namespace Reborn_Zune.ViewModel
             set { _library = value; }
         }
 
-        public List<LocalMusicModel> GetLocalMusics()
+        private ObservableCollection<BitmapImage> _thumbnails;
+        public ObservableCollection<BitmapImage> Thumbnails
         {
-            List<LocalMusicModel> result = new List<LocalMusicModel>();
-            foreach(Music music in Library.musics)
+            get
             {
-                result.Add(new LocalMusicModel(music));
+                return _thumbnails;
             }
-            return result;
+            set
+            {
+                Set<ObservableCollection<BitmapImage>>(() => this.Thumbnails, ref _thumbnails, value);
+            }
         }
 
-        public List<LocalAlbumModel> GetLocalAlbums()
+        private ObservableCollection<LocalMusicModel> _musics;
+        public ObservableCollection<LocalMusicModel> Musics
         {
-            List<LocalAlbumModel> result = new List<LocalAlbumModel>();
+            get
+            {
+                return _musics;
+            }
+            set
+            {
+                Set<ObservableCollection<LocalMusicModel>>(() => this.Musics, ref _musics, value);
+            }
+        }
+
+        private ObservableCollection<LocalAlbumModel> _albums;
+        public ObservableCollection<LocalAlbumModel> Albums
+        {
+            get
+            {
+                return _albums;
+            }
+            set
+            {
+                Set<ObservableCollection<LocalAlbumModel>>(() => this.Albums, ref _albums, value);
+            }
+        }
+
+        public async Task GetLocalMusics()
+        {
+            foreach(Music music in Library.musics)
+            {
+                var localmusic = new LocalMusicModel(music);
+                await localmusic.GetThumbnail();
+                await localmusic.GetStorageFile();
+                Musics.Add(localmusic);
+            }
+        }
+
+        public async Task GetLocalAlbums()
+        {
             foreach (Album album in Library.albums)
             {
-                result.Add(new LocalAlbumModel(album));
+                var localalbum = new LocalAlbumModel(album);
+                await localalbum.GetThumbanail();
+                Albums.Add(localalbum);
             }
-            return result;
         }
 
         public List<LocalArtistModel> GetLocalArtists()
@@ -62,14 +111,13 @@ namespace Reborn_Zune.ViewModel
             return result;
         }
 
-        public async Task<List<BitmapImage>> GetThumbnails()
+        public async Task GetThumbnails()
         {
-            List<BitmapImage> result = new List<BitmapImage>();
             foreach(Thumbnail thumbnail in Library.thumbnails)
             {
-                result.Add(await Utility.ImageFromBytes(thumbnail.Image));
+                var thumb = await Utility.ImageFromBytes(thumbnail.Image);
+                Thumbnails.Add(thumb);
             }
-            return result;
         }
 
 

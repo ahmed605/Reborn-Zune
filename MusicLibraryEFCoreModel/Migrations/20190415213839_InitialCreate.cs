@@ -169,8 +169,7 @@ namespace MusicLibraryEFCoreModel.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Music_ThumbnailId",
                 table: "Music",
-                column: "ThumbnailId",
-                unique: true);
+                column: "ThumbnailId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MusicInPlaylist_PlaylistId",

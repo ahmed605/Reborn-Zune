@@ -109,8 +109,7 @@ namespace MusicLibraryEFCoreModel.Migrations
 
                     b.HasIndex("PlaylistId");
 
-                    b.HasIndex("ThumbnailId")
-                        .IsUnique();
+                    b.HasIndex("ThumbnailId");
 
                     b.ToTable("Music");
                 });
@@ -201,8 +200,8 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .HasForeignKey("PlaylistId");
 
                     b.HasOne("MusicLibraryEFCoreModel.Thumbnail", "Thumbnail")
-                        .WithOne("Music")
-                        .HasForeignKey("MusicLibraryEFCoreModel.Music", "ThumbnailId")
+                        .WithMany("Musics")
+                        .HasForeignKey("ThumbnailId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

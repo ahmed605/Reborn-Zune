@@ -15,16 +15,14 @@ namespace Reborn_Zune.Model
         public LocalMusicModel(Music music)
         {
             Music = music;
-            GetThumbnail();
-            GetStorageFile();
         }
 
-        private async void GetStorageFile()
+        public async Task GetStorageFile()
         {
             StorageFile = await StorageFile.GetFileFromPathAsync(Music.Path);
         }
 
-        private async void GetThumbnail()
+        public async Task GetThumbnail()
         {
             ImageSource = await Utility.ImageFromBytes(Music.Thumbnail.Image);
         }

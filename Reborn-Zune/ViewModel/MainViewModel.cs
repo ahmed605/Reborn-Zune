@@ -4,6 +4,8 @@ using Reborn_Zune.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.UI.Core;
@@ -45,12 +47,13 @@ namespace Reborn_Zune.ViewModel
             LibraryViewModel.InitializeFinished += LibraryViewModel_InitializeFinished;
         }
 
-        private async void LibraryViewModel_InitializeFinished(object sender, EventArgs e)
+        private void LibraryViewModel_InitializeFinished(object sender, EventArgs e)
         {
-            TileViewModel.CreateTiles(await LibraryViewModel.GetThumbnails());
+            var thumbnails = LibraryViewModel.Thumbnails;
+            TileViewModel.CreateTiles(thumbnails);
             FirstPanelList = new ObservableCollection<LocalArtistModel>(LibraryViewModel.GetLocalArtists());
-            SecondPanelList = new ObservableCollection<LocalAlbumModel>(LibraryViewModel.GetLocalAlbums());
-            ThirdPanelList = new ObservableCollection<LocalMusicModel>(LibraryViewModel.GetLocalMusics());
+            SecondPanelList = LibraryViewModel.Albums;
+            ThirdPanelList = LibraryViewModel.Musics;
         }
         #endregion
 
@@ -211,7 +214,7 @@ namespace Reborn_Zune.ViewModel
 
         public void CreatTiles()
         {
-            //TileViewModel.CreateTiles(MusicsViewModel.GetThumbnails);
+            TileViewModel.CreateTiles(LibraryViewModel.Thumbnails);
         }
         
         private void UpdateThirdPanelList()

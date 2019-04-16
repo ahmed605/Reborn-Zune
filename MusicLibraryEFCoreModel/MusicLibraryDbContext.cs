@@ -68,6 +68,11 @@ namespace MusicLibraryEFCoreModel
                     .WithMany(a => a.Musics)
                     .HasForeignKey(a => a.ArtistId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(m => m.Thumbnail)
+                    .WithMany(t => t.Musics)
+                    .HasForeignKey(t => t.ThumbnailId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             builder.Entity<Album>(entity =>
@@ -96,6 +101,11 @@ namespace MusicLibraryEFCoreModel
                 entity.HasOne(a => a.Artist)
                     .WithMany(a => a.Albums)
                     .HasForeignKey(a => a.ArtistId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(a => a.Thumbnail)
+                    .WithOne(t => t.Album)
+                    .HasForeignKey<Album>(a => a.ThumbnailId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -181,16 +191,6 @@ namespace MusicLibraryEFCoreModel
                 entity.HasKey("Id");
 
                 entity.ToTable("Thumbnail");
-
-                entity.HasOne<Music>(t => t.Music)
-                    .WithOne(m => m.Thumbnail)
-                    .HasForeignKey<Music>(m => m.ThumbnailId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne<Album>(t => t.Album)
-                    .WithOne(a => a.Thumbnail)
-                    .HasForeignKey<Album>(a => a.ThumbnailId)
-                    .OnDelete(DeleteBehavior.Cascade);
 
             });
         }
