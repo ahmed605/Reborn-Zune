@@ -9,6 +9,7 @@ namespace MusicLibraryService
     public static class MusicLibrary
     {
         public static event EventHandler InitializeFinished;
+        public static event EventHandler FetchAllFinished;
         public static async void Initialize(bool IsFirstUse)
         {
             try
@@ -56,7 +57,9 @@ namespace MusicLibraryService
         {
             try
             {
-                return DataBaseService.FetchAll();
+                var result = DataBaseService.FetchAll();
+                FetchAllFinished?.Invoke(null, EventArgs.Empty);
+                return result;
             }
             catch(Exception e)
             {

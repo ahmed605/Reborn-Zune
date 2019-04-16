@@ -20,16 +20,16 @@ namespace Reborn_Zune.ViewModel
             Thumbnails = new ObservableCollection<BitmapImage>();
             Musics = new ObservableCollection<LocalMusicModel>();
             Albums = new ObservableCollection<LocalAlbumModel>();
-            MusicLibrary.InitializeFinished += MusicLibrary_InitializeFinished;
+            Library = MusicLibrary.FetchAll();
+            Finialize();
         }
 
-        private async void MusicLibrary_InitializeFinished(object sender, EventArgs e)
+        private async void Finialize()
         {
-            Library = MusicLibrary.FetchAll();
             await GetThumbnails();
             await GetLocalMusics();
             await GetLocalAlbums();
-            
+
             InitializeFinished?.Invoke(this, EventArgs.Empty);
         }
 
