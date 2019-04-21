@@ -4,7 +4,10 @@ using Reborn_Zune.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,7 +23,7 @@ namespace Reborn_Zune.ViewModel
         private ObservableCollection<LocalMusicModel> _thirdPanelList;
         
         private CoreDispatcher dispatcher;
-        private MusicsViewModel _musicsViewModel;
+        private LibraryViewModel _libraryViewModel;
         private PlayerViewModel _playerViewModel;
         private TileViewModel _tileViewModel;
         private String _thirdPanelTitle;
@@ -34,17 +37,23 @@ namespace Reborn_Zune.ViewModel
         public MainViewModel(CoreDispatcher dispatcher)
         {
             this.dispatcher = dispatcher;
-            MusicsViewModel = new MusicsViewModel();
+            LibraryViewModel = new LibraryViewModel();
             PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
             TileViewModel = new TileViewModel();
-
-            BuildMusicDataBaseAsync();
-            
             FirstPanelList = new ObservableCollection<LocalArtistModel>();
             SecondPanelList = new ObservableCollection<LocalAlbumModel>();
             ThirdPanelList = new ObservableCollection<LocalMusicModel>();
-
             IsThirdPanelAltShown = false;
+            LibraryViewModel.InitializeFinished += LibraryViewModel_InitializeFinished;
+        }
+
+        private void LibraryViewModel_InitializeFinished(object sender, EventArgs e)
+        {
+            var thumbnails = LibraryViewModel.Thumbnails;
+            TileViewModel.CreateTiles(thumbnails);
+            FirstPanelList = new ObservableCollection<LocalArtistModel>(LibraryViewModel.GetLocalArtists());
+            SecondPanelList = LibraryViewModel.Albums;
+            ThirdPanelList = LibraryViewModel.Musics;
         }
         #endregion
 
@@ -104,18 +113,18 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
-        public MusicsViewModel MusicsViewModel
+        public LibraryViewModel LibraryViewModel
         {
             get
             {
-                return _musicsViewModel;
+                return _libraryViewModel;
             }
             set
             {
-                if (_musicsViewModel != value)
+                if (_libraryViewModel != value)
                 {
-                    _musicsViewModel = value;
-                    RaisePropertyChanged(() => MusicsViewModel);
+                    _libraryViewModel = value;
+                    RaisePropertyChanged(() => LibraryViewModel);
                 }
             }
         }
@@ -202,18 +211,10 @@ namespace Reborn_Zune.ViewModel
         #endregion
 
         #region Helpers
-        private async void BuildMusicDataBaseAsync()
-        {
-            await MusicsViewModel.BuildMusicDataBaseAsync();
-            FirstPanelList = new ObservableCollection<LocalArtistModel>(MusicsViewModel.GetArtists);
-            SecondPanelList = new ObservableCollection<LocalAlbumModel>(MusicsViewModel.GetAlbums);
-            ThirdPanelList = new ObservableCollection<LocalMusicModel>(MusicsViewModel.GetMusics);
-
-        }
 
         public void CreatTiles()
         {
-            TileViewModel.CreateTiles(MusicsViewModel.GetThumbnails);
+            TileViewModel.CreateTiles(LibraryViewModel.Thumbnails);
         }
         
         private void UpdateThirdPanelList()
@@ -264,62 +265,7 @@ namespace Reborn_Zune.ViewModel
         #endregion
 
         #region Events
-        public void AlbumTapped(object sender, TappedRoutedEventArgs e)
-        {
-
-            var album = (e.OriginalSource as FrameworkElement).DataContext as LocalAlbumModel;
-            if (album == null)
-                return;
-            IsThirdPanelAltShown = true;
-            var title = album.AlbumTitle;
-            ThirdPanelTitle = title;
-
-            ThirdPanelList.Clear();
-            ThirdPanelList = album.GetMusics;
-
-            GC.Collect();
-        }
-
-        public void ArtistTapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (IsThirdPanelAltShown)
-                IsThirdPanelAltShown = false;
-            var artist = (e.OriginalSource as FrameworkElement).DataContext as LocalArtistModel;
-            if (artist == null)
-                return;
-            SecondPanelList = MusicsViewModel.ArtistsDict[artist.Name].GetAlbums;
-
-            ThirdPanelList = MusicsViewModel.ArtistsDict[artist.Name].GetMusics;
-
-            GC.Collect();
-        }
-
-        public void DoubleTapped_Music(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            int selectedIndex = (sender as ListView).SelectedIndex;
-            if (PlayBackListConsistencyDetect(ThirdPanelList))
-                PlaybackList = ToPlayBackList(ThirdPanelList);
-            PlayerViewModel.MediaList = new MediaListViewModel(ThirdPanelList, PlaybackList, dispatcher);
-
-            PlayerViewModel.SetCurrentItem(selectedIndex);
-
-            GC.Collect();
-        }
-
-        public void AlbumDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            UpdateThirdPanelList();
-        }
-
-        public void ArtistDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            if (PlayBackListConsistencyDetect(ThirdPanelList))
-                PlaybackList = ToPlayBackList(ThirdPanelList);
-            PlayerViewModel.MediaList = new MediaListViewModel(ThirdPanelList, PlaybackList, dispatcher);
-
-            GC.Collect();
-        }
-
+        
         public void MTC_RepeatCheckBoxChecked(object sender, EventArgs e)
         {
             if(PlayerViewModel.MediaList != null)

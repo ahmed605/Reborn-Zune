@@ -54,6 +54,8 @@ namespace Reborn_Zune
             MainMediaElement.SetMediaPlayer(viewModel._player);
             TileMediaElement.SetMediaPlayer(viewModel._player);
             TitleBarSetting();
+
+           
             
         }
         private static void TitleBarSetting()
@@ -227,6 +229,7 @@ namespace Reborn_Zune
 
         private async void CustomMTC_ListViewGridChecked(object sender, EventArgs e)
         {
+            
             await ListGrid.Fade(1, 700).StartAsync();
         }
 

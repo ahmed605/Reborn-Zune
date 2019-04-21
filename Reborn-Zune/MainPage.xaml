@@ -64,7 +64,7 @@
                     <Image
                         Width="142"
                         Height="142"
-                        Source="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}" />
+                        Source="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.ImageSource, Mode=OneWay}" />
                 </Border>
 
                 <StackPanel Margin="20,10,0,0">
@@ -72,19 +72,19 @@
                         HorizontalAlignment="Left"
                         FontSize="29"
                         Foreground="White"
-                        Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Artist, Mode=OneWay}" />
+                        Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Artist.Name, Mode=OneWay}" />
                     <TextBlock
                         Margin="0,-4,0,0"
                         HorizontalAlignment="Left"
                         FontSize="24"
                         Foreground="White"
-                        Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Album, Mode=OneWay}" />
+                        Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Album.Title, Mode=OneWay}" />
                     <TextBlock
                         Margin="0,9,0,0"
                         HorizontalAlignment="Left"
                         FontSize="24"
                         Foreground="White"
-                        Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Title, Mode=OneWay}" />
+                        Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Title, Mode=OneWay}" />
                 </StackPanel>
             </StackPanel>
 
@@ -113,12 +113,12 @@
                                     HorizontalAlignment="Left"
                                     FontSize="20"
                                     Foreground="White"
-                                    Text="{x:Bind Title, Mode=OneWay}" />
+                                    Text="{x:Bind Music.Title, Mode=OneWay}" />
                                 <TextBlock
                                     HorizontalAlignment="Left"
                                     FontSize="12"
                                     Foreground="DarkGray"
-                                    Text="{x:Bind Artist, Mode=OneWay}" />
+                                    Text="{x:Bind Music.Artist.Name, Mode=OneWay}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -216,9 +216,7 @@
                                 x:Name="ArtistList"
                                 Margin="55,12,0,0"
                                 controls:DockPanel.Dock="Top"
-                                DoubleTapped="{x:Bind viewModel.ArtistDoubleTapped}"
-                                ItemsSource="{x:Bind viewModel.FirstPanelList, Mode=OneWay}"
-                                Tapped="{x:Bind viewModel.ArtistTapped}">
+                                ItemsSource="{x:Bind viewModel.FirstPanelList, Mode=OneWay}">
 
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
@@ -232,7 +230,7 @@
                                             <TextBlock
                                                 FontFamily="Microsoft YaHei UI"
                                                 FontSize="13"
-                                                Text="{x:Bind Name}" />
+                                                Text="{x:Bind Artist.Name}" />
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
@@ -259,9 +257,7 @@
                                 Margin="0,12,0,0"
                                 Padding="0,0,25,0"
                                 controls:DockPanel.Dock="Top"
-                                DoubleTapped="{x:Bind viewModel.AlbumDoubleTapped}"
-                                ItemsSource="{x:Bind viewModel.SecondPanelList, Mode=OneWay}"
-                                Tapped="{x:Bind viewModel.AlbumTapped}">
+                                ItemsSource="{x:Bind viewModel.SecondPanelList, Mode=OneWay}">
                                 <GridView.ItemContainerStyle>
                                     <Style TargetType="GridViewItem">
                                         <Setter Property="Margin" Value="27,0,0,25" />
@@ -279,19 +275,20 @@
                                                 <Image
                                                     Width="95"
                                                     Height="95"
-                                                    Source="{x:Bind Thumbnail}" />
+                                                    Source="{x:Bind Image, Mode=OneWay}"
+                                                    Stretch="Fill"/>
                                             </Grid>
                                             <TextBlock
                                                 Margin="0,3,0,0"
                                                 FontSize="12"
                                                 FontWeight="Medium"
-                                                Text="{x:Bind AlbumTitle}" />
+                                                Text="{x:Bind Album.Title}" />
                                             <TextBlock
                                                 Margin="0,0,0,0"
                                                 FontSize="12"
                                                 FontWeight="Medium"
                                                 Foreground="DarkGray"
-                                                Text="{x:Bind Artist}" />
+                                                Text="{x:Bind Album.Artist.Name}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridView.ItemTemplate>
@@ -323,7 +320,6 @@
                                 x:Name="SongList"
                                 Margin="30,10,0,0"
                                 controls:DockPanel.Dock="Top"
-                                DoubleTapped="{x:Bind viewModel.DoubleTapped_Music}"
                                 ItemsSource="{x:Bind viewModel.ThirdPanelList, Mode=OneWay}">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
@@ -338,7 +334,7 @@
                                             <TextBlock
                                                 FontFamily="Microsoft YaHei UI"
                                                 FontSize="13"
-                                                Text="{x:Bind Title}" />
+                                                Text="{x:Bind Music.Title}" />
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
@@ -363,7 +359,7 @@
                 <MediaPlayerElement.TransportControls>
                     <custom_controls:CustomMediaTransportControl
                         x:Name="MainPageMTC"
-                        Title="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Title, Mode=OneWay}"
+                        Title="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Title, Mode=OneWay}"
                         IsNextTrackButtonVisible="True"
                         IsPreviousTrackButtonVisible="True"
                         Repeat="{x:Bind viewModel.IsRepeated, Mode=OneWay}"
@@ -372,7 +368,7 @@
                         Shuffle="{x:Bind viewModel.IsShuffled, Mode=OneWay}"
                         ShuffleCheckBoxChecked="{x:Bind viewModel.MTC_ShuffleCheckBoxChecked}"
                         ShuffleCheckBoxUnchecked="{x:Bind viewModel.MTC_ShuffleCheckBoxUnchecked}"
-                        Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Thumbnail, Mode=OneWay}"
+                        Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.ImageSource, Mode=OneWay}"
                         TilePageClicked="MainPageMTC_TilePageClicked" />
                 </MediaPlayerElement.TransportControls>
             </MediaPlayerElement>
