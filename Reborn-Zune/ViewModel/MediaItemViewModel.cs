@@ -5,6 +5,8 @@ using System.Linq;
 using Windows.Media.Playback;
 using Windows.UI.Xaml.Media.Imaging;
 
+#pragma warning disable CS0067
+
 namespace Reborn_Zune.ViewModel
 {
     public class MediaItemViewModel : ViewModelBase
@@ -14,7 +16,9 @@ namespace Reborn_Zune.ViewModel
 
         BitmapImage previewImage;
 
+#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
         public event PropertyChangedEventHandler PropertyChanged;
+#pragma warning restore CS0108 // Member hides inherited member; missing new keyword
 
         public LocalMusicModel MediaItem { get; private set; }
 
