@@ -11,20 +11,20 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="0.55*"/>
             <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.18*"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
-        <Image Source="ms-appx:///Assets/Spotify_Icon_RGB_Green.png"
-               Grid.Row="0"
+        <Image Source="ms-appx:///Assets/Spotify_Icon_RGB_Green Black.png"
+               Grid.Row="1"
                Grid.Column="1"
-               Width="45"
-               Height="45"
+               Width="40"
+               Height="40"
                HorizontalAlignment="Left"
-               VerticalAlignment="Bottom"/>
+               VerticalAlignment="Top"/>
         <Pivot Grid.Row="1"
                Margin="0,10,0,0"
                Grid.ColumnSpan="2"
@@ -32,8 +32,8 @@
             Style="{StaticResource PivotStyle1}">
             <PivotItem >
                 <PivotItem.Header>
-                    <FontIcon FontSize="55" 
-                              FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF139;"/>
+                    <TextBlock FontSize="55" 
+                              FontFamily="Segoe MDL2 Assets" Text="&#xF139;"/>
                 </PivotItem.Header>
                 <Grid>
                     <controls:Carousel x:Name="CarouselControl"
@@ -49,8 +49,8 @@
                         </controls:Carousel.EasingFunction>
                         <controls:Carousel.ItemTemplate>
                             <DataTemplate>
-                                <controls:DropShadowPanel Width="350"
-                                                          Height="350"
+                                <controls:DropShadowPanel Width="325"
+                                                          Height="325"
                                                           BlurRadius="25"
                                                           ShadowOpacity="0.25"
                                                           OffsetX="6"
@@ -69,23 +69,40 @@
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
-                    <FontIcon FontSize="55"
-                              FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE73B;"/>
+                    <TextBlock FontSize="55"
+                              FontFamily="Segoe MDL2 Assets" Text="&#xE73B;"/>
                 </PivotItem.Header>
                 <Grid>
                     <GridView x:Name="albums"
                               MaxWidth="1000"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Top"
-                              Margin="0,50,0,0">
+                              Margin="0,65,0,0">
+                        <GridView.ItemContainerStyle>
+                            <Style TargetType="GridViewItem">
+                                <Setter Property="Margin" Value="30,0,30,50"/>
+                            </Style>
+                        </GridView.ItemContainerStyle>
                         <GridView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Width="100"
-                                      Height="100"
-                                      Margin="50,0,50,0">
-                                    <Image Source="{Binding}"
+                                <StackPanel Orientation="Vertical">
+                                    <controls:DropShadowPanel Width="175"
+                                      Height="175"
+                                                          BlurRadius="22"
+                                                          ShadowOpacity="0.3"
+                                                          OffsetX="3"
+                                                          OffsetY="2">
+                                        <Image Source="{Binding}"
                                            Stretch="UniformToFill"/>
-                                </Grid>
+                                    </controls:DropShadowPanel>
+                                    <TextBlock Text="Pop Songs" 
+                                               FontSize="18" 
+                                               FontFamily="Source Han Sans CN" 
+                                               Foreground="Black" 
+                                               FontWeight="Normal"
+                                               Margin="0,5,0,0"/>
+                                </StackPanel>
+
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
@@ -93,26 +110,44 @@
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
-                    <FontIcon FontSize="55"
-                              FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF136;"/>
+                    <TextBlock FontSize="55"
+                              FontFamily="Segoe MDL2 Assets" Text="&#xF136;"/>
                 </PivotItem.Header>
                 <Grid>
                     <GridView x:Name="playlists"
+                              MaxWidth="1000"
                               HorizontalAlignment="Center"
-                              VerticalAlignment="Stretch">
+                              VerticalAlignment="Top"
+                              Margin="0,65,0,0">
+                        <GridView.ItemContainerStyle>
+                            <Style TargetType="GridViewItem">
+                                <Setter Property="Margin" Value="30,0,30,50"/>
+                            </Style>
+                        </GridView.ItemContainerStyle>
                         <GridView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Width="50"
-                                      Height="50">
-                                    <Image Source="{Binding}"
+                                <StackPanel Orientation="Vertical">
+                                    <controls:DropShadowPanel Width="175"
+                                      Height="175"
+                                                          BlurRadius="22"
+                                                          ShadowOpacity="0.3"
+                                                          OffsetX="3"
+                                                          OffsetY="2">
+                                        <Image Source="{Binding}"
                                            Stretch="UniformToFill"/>
-                                </Grid>
+                                    </controls:DropShadowPanel>
+                                    <TextBlock Text="Pop Songs" 
+                                               FontSize="18" 
+                                               FontFamily="Source Han Sans CN" 
+                                               Foreground="Black" 
+                                               FontWeight="Normal"
+                                               Margin="0,8,0,0"/>
+                                </StackPanel>
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
                 </Grid>
             </PivotItem>
         </Pivot>
-
     </Grid>
 </Page>
