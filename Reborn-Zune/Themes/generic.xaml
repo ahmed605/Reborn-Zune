@@ -7,6 +7,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Reborn_Zune">
 
+
     <Style TargetType="control:CustomMediaTransportControl">
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Background" Value="Transparent" />
@@ -21,11 +22,11 @@
                             <local:TimeSpanFormatConverter x:Key="TimeSpanFormatConverter" />
                             <Style x:Key="CircleButtonStyle" TargetType="Button">
                                 <Setter Property="Background" Value="Transparent" />
-                                <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
-                                <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
+                                <Setter Property="Foreground" Value="Black" />
+                                <Setter Property="BorderBrush" Value="Black" />
                                 <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}" />
                                 <Setter Property="Padding" Value="0" />
-                                <Setter Property="HorizontalAlignment" Value="Left" />
+                                <Setter Property="HorizontalAlignment" Value="Center" />
                                 <Setter Property="VerticalAlignment" Value="Center" />
                                 <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
                                 <Setter Property="FontWeight" Value="Normal" />
@@ -67,7 +68,7 @@
                                                         <VisualState x:Name="Pressed">
                                                             <Storyboard>
                                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="LightGray" />
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Black" />
                                                                 </ObjectAnimationUsingKeyFrames>
                                                                 <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
                                                             </Storyboard>
@@ -117,7 +118,7 @@
                                                 </Grid.RowDefinitions>
                                                 <ContentPresenter
                                                     x:Name="HeaderContentPresenter"
-                                                    Margin="0,0,0,0"
+                                                    Margin="0"
                                                     x:DeferLoadStrategy="Lazy"
                                                     Content="{TemplateBinding Header}"
                                                     ContentTemplate="{TemplateBinding HeaderTemplate}"
@@ -130,7 +131,7 @@
                                                     Grid.Row="1"
                                                     Background="{ThemeResource SliderContainerBackground}"
                                                     Control.IsTemplateFocusTarget="True">
-                                                    <Grid x:Name="HorizontalTemplate" MinHeight="20">
+                                                    <Grid x:Name="HorizontalTemplate">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto" />
                                                             <ColumnDefinition Width="Auto" />
@@ -391,236 +392,254 @@
                                     </Setter.Value>
                                 </Setter>
                             </Style>
+                            <Storyboard
+                                x:Name="TopStoryboard"
+                                AutoReverse="True"
+                                RepeatBehavior="Forever"
+                                Duration="0:0:11">
+                                <DoubleAnimation
+                                    BeginTime="0:0:5"
+                                    Storyboard.TargetName="TopMusicTextBlock"
+                                    Storyboard.TargetProperty="Opacity"
+                                    From="1.0"
+                                    To="0.0"
+                                    Duration="0:0:1" />
+                                <DoubleAnimation
+                                    BeginTime="0:0:6"
+                                    Storyboard.TargetName="TopArtistTextBlock"
+                                    Storyboard.TargetProperty="Opacity"
+                                    From="0.0"
+                                    To="1.0"
+                                    Duration="0:0:1" />
+                            </Storyboard>
+
                         </Grid.Resources>
-
-
                         <Border x:Name="ControlPanel_ControlPanelVisibilityStates_Border">
-                            <Grid x:Name="ControlPanelGrid" VerticalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition MinWidth="210" MaxWidth="470" />
-                                    <ColumnDefinition MinWidth="265" MaxWidth="930" />
-                                    <ColumnDefinition MinWidth="240" />
-                                </Grid.ColumnDefinitions>
-
-                                <controls:DockPanel
-                                    x:Name="MediaTransportControlsTimelineGrid"
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="3"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Opacity="0">
+                            <Grid x:Name="ControlPanelGrid">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="0.21*" />
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Image
+                                        Width="auto"
+                                        VerticalAlignment="Top"
+                                        Source="{StaticResource myImage}"
+                                        Stretch="Uniform" />
+                                    <Image
+                                        x:Name="MusicThumbnail"
+                                        VerticalAlignment="Top"
+                                        Source="ms-appx:///Assets/LargeTile.scale-400.png"
+                                        Stretch="Uniform" />
                                     <Grid
-                                        Grid.Column="1"
-                                        Width="39"
-                                        Height="39"
-                                        controls:DockPanel.Dock="Left">
-                                        <Image Source="{StaticResource myImage}" />
-                                        <Image x:Name="MusicThumbnail" />
-
+                                        x:Name="TopTextBlocks"
+                                        Height="30"
+                                        VerticalAlignment="Top"
+                                        Background="Black">
+                                        <TextBlock
+                                            x:Name="TopArtistTextBlock"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            FontSize="16"
+                                            Foreground="White"
+                                            Opacity="0"
+                                            Text="Artist: Wayne" />
+                                        <TextBlock
+                                            x:Name="TopMusicTextBlock"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            FontSize="16"
+                                            Foreground="White"
+                                            Text="Now playing: Long Island City" />
                                     </Grid>
-                                    <controls:DockPanel Margin="10,0,0,0" controls:DockPanel.Dock="Left">
-                                        <Grid controls:DockPanel.Dock="Top">
+                                    <StackPanel Margin="26,0,0,50" VerticalAlignment="Bottom">
+                                        <Grid HorizontalAlignment="Left" Background="Black">
+                                            <TextBlock
+                                                Margin="7"
+                                                FontSize="22"
+                                                FontWeight="Bold"
+                                                Foreground="White"
+                                                Text="Now Playing" />
+                                        </Grid>
+                                        <Grid HorizontalAlignment="Left" Background="Black">
                                             <TextBlock
                                                 x:Name="MusicTitle"
-                                                FontSize="12"
-                                                Foreground="#707070" />
-                                            <TextBlock
-                                                x:Name="AlbumTitle"
-                                                FontSize="12"
-                                                Foreground="#707070"
-                                                Visibility="Collapsed" />
-                                            <TextBlock
-                                                x:Name="ArtistTitle"
-                                                FontSize="12"
-                                                Foreground="#707070"
-                                                Visibility="Collapsed" />
+                                                Margin="7"
+                                                FontSize="22"
+                                                FontWeight="Bold"
+                                                Foreground="White"
+                                                Text="Long Island City" />
                                         </Grid>
-
-                                        <Slider
-                                            x:Name="ProgressSlider"
-                                            Width="210"
-                                            HorizontalAlignment="Center"
-                                            controls:DockPanel.Dock="Top"
-                                            IsThumbToolTipEnabled="False"
-                                            Style="{StaticResource SliderStyle1}" />
+                                    </StackPanel>
+                                    <StackPanel VerticalAlignment="Bottom" Orientation="Vertical">
                                         <Grid
-                                            x:Name="TimeTextGrid"
-                                            Grid.Row="1"
+                                            x:Name="MediaTransportControlsTimelineGrid"
+                                            Height="9"
                                             HorizontalAlignment="Stretch"
-                                            controls:DockPanel.Dock="Top">
+                                            Opacity="1">
+                                            <Slider
+                                                x:Name="ProgressSlider"
+                                                IsThumbToolTipEnabled="False"
+                                                Style="{StaticResource SliderStyle1}" />
+                                        </Grid>
+                                        <Grid x:Name="TimeTextGrid" HorizontalAlignment="Stretch">
                                             <TextBlock
                                                 x:Name="MyTimeElapsedElement"
-                                                FontSize="10"
+                                                FontSize="9"
                                                 Foreground="#606060"
                                                 Text="{Binding Text, Converter={StaticResource TimeSpanFormatConverter}, ElementName=TimeElapsedElement}" />
                                             <TextBlock
                                                 x:Name="MyTimeRemaining"
                                                 HorizontalAlignment="Right"
-                                                FontSize="10"
+                                                FontSize="9"
                                                 Foreground="#8a8a8a"
                                                 Text="{Binding Text, Converter={StaticResource TimeSpanFormatConverter}, ElementName=TimeRemainingElement}" />
-
-
                                             <Grid Visibility="Collapsed">
                                                 <TextBlock
                                                     x:Name="TimeElapsedElement"
                                                     HorizontalAlignment="Left"
-                                                    FontSize="10"
                                                     Text="00:00" />
                                                 <TextBlock
                                                     x:Name="TimeRemainingElement"
                                                     HorizontalAlignment="Right"
                                                     Text="00:00" />
                                             </Grid>
-
+                                        </Grid>
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Grid.Row="1">
+                                    <controls:DockPanel
+                                        x:Name="MusicStatesButtons"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                        <StackPanel controls:DockPanel.Dock="Top" Orientation="Horizontal">
+                                            <CheckBox
+                                                x:Name="RepeatCheckBox"
+                                                Margin="20,0,10,0"
+                                                Background="Transparent"
+                                                Style="{StaticResource LeftSmallCheckBoxStyle}">
+                                                <Grid>
+                                                    <TextBlock
+                                                        x:Name="RepeatSymbol"
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        FontSize="20"
+                                                        FontWeight="Bold"
+                                                        Text="&#xE8EE;" />
+                                                </Grid>
+                                            </CheckBox>
+                                            <Button
+                                                x:Name="PreviousTrackButton"
+                                                Width="35"
+                                                Height="35"
+                                                Margin="10,0,10,0"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
+                                                BorderThickness="1"
+                                                Style="{StaticResource CircleButtonStyle}">
+                                                <Grid>
+                                                    <TextBlock
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        FontWeight="Bold"
+                                                        Text="&#xE892;" />
+                                                </Grid>
+                                            </Button>
+                                            <Button
+                                                x:Name="PlayPauseButton"
+                                                Width="35"
+                                                Height="35"
+                                                Margin="10,0,10,0"
+                                                Background="Transparent"
+                                                BorderThickness="1"
+                                                Style="{StaticResource CircleButtonStyle}">
+                                                <Grid>
+                                                    <TextBlock
+                                                        x:Name="PlayPauseSymbol"
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        FontWeight="Bold"
+                                                        Text="&#xE768;" />
+                                                </Grid>
+                                            </Button>
+                                            <Button
+                                                x:Name="NextTrackButton"
+                                                Width="35"
+                                                Height="35"
+                                                Margin="10,0,10,0"
+                                                BorderThickness="1"
+                                                Style="{StaticResource CircleButtonStyle}">
+                                                <Grid>
+                                                    <TextBlock
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        FontWeight="Bold"
+                                                        Text="&#xE893;" />
+                                                </Grid>
+                                            </Button>
+                                            <CheckBox
+                                                x:Name="ShuffleCheckBox"
+                                                Margin="10,0,20,0"
+                                                Background="Transparent"
+                                                Style="{StaticResource LeftSmallCheckBoxStyle}">
+                                                <Grid>
+                                                    <TextBlock
+                                                        x:Name="ShuffleSymbol"
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        FontSize="20"
+                                                        FontWeight="Bold"
+                                                        Text="&#xE8B1;" />
+                                                </Grid>
+                                            </CheckBox>
+                                        </StackPanel>
+                                        <Grid Margin="0,10,0,0">
+                                            <CheckBox
+                                                Margin="20,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                Background="Transparent"
+                                                Style="{StaticResource LeftSmallCheckBoxStyle}">
+                                                <TextBlock
+                                                    FontFamily="Segoe MDL2 Assets"
+                                                    FontSize="20"
+                                                    FontWeight="Bold"
+                                                    Text="&#xF0E2;" />
+                                            </CheckBox>
+                                            <Grid x:Name="VolumeSliderGrid" HorizontalAlignment="Center">
+                                                <StackPanel
+                                                    x:Name="VolumeValue"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Horizontal">
+                                                    <TextBlock
+                                                        FontSize="10"
+                                                        FontWeight="Medium"
+                                                        Text="VOLUME" />
+                                                    <TextBlock
+                                                        Margin="3,0,0,0"
+                                                        FontSize="10"
+                                                        FontWeight="Medium"
+                                                        Text="{Binding ElementName=VolumeSlider, Path=Value}" />
+                                                </StackPanel>
+                                                <Slider
+                                                    x:Name="VolumeSlider"
+                                                    Width="120"
+                                                    Height="20"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    IsThumbToolTipEnabled="False"
+                                                    Opacity="0"
+                                                    Style="{StaticResource SliderStyle1}"
+                                                    Value="50" />
+                                            </Grid>
+                                            <CheckBox
+                                                Margin="0,0,20,0"
+                                                HorizontalAlignment="Right"
+                                                Style="{StaticResource LeftSmallCheckBoxStyle}">
+                                                <TextBlock
+                                                    FontFamily="Segoe MDL2 Assets"
+                                                    FontSize="20"
+                                                    FontWeight="Bold"
+                                                    Text="&#xEA37;" />
+                                            </CheckBox>
                                         </Grid>
                                     </controls:DockPanel>
-                                </controls:DockPanel>
-
-                                <controls:DockPanel
-                                    x:Name="MusicStatesButtons"
-                                    Grid.Column="2"
-                                    Margin="0,20,50,0"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center">
-                                    <CheckBox
-                                        x:Name="RepeatCheckBox"
-                                        Width="18"
-                                        Height="18"
-                                        Margin="0,0,5,5"
-                                        controls:DockPanel.Dock="Left"
-                                        Background="Transparent"
-                                        Foreground="DarkGray"
-                                        Style="{StaticResource LeftSmallCheckBoxStyle}">
-                                        <Grid>
-                                            <TextBlock
-                                                x:Name="RepeatSymbol"
-                                                FontFamily="Segoe MDL2 Assets"
-                                                FontSize="11"
-                                                FontWeight="Bold"
-                                                Text="&#xE8EE;" />
-                                        </Grid>
-                                    </CheckBox>
-                                    <CheckBox
-                                        x:Name="ShuffleCheckBox"
-                                        Width="18"
-                                        Height="18"
-                                        Margin="0,0,10,5"
-                                        controls:DockPanel.Dock="Left"
-                                        Background="Transparent"
-                                        Foreground="DarkGray"
-                                        Style="{StaticResource LeftSmallCheckBoxStyle}">
-                                        <Grid>
-                                            <TextBlock
-                                                x:Name="ShuffleSymbol"
-                                                FontFamily="Segoe MDL2 Assets"
-                                                FontSize="13"
-                                                FontWeight="Bold"
-                                                Text="&#xE8B1;" />
-                                        </Grid>
-                                    </CheckBox>
-                                    <Button
-                                        x:Name="PreviousTrackButton"
-                                        Width="24"
-                                        Height="23"
-                                        Margin="0,0,1,5"
-                                        controls:DockPanel.Dock="Left"
-                                        BorderBrush="DarkGray"
-                                        BorderThickness="1"
-                                        Style="{StaticResource CircleButtonStyle}">
-                                        <Grid>
-                                            <TextBlock
-                                                FontFamily="Segoe MDL2 Assets"
-                                                FontSize="9"
-                                                FontWeight="Bold"
-                                                Text="&#xE892;" />
-                                        </Grid>
-                                    </Button>
-                                    <Button
-                                        x:Name="PlayPauseButton"
-                                        Width="35"
-                                        Height="35"
-                                        Margin="0,0,1,5"
-                                        controls:DockPanel.Dock="Left"
-                                        Background="Transparent"
-                                        BorderBrush="DarkGray"
-                                        BorderThickness="1"
-                                        Style="{StaticResource CircleButtonStyle}">
-                                        <Grid>
-                                            <TextBlock
-                                                x:Name="PlayPauseSymbol"
-                                                FontFamily="Segoe MDL2 Assets"
-                                                FontSize="18"
-                                                FontWeight="Bold"
-                                                Text="&#xE768;" />
-                                        </Grid>
-                                    </Button>
-                                    <Button
-                                        x:Name="NextTrackButton"
-                                        Width="24"
-                                        Height="23"
-                                        Margin="0,0,2,5"
-                                        controls:DockPanel.Dock="Left"
-                                        BorderBrush="DarkGray"
-                                        BorderThickness="1"
-                                        Style="{StaticResource CircleButtonStyle}"
-                                        Visibility="Visible">
-                                        <Grid>
-                                            <TextBlock
-                                                FontFamily="Segoe MDL2 Assets"
-                                                FontSize="9"
-                                                FontWeight="Bold"
-                                                Text="&#xE893;" />
-                                        </Grid>
-                                    </Button>
-                                    <Button
-                                        x:Name="TilePageButton"
-                                        Width="18"
-                                        Height="17"
-                                        Margin="6,0,0,6"
-                                        controls:DockPanel.Dock="Left"
-                                        Background="Transparent"
-                                        Foreground="#f0009b"
-                                        Style="{StaticResource RightSmallButtonStyle}" />
-                                </controls:DockPanel>
-
-                                <Grid
-                                    x:Name="VolumeSliderGrid"
-                                    Grid.Column="2"
-                                    Width="80"
-                                    Height="14"
-                                    Margin="0,0,75,10"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom">
-                                    <StackPanel
-                                        x:Name="VolumeValue"
-                                        Margin="0,0,0,0"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        Orientation="Horizontal">
-                                        <TextBlock
-                                            FontSize="8"
-                                            FontWeight="Medium"
-                                            Text="VOLUME" />
-                                        <TextBlock
-                                            Margin="3,0,0,0"
-                                            FontSize="8"
-                                            FontWeight="Medium"
-                                            Text="{Binding ElementName=VolumeSlider, Path=Value}" />
-                                    </StackPanel>
-                                    <Slider
-                                        x:Name="VolumeSlider"
-                                        Width="80"
-                                        Height="20"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        IsThumbToolTipEnabled="False"
-                                        Opacity="0"
-                                        Style="{StaticResource SliderStyle1}"
-                                        Value="50" />
                                 </Grid>
-
-
                             </Grid>
                         </Border>
                         <VisualStateManager.VisualStateGroups>

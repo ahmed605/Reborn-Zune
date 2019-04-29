@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,6 +23,20 @@ namespace Reborn_Zune.Control
         public PlayerPopUp()
         {
             this.InitializeComponent();
+            CurrentPlaylist.ItemsSource = new List<string>
+            {
+                "a",
+                "a",
+                "a",
+                "a",
+                "a",
+                "a"
+            };
+        }
+
+        public void SetMediaPlayer(MediaPlayer _player)
+        {
+            PopUpMediaElement.SetMediaPlayer(_player);
         }
     }
 }
