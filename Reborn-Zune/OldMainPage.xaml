@@ -124,7 +124,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </Grid>
-            <MediaPlayerElement
+            <!--<MediaPlayerElement
                 x:Name="TileMediaElement"
                 Height="80"
                 VerticalAlignment="Bottom"
@@ -146,7 +146,7 @@
                         ShuffleCheckBoxUnchecked="{x:Bind viewModel.MTC_ShuffleCheckBoxUnchecked}"
                         Style="{StaticResource TilePageMTCStyle}" />
                 </MediaPlayerElement.TransportControls>
-            </MediaPlayerElement>
+            </MediaPlayerElement>-->
         </Grid>
 
         <Grid
@@ -352,7 +352,7 @@
                 </PivotItem>
             </Pivot>
 
-            <MediaPlayerElement
+            <!--<MediaPlayerElement
                 x:Name="MainMediaElement"
                 Grid.Row="2"
                 AreTransportControlsEnabled="True">
@@ -371,7 +371,7 @@
                         Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.ImageSource, Mode=OneWay}"
                         TilePageClicked="MainPageMTC_TilePageClicked" />
                 </MediaPlayerElement.TransportControls>
-            </MediaPlayerElement>
+            </MediaPlayerElement>-->
         </Grid>
     </Grid>
 

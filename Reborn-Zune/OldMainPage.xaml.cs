@@ -51,8 +51,8 @@ namespace Reborn_Zune
             this.InitializeComponent();
 
             viewModel = new MainViewModel(Dispatcher);
-            MainMediaElement.SetMediaPlayer(viewModel._player);
-            TileMediaElement.SetMediaPlayer(viewModel._player);
+            //MainMediaElement.SetMediaPlayer(viewModel._player);
+            //TileMediaElement.SetMediaPlayer(viewModel._player);
             TitleBarSetting();
 
            
