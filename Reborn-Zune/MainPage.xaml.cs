@@ -1,4 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.UI.Animations;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,8 +43,8 @@ namespace Reborn_Zune
                 new BitmapImage(new Uri("ms-appx:///Assets/LargeTile.scale-400.png")),
                 new BitmapImage(new Uri("ms-appx:///Assets/LargeTile.scale-400.png"))
             };
-            CarouselControl.ItemsSource = imageList;
-            CarouselControl.SelectedIndex = 3;
+            //CarouselControl.ItemsSource = imageList;
+            //CarouselControl.SelectedIndex = 3;
             albums.ItemsSource = imageList;
             playlists.ItemsSource = imageList;
 
@@ -60,6 +63,54 @@ namespace Reborn_Zune
             titleBar.ButtonHoverForegroundColor = Colors.Black;
             titleBar.ButtonPressedBackgroundColor = "#f5f5f5".ToColor();
             titleBar.ButtonPressedForegroundColor = Colors.Black;
+        }
+
+        private void Albums_ChoosingItemContainer(ListViewBase sender, ChoosingItemContainerEventArgs args)
+        {
+            if (args.ItemContainer != null)
+            {
+                return;
+            }
+
+            GridViewItem container = (GridViewItem)args.ItemContainer ?? new GridViewItem();
+            container.PointerEntered -= ItemContainer_PointerEntered;
+            container.PointerExited -= ItemContainer_PointerExited;
+
+            container.PointerEntered += ItemContainer_PointerEntered;
+            container.PointerExited += ItemContainer_PointerExited;
+
+            args.ItemContainer = container;
+        }
+
+        private void ItemContainer_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var panel = (sender as FrameworkElement).FindDescendant<DropShadowPanel>();
+            if (panel != null)
+            {
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(1200) };
+                animation.StartAnimation(panel);
+
+                var parentAnimation = new ScaleAnimation() { To = "1", Duration = TimeSpan.FromMilliseconds(1200) };
+                parentAnimation.StartAnimation(panel.Parent as UIElement);
+            }
+            
+        }
+
+        private void ItemContainer_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
+            {
+                var panel = (sender as FrameworkElement).FindDescendant<DropShadowPanel>();
+                if (panel != null)
+                {
+                    panel.Visibility = Visibility.Visible;
+                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(600) };
+                    animation.StartAnimation(panel);
+
+                    var parentAnimation = new ScaleAnimation() { To = "1.1", Duration = TimeSpan.FromMilliseconds(600) };
+                    parentAnimation.StartAnimation(panel.Parent as UIElement);
+                }
+            }
         }
     }
 }
