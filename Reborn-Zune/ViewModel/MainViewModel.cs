@@ -18,19 +18,12 @@ namespace Reborn_Zune.ViewModel
     public class MainViewModel : ViewModelBase
     {
         #region Fields
-        private ObservableCollection<LocalArtistModel> _firstPanelList;
-        private ObservableCollection<LocalAlbumModel> _secondPanelList;
-        private ObservableCollection<LocalMusicModel> _thirdPanelList;
-        
-        private CoreDispatcher dispatcher;
+        public CoreDispatcher dispatcher;
         private LibraryViewModel _libraryViewModel;
         private PlayerViewModel _playerViewModel;
-        private TileViewModel _tileViewModel;
-        private String _thirdPanelTitle;
-        private bool _isThirdPanelAltShown;
-        private bool _isRepeated;
-        private bool _isShuffled;
+        //private TileViewModel _tileViewModel;
         public MediaPlayer _player = PlaybackService.Instance.Player;
+        public bool _isStop = true;
         #endregion
 
         #region Constructor
@@ -38,68 +31,23 @@ namespace Reborn_Zune.ViewModel
         {
             this.dispatcher = dispatcher;
             LibraryViewModel = new LibraryViewModel();
-            PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
-            TileViewModel = new TileViewModel();
-            FirstPanelList = new ObservableCollection<LocalArtistModel>();
-            SecondPanelList = new ObservableCollection<LocalAlbumModel>();
-            ThirdPanelList = new ObservableCollection<LocalMusicModel>();
-            IsThirdPanelAltShown = false;
             LibraryViewModel.InitializeFinished += LibraryViewModel_InitializeFinished;
+            PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
+            //TileViewModel = new TileViewModel();
+            
         }
 
         private void LibraryViewModel_InitializeFinished(object sender, EventArgs e)
         {
-            var thumbnails = LibraryViewModel.Thumbnails;
-            TileViewModel.CreateTiles(thumbnails);
-            FirstPanelList = new ObservableCollection<LocalArtistModel>(LibraryViewModel.GetLocalArtists());
-            SecondPanelList = LibraryViewModel.Albums;
-            ThirdPanelList = LibraryViewModel.Musics;
+            //var thumbnails = LibraryViewModel.Thumbnails;
+            //TileViewModel.CreateTiles(thumbnails);
+            //FirstPanelList = new ObservableCollection<LocalArtistModel>(LibraryViewModel.GetLocalArtists());
+            //SecondPanelList = LibraryViewModel.Albums;
+            //ThirdPanelList = LibraryViewModel.Musics;
         }
         #endregion
 
         #region Properties
-        public ObservableCollection<LocalArtistModel> FirstPanelList
-        {
-            get
-            {
-                return _firstPanelList;
-            }
-            set
-            {
-                if (_firstPanelList != value)
-                {
-                    _firstPanelList = value;
-                    RaisePropertyChanged(() => FirstPanelList);
-                }
-            }
-        }
-        
-        public ObservableCollection<LocalAlbumModel> SecondPanelList
-        {
-            get
-            {
-                return _secondPanelList;
-            }
-            set
-            {
-                _secondPanelList = value;
-                RaisePropertyChanged(() => SecondPanelList);
-            }
-        }
-
-        public ObservableCollection<LocalMusicModel> ThirdPanelList
-        {
-            get
-            {
-                return _thirdPanelList;
-            }
-            set
-            {
-                _thirdPanelList = value;
-                RaisePropertyChanged(() => ThirdPanelList);
-            }
-        }
-
         public PlayerViewModel PlayerViewModel
         {
             get
@@ -129,104 +77,24 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
-        public TileViewModel TileViewModel
-        {
-            get
-            {
-                return _tileViewModel;
-            }
-            set
-            {
-                if(_tileViewModel != value)
-                {
-                    _tileViewModel = value;
-                    RaisePropertyChanged(() => TileViewModel);
-                }
-            }
-        }
-
-        public String ThirdPanelTitle
-        {
-            get
-            {
-                return _thirdPanelTitle;
-            }
-            set
-            {
-                _thirdPanelTitle = value;
-                RaisePropertyChanged(() => ThirdPanelTitle);
-            }
-        }
-
-        public bool IsThirdPanelAltShown
-        {
-            get
-            {
-                return _isThirdPanelAltShown;
-            }
-            set
-            {
-                _isThirdPanelAltShown = value;
-                RaisePropertyChanged(() => IsThirdPanelAltShown);
-            }
-        }
-
-        public bool IsRepeated
-        {
-            get
-            {
-                return _isRepeated;
-            }
-            set
-            {
-                if(_isRepeated != value)
-                {
-                    _isRepeated = value;
-                    RaisePropertyChanged(() => IsRepeated);
-                }
-            }
-        }
-
-        public bool IsShuffled
-        {
-            get
-            {
-                return _isShuffled;
-            }
-            set
-            {
-                if(_isShuffled != value)
-                {
-                    _isShuffled = value;
-                    RaisePropertyChanged(() => IsShuffled);
-                }
-            }
-        }
-
-        MediaPlaybackList PlaybackList
+        public MediaPlaybackList PlaybackList
         {
             get { return _player.Source as MediaPlaybackList; }
             set { _player.Source = value; }
         }
+
         #endregion
 
         #region Helpers
 
-        public void CreatTiles()
-        {
-            TileViewModel.CreateTiles(LibraryViewModel.Thumbnails);
-        }
-        
-        private void UpdateThirdPanelList()
-        {
-            if (PlayBackListConsistencyDetect(ThirdPanelList))
-                PlaybackList = ToPlayBackList(ThirdPanelList);
-            PlayerViewModel.MediaList = new MediaListViewModel(ThirdPanelList, PlaybackList, dispatcher);
 
-            GC.Collect();
-        }
 
-        private MediaPlaybackList ToPlayBackList(ObservableCollection<LocalMusicModel> musics)
+        //public void CreatTiles()
+        //{
+        //    TileViewModel.CreateTiles(LibraryViewModel.Thumbnails);
+        //}
+
+        public MediaPlaybackList ToPlayBackList(ObservableCollection<LocalMusicModel> musics)
         {
             var playbackList = new MediaPlaybackList();
 
@@ -240,71 +108,31 @@ namespace Reborn_Zune.ViewModel
             return playbackList;
         }
 
-        private bool PlayBackListConsistencyDetect(ObservableCollection<LocalMusicModel> currentList)
+        public void ShowMediaPopUp()
         {
-            if (PlaybackList == null)
-                return true;
-
-            // Verify consistency of the lists that were passed in
-            var mediaListIds = currentList.Select(i => i.MusicID);
-            var playbackListIds = PlaybackList.Items.Select(
-                i => (string)i.Source.CustomProperties.SingleOrDefault(
-                    p => p.Key == LocalMusicModel.MediaItemIdKey).Value);
-
-            if (!mediaListIds.SequenceEqual(playbackListIds))
-                return true;
-
-            return false;
-
+            //throw new NotImplementedException();
         }
 
-        public void ClearTiles()
-        {
-            TileViewModel.ClearTiles();
-        }
+        //private bool PlayBackListConsistencyDetect(ObservableCollection<LocalMusicModel> currentList)
+        //{
+        //    if (PlaybackList == null)
+        //        return true;
+
+        //    // Verify consistency of the lists that were passed in
+        //    var mediaListIds = currentList.Select(i => i.MusicID);
+        //    var playbackListIds = PlaybackList.Items.Select(
+        //        i => (string)i.Source.CustomProperties.SingleOrDefault(
+        //            p => p.Key == LocalMusicModel.MediaItemIdKey).Value);
+
+        //    if (!mediaListIds.SequenceEqual(playbackListIds))
+        //        return true;
+
+        //    return false;
+
+        //}
+
         #endregion
 
-        #region Events
-        
-        public void MTC_RepeatCheckBoxChecked(object sender, EventArgs e)
-        {
-            if(PlayerViewModel.MediaList != null)
-            {
-                PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = true;
-                IsRepeated = true;
-            }
-            
-        }
 
-        public void MTC_RepeatCheckBoxUnchecked(object sender, EventArgs e)
-        {
-            if (PlayerViewModel.MediaList != null)
-            {
-                PlayerViewModel.MediaList.PlaybackList.AutoRepeatEnabled = false;
-                IsRepeated = false;
-            }
-
-        }
-
-        public void MTC_ShuffleCheckBoxChecked(object sender, EventArgs e)
-        {
-            if (PlayerViewModel.MediaList != null)
-            {
-                PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = true;
-                IsShuffled = true;
-            }
-            
-        }
-
-        public void MTC_ShuffleCheckBoxUnchecked(object sender, EventArgs e)
-        {
-            if (PlayerViewModel.MediaList != null)
-            {
-                PlayerViewModel.MediaList.PlaybackList.ShuffleEnabled = false;
-                IsShuffled = false;
-            }
-            
-        }
-        #endregion
     }
 }

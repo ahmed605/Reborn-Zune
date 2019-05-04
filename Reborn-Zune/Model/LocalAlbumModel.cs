@@ -14,9 +14,10 @@ namespace Reborn_Zune.Model
     public class LocalAlbumModel : ObservableObject
     {
         #region Constructors
-        public LocalAlbumModel(Album album)
+        public LocalAlbumModel(Album album, ObservableCollection<LocalMusicModel> musics)
         {
             Album = album;
+            Musics = new ObservableCollection<LocalMusicModel>(musics.Where(m => m.Music.Album == Album).ToList());
         }
 
         public async Task GetThumbanail()
@@ -49,6 +50,19 @@ namespace Reborn_Zune.Model
             set
             {
                 Set<BitmapImage>(() => this.Image, ref _image, value);
+            }
+        }
+
+        private ObservableCollection<LocalMusicModel> _musics;
+        public ObservableCollection<LocalMusicModel> Musics
+        {
+            get
+            {
+                return _musics;
+            }
+            set
+            {
+                Set<ObservableCollection<LocalMusicModel>>(() => this.Musics, ref _musics, value);
             }
         }
     }

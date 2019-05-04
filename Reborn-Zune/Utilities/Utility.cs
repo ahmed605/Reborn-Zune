@@ -19,6 +19,7 @@ namespace Reborn_Zune.Utilities
                 await stream.WriteAsync(bytes.AsBuffer());
                 stream.Seek(0);
                 await image.SetSourceAsync(stream);
+                
             }
             return image;
         }

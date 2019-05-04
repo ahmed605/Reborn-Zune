@@ -5,11 +5,13 @@
     xmlns:control="using:Reborn_Zune.Control"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:local="using:Reborn_Zune"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
-    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:model="using:Reborn_Zune.Model"
     Background="#F1F1F1"
+    NavigationCacheMode="Required"
     mc:Ignorable="d">
 
     <Grid>
@@ -88,43 +90,51 @@
                     <GridView
                         x:Name="albums"
                         MaxWidth="1000"
-                        Padding="0,85,0,0"
-                        HorizontalAlignment="Center"
+                        Margin="0,30,0,0"
+                        Padding="0,35,0,0"
+                        HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
-                        ChoosingItemContainer="Albums_ChoosingItemContainer">
-                        <GridView.ItemContainerStyle>
-                            <Style TargetType="GridViewItem">
-                                <Setter Property="Margin" Value="30,0,30,50" />
-                            </Style>
-                        </GridView.ItemContainerStyle>
+                        HorizontalContentAlignment="Center"
+                        ChoosingItemContainer="GridView_ChoosingItemContainer"
+                        IsItemClickEnabled="True"
+                        ItemClick="GridView_ItemClick"
+                        ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
+                        ItemsSource="{x:Bind MainVM.LibraryViewModel.Albums, Mode=OneWay}"
+                        SelectionMode="Single">
                         <GridView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Vertical">
-                                    <Grid Width="175"
-                                        Height="175"
-                                          extensions:VisualExtensions.CenterPoint="87.5,87.5,0">
-                                        <controls:DropShadowPanel
-                                        HorizontalContentAlignment="Stretch"
-                                              VerticalContentAlignment="Stretch"
-                                              BlurRadius="30"
-                                              ShadowOpacity="0.5"
-                                                     OffsetY="3"
-                                              extensions:VisualExtensions.Opacity="0"
-                                              Visibility="Collapsed">
-                                            <Border></Border>
-                                        </controls:DropShadowPanel>
-                                        <Image Source="{Binding}" Stretch="UniformToFill" />
-                                    </Grid>
-                                    
+                            <DataTemplate x:DataType="model:LocalAlbumModel">
+                                <controls:DockPanel>
                                     <TextBlock
                                         Margin="0,5,0,0"
+                                        controls:DockPanel.Dock="Bottom"
                                         FontFamily="Source Han Sans CN"
                                         FontSize="18"
                                         FontWeight="Normal"
                                         Foreground="Black"
-                                        Text="Pop Songs" />
-                                </StackPanel>
+                                        Text="{x:Bind Album.Title, Mode=OneWay}" />
+                                    <Grid
+                                        Width="175"
+                                        Height="175"
+                                        controls:DockPanel.Dock="Top"
+                                        extensions:VisualExtensions.CenterPoint="87.5,87.5,0">
+                                        <controls:DropShadowPanel
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            BlurRadius="30"
+                                            OffsetY="3"
+                                            ShadowOpacity="0.5"
+                                            Visibility="Collapsed">
+                                            <Border />
+                                        </controls:DropShadowPanel>
+                                        <controls:ImageEx
+                                            IsCacheEnabled="True"
+                                            PlaceholderSource="ms-appx:///Assets/Vap-logo-placeholder.jpg"
+                                            Source="{x:Bind Image, Mode=OneWay}"
+                                            Stretch="UniformToFill" />
+                                    </Grid>
 
+                                </controls:DockPanel>
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
@@ -141,26 +151,35 @@
                     <GridView
                         x:Name="playlists"
                         MaxWidth="1000"
-                        Margin="0,65,0,0"
+                        Padding="0,65,0,0"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Top">
-                        <GridView.ItemContainerStyle>
-                            <Style TargetType="GridViewItem">
-                                <Setter Property="Margin" Value="30,0,30,50" />
-                            </Style>
-                        </GridView.ItemContainerStyle>
+                        VerticalAlignment="Top"
+                        ChoosingItemContainer="GridView_ChoosingItemContainer"
+                        ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}">
                         <GridView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical">
-                                    <controls:DropShadowPanel
+                                    <Grid
                                         Width="175"
                                         Height="175"
-                                        BlurRadius="22"
-                                        OffsetX="3"
-                                        OffsetY="2"
-                                        ShadowOpacity="0.3">
-                                        <Image Source="{Binding}" Stretch="UniformToFill" />
-                                    </controls:DropShadowPanel>
+                                        extensions:VisualExtensions.CenterPoint="87.5,87.5,0">
+                                        <controls:DropShadowPanel
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            BlurRadius="30"
+                                            OffsetY="3"
+                                            ShadowOpacity="0.5"
+                                            Visibility="Collapsed">
+                                            <Border />
+                                        </controls:DropShadowPanel>
+                                        <controls:ImageEx
+                                            IsCacheEnabled="True"
+                                            PlaceholderSource="ms-appx:///Assets/Vap-logo-placeholder.jpg"
+                                            Source="{Binding}"
+                                            Stretch="UniformToFill" />
+                                    </Grid>
+
                                     <TextBlock
                                         Margin="0,8,0,0"
                                         FontFamily="Source Han Sans CN"
@@ -175,33 +194,58 @@
                 </Grid>
             </PivotItem>
         </Pivot>
-        <!--<Grid
-            x:Name="BlurryBackground"
+
+        <Grid
+            x:Name="PlayerFloating"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2">
-            <Border Background="Black" Opacity="0.4" />
-            <Border>
-                <Border.Background>
-                    <media:BackdropBlurBrush Amount="5" />
-                </Border.Background>
-            </Border>
+            Grid.Column="1"
+            Width="100"
+            Height="100"
+            Margin="0,0,50,50"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            extensions:VisualExtensions.CenterPoint="50,50,0"
+            IsHitTestVisible="False"
+            PointerEntered="PlayerFloating_PointerEntered"
+            PointerExited="PlayerFloating_PointerExited"
+            Tapped="PlayerFloating_Tapped">
+            <controls:DropShadowPanel
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                extensions:VisualExtensions.Opacity="0"
+                BlurRadius="30"
+                OffsetY="3"
+                ShadowOpacity="0.5"
+                Visibility="Collapsed">
+                <Border />
+            </controls:DropShadowPanel>
+            <Image x:Name="CurrentPlayingThumbnail" Source="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.PreviewImage, Mode=OneWay}" />
         </Grid>
 
-        <controls:DropShadowPanel
+
+
+        <control:PlaylistPopUp
+            x:Name="PlaylistPopUp"
             Grid.Row="0"
             Grid.RowSpan="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            BlurRadius="35"
-            OffsetX="2"
-            OffsetY="10"
-            ShadowOpacity="0.5">
-            <control:PlayerPopUp Width="400" Height="650" />
-        </controls:DropShadowPanel>-->
+            IsHitTestVisible="False"
+            Visibility="Collapsed" />
+
+        <control:PlayerPopUp
+            x:Name="MediaPopUp"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            IsHitTestVisible="False"
+            MediaList="{x:Bind MainVM.PlayerViewModel.MediaList, Mode=OneWay}"
+            Opacity="0"
+            TilePageButtonClicked="MediaPopUp_TilePageButtonClicked" />
+
+
 
     </Grid>
 </Page>

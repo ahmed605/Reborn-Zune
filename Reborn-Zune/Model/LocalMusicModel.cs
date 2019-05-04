@@ -15,6 +15,7 @@ namespace Reborn_Zune.Model
         public LocalMusicModel(Music music)
         {
             Music = music;
+            MusicID = Guid.NewGuid().ToString();
         }
 
         public async Task GetStorageFile()

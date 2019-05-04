@@ -106,8 +106,12 @@
     <Compile Include="BackgroundApp.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
     <Compile Include="Control\CustomMediaTransportControl.cs" />
+    <Compile Include="Control\CustomPopUpMediaTransportControl.cs" />
     <Compile Include="Control\PlayerPopUp.xaml.cs">
       <DependentUpon>PlayerPopUp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Control\PlaylistPopUp.xaml.cs">
+      <DependentUpon>PlaylistPopUp.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -116,7 +120,11 @@
     <Compile Include="SplashScreen.xaml.cs">
       <DependentUpon>SplashScreen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TilePage.xaml.cs">
+      <DependentUpon>TilePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TimeSpanFormatConverter.cs" />
+    <Compile Include="Utilities\CompositionExtensions.cs" />
     <Compile Include="Utilities\FluidBitMatrix.cs" />
     <Compile Include="OldMainPage.xaml.cs">
       <DependentUpon>OldMainPage.xaml</DependentUpon>
@@ -210,6 +218,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Control\PlaylistPopUp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -227,6 +239,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TilePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

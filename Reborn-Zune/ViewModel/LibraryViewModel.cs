@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
@@ -20,17 +21,26 @@ namespace Reborn_Zune.ViewModel
             Thumbnails = new ObservableCollection<BitmapImage>();
             Musics = new ObservableCollection<LocalMusicModel>();
             Albums = new ObservableCollection<LocalAlbumModel>();
+            Artists = new ObservableCollection<LocalArtistModel>();
             Library = MusicLibrary.FetchAll();
             Finialize();
         }
 
         private async void Finialize()
         {
-            await GetThumbnails();
-            await GetLocalMusics();
-            await GetLocalAlbums();
-
-            InitializeFinished?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                await GetLocalMusics();
+                await GetLocalAlbums();
+                await GetThumbnails();
+                GetLocalArtists();
+                InitializeFinished?.Invoke(this, EventArgs.Empty);
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
+            
         }
 
         private Library _library;
@@ -80,6 +90,20 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
+        private ObservableCollection<LocalArtistModel> _artists;
+
+        public ObservableCollection<LocalArtistModel> Artists
+        {
+            get
+            {
+                return _artists;
+            }
+            set
+            {
+                Set<ObservableCollection<LocalArtistModel>>(() => this.Artists, ref _artists, value);
+            }
+        }
+
         public async Task GetLocalMusics()
         {
             foreach(Music music in Library.musics)
@@ -95,20 +119,18 @@ namespace Reborn_Zune.ViewModel
         {
             foreach (Album album in Library.albums)
             {
-                var localalbum = new LocalAlbumModel(album);
+                var localalbum = new LocalAlbumModel(album, Musics);
                 await localalbum.GetThumbanail();
                 Albums.Add(localalbum);
             }
         }
 
-        public List<LocalArtistModel> GetLocalArtists()
+        public void GetLocalArtists()
         {
-            List<LocalArtistModel> result = new List<LocalArtistModel>();
             foreach(Artist artist in Library.artists)
             {
-                result.Add(new LocalArtistModel(artist));
+                Artists.Add(new LocalArtistModel(artist, Albums));
             }
-            return result;
         }
 
         public async Task GetThumbnails()

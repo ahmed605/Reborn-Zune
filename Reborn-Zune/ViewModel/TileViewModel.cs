@@ -24,6 +24,7 @@ namespace Reborn_Zune.ViewModel
         private PlayerViewModel _playerViewModel;
         private ObservableCollection<BitmapImage> _bitmapList;
         private ObservableCollection<UIElement> _tiles;
+        private ObservableCollection<BitmapImage> thumbnails;
         #endregion
 
         #region Constructor
@@ -31,6 +32,13 @@ namespace Reborn_Zune.ViewModel
         {
             BitmapList = new ObservableCollection<BitmapImage>();
             Tiles = new ObservableCollection<UIElement>();
+        }
+
+        public TileViewModel(ObservableCollection<BitmapImage> thumbnails)
+        {
+            BitmapList = thumbnails;
+            Tiles = new ObservableCollection<UIElement>();
+            CreateTile();
         }
         #endregion
 
@@ -68,12 +76,6 @@ namespace Reborn_Zune.ViewModel
         }
         #endregion
 
-        #region Events
-        public void CurrentListDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            int selectedIndex = (sender as ListView).SelectedIndex;
-        }
-        #endregion
 
         #region Helpers
         private int Spans(int i)
@@ -156,16 +158,6 @@ namespace Reborn_Zune.ViewModel
                     return 1;
 
             }
-        }
-
-        public void CreateTiles(ObservableCollection<BitmapImage> getThumbnails)
-        {
-            foreach (var item in getThumbnails)
-            {
-                BitmapList.Add(item);
-            }
-
-            CreateTile();
         }
 
         private void CreateTile()

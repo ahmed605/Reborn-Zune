@@ -16,7 +16,7 @@
     </Page.Resources>
 
     <Grid x:Name="root">
-        <Grid
+        <!--<Grid
             x:Name="TileRoot"
             Loaded="TileRoot_Loaded"
             Opacity="0"
@@ -41,13 +41,15 @@
                         <media:BackdropSaturationBrush Saturation="0" />
                     </Border.Background>
                 </Border>
-                <!--<GridView ItemsSource="{x:Bind viewModel.TileViewModel.BitmapList, Mode=OneWay}">
+        -->
+        <!--<GridView ItemsSource="{x:Bind viewModel.TileViewModel.BitmapList, Mode=OneWay}">
                     <GridView.ItemTemplate>
                         <DataTemplate>
                             <Image Source="{Binding}"/>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>-->
+        <!--
             </Grid>
 
             <StackPanel
@@ -124,7 +126,8 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </Grid>
-            <!--<MediaPlayerElement
+        -->
+        <!--<MediaPlayerElement
                 x:Name="TileMediaElement"
                 Height="80"
                 VerticalAlignment="Bottom"
@@ -147,6 +150,7 @@
                         Style="{StaticResource TilePageMTCStyle}" />
                 </MediaPlayerElement.TransportControls>
             </MediaPlayerElement>-->
+        <!--
         </Grid>
 
         <Grid
@@ -352,7 +356,8 @@
                 </PivotItem>
             </Pivot>
 
-            <!--<MediaPlayerElement
+        -->
+        <!--<MediaPlayerElement
                 x:Name="MainMediaElement"
                 Grid.Row="2"
                 AreTransportControlsEnabled="True">
@@ -372,7 +377,8 @@
                         TilePageClicked="MainPageMTC_TilePageClicked" />
                 </MediaPlayerElement.TransportControls>
             </MediaPlayerElement>-->
-        </Grid>
+        <!--
+        </Grid>-->
     </Grid>
 
 
