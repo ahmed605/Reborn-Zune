@@ -61,7 +61,6 @@ namespace MusicLibraryEFCoreModel
         public string Name { get; set; }
         public ICollection<MusicInPlaylist> MusicInPlaylists { get; set; }
 
-        public ICollection<Music> Musics { get; set; }
     }
 
     public class MusicInPlaylist
