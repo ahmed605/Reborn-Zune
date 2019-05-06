@@ -325,6 +325,7 @@ namespace MusicLibraryService
                     viewModel.artists = artists;
                     viewModel.playlists = playlists;
                     viewModel.thumbnails = thumbnails;
+                    viewModel.mInP = musicplaylists;
                 }
                 return viewModel;
             }
@@ -531,6 +532,6 @@ namespace MusicLibraryService
         public List<Artist> artists { get; set; }
         public List<Playlist> playlists { get; set; }
         public List<Thumbnail> thumbnails { get; set; }
-
+        public List<MusicInPlaylist> mInP { get; set; }
     }
 }

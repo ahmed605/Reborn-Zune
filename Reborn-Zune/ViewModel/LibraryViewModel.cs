@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
@@ -9,6 +10,7 @@ using MusicLibraryEFCoreModel;
 using MusicLibraryService;
 using Reborn_Zune.Model;
 using Reborn_Zune.Utilities;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.ViewModel
@@ -22,6 +24,7 @@ namespace Reborn_Zune.ViewModel
             Musics = new ObservableCollection<LocalMusicModel>();
             Albums = new ObservableCollection<LocalAlbumModel>();
             Artists = new ObservableCollection<LocalArtistModel>();
+            Playlists = new ObservableCollection<LocalPlaylistModel>();
             Library = MusicLibrary.FetchAll();
             Finialize();
         }
@@ -34,6 +37,9 @@ namespace Reborn_Zune.ViewModel
                 await GetLocalAlbums();
                 await GetThumbnails();
                 GetLocalArtists();
+                GetLocalPlaylists();
+                RaisePropertyChanged(nameof(hasPlaylistReverse));
+                RaisePropertyChanged(nameof(hasPlaylist));
                 InitializeFinished?.Invoke(this, EventArgs.Empty);
             }
             catch(Exception e)
@@ -41,6 +47,22 @@ namespace Reborn_Zune.ViewModel
                 Debug.WriteLine(e.ToString());
             }
             
+        }
+
+        private void GetLocalPlaylists()
+        {
+
+            foreach(var item in Library.playlists)
+            {
+                var final = Musics.Where(a => Library.mInP.Where(m => m.PlaylistId == item.Id).Select(m => m.MusicId).Any(b => b == a.Music.Id)).ToList();
+                var local = new LocalPlaylistModel
+                {
+                    Playlist = item,
+                    Musics = new ObservableCollection<LocalMusicModel>(final)
+                };
+                Playlists.Add(local);
+
+            }
         }
 
         private Library _library;
@@ -104,6 +126,19 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
+        private ObservableCollection<LocalPlaylistModel> _playlists;
+        public ObservableCollection<LocalPlaylistModel> Playlists
+        {
+            get
+            {
+                return _playlists;
+            }
+            set
+            {
+                Set<ObservableCollection<LocalPlaylistModel>>(() => this.Playlists, ref _playlists, value);
+            }
+        }
+
         public async Task GetLocalMusics()
         {
             foreach(Music music in Library.musics)
@@ -142,8 +177,30 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
+        public void CreatePlaylist(string text)
+        {
+            MusicLibrary.CreatePlaylist(text);
+            Library = MusicLibrary.FetchAll();
+            GetLocalPlaylists();
+            RaisePropertyChanged(nameof(hasPlaylistReverse));
+            RaisePropertyChanged(nameof(hasPlaylist));
+        }
 
-        
-        
+
+        public Visibility hasPlaylist
+        {
+            get
+            {
+                return Playlists.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        public Visibility hasPlaylistReverse
+        {
+            get
+            {
+                return Playlists.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
     }
 }

@@ -198,5 +198,10 @@ namespace Reborn_Zune
         {
             Frame.Navigate(typeof(TilePage), MainVM);
         }
+
+        private void NewPlaylistButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainVM.LibraryViewModel.CreatePlaylist(PlaylistName.Text);
+        }
     }
 }
