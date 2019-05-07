@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Reborn_Zune.Model
 {
-    public class LocalPlaylistModel : ObservableObject
+    public class LocalPlaylistModel : ObservableObject, ILocalListModel
     {
         public LocalPlaylistModel()
         {
@@ -31,7 +31,6 @@ namespace Reborn_Zune.Model
         }
 
         private ObservableCollection<LocalMusicModel> _musics;
-
         public ObservableCollection<LocalMusicModel> Musics
         {
             get
@@ -41,6 +40,14 @@ namespace Reborn_Zune.Model
             set
             {
                 Set<ObservableCollection<LocalMusicModel>>(() => this.Musics, ref _musics, value);
+            }
+        }
+
+        public bool isEditable
+        {
+            get
+            {
+                return true;
             }
         }
     }

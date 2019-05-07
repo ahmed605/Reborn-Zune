@@ -41,6 +41,12 @@
                     Margin="0,30,0,0"
                     VerticalAlignment="Top"
                     Orientation="Horizontal">
+                    <local:CompactGridControl x:Name="PlaylistImages"
+                                              Width="130"
+                                              Height="130"
+                                              Margin="30,0,0,0"
+                                              HorizontalAlignment="Left"
+                                              Visibility="Collapsed"/>
                     <Image
                         x:Name="AlbumImage"
                         Width="130"
@@ -49,7 +55,7 @@
                         HorizontalAlignment="Left" />
                     <StackPanel Margin="15,0,0,0" Orientation="Vertical">
                         <TextBlock
-                            x:Name="AlbumTitle"
+                            x:Name="Title"
                             FontSize="20"
                             FontWeight="SemiBold" />
                         <TextBlock
@@ -57,11 +63,6 @@
                             FontSize="20"
                             FontWeight="SemiBold"
                             Foreground="Gray" />
-                        <TextBlock
-                            FontSize="20"
-                            FontWeight="SemiBold"
-                            Foreground="Gray"
-                            Text="2019" />
                     </StackPanel>
 
                 </StackPanel>

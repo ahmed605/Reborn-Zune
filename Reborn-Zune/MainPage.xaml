@@ -104,6 +104,7 @@
                         ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
                         ItemsSource="{x:Bind MainVM.LibraryViewModel.Albums, Mode=OneWay}"
                         SelectionMode="Single">
+                        
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="model:LocalAlbumModel">
                                 <controls:DockPanel>
@@ -120,6 +121,11 @@
                                         Height="175"
                                         controls:DockPanel.Dock="Top"
                                         extensions:VisualExtensions.CenterPoint="87.5,87.5,0">
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem x:Name="AddToPlaylist" Text="AddToPlaylist"/>
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
                                         <controls:DropShadowPanel
                                             HorizontalContentAlignment="Stretch"
                                             VerticalContentAlignment="Stretch"
@@ -192,6 +198,8 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
                         ChoosingItemContainer="GridView_ChoosingItemContainer"
+                        ItemClick="GridView_ItemClick"
+                        IsItemClickEnabled="True"
                         ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
                         ItemsSource="{x:Bind MainVM.LibraryViewModel.Playlists, Mode=OneWay}"
                         Visibility="{x:Bind MainVM.LibraryViewModel.hasPlaylistReverse, Mode=OneWay}">

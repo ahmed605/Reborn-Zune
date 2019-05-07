@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.Model
 {
-    public class LocalAlbumModel : ObservableObject
+    public class LocalAlbumModel : ObservableObject, ILocalListModel
     {
         #region Constructors
         public LocalAlbumModel(Album album, ObservableCollection<LocalMusicModel> musics)
@@ -63,6 +63,14 @@ namespace Reborn_Zune.Model
             set
             {
                 Set<ObservableCollection<LocalMusicModel>>(() => this.Musics, ref _musics, value);
+            }
+        }
+
+        public bool isEditable
+        {
+            get
+            {
+                return false;
             }
         }
     }

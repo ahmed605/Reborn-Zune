@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -148,7 +149,7 @@ namespace Reborn_Zune
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            PlaylistPopUp.SetModel(e.ClickedItem as LocalAlbumModel);
+            PlaylistPopUp.SetModel(e.ClickedItem as ILocalListModel);
             GridView gridView = (GridView)e.OriginalSource;
             var parentPanel = ((GridViewItem)gridView.ContainerFromItem(e.ClickedItem)).FindDescendant<DropShadowPanel>().Parent as FrameworkElement;
 
@@ -196,7 +197,7 @@ namespace Reborn_Zune
 
         private void MediaPopUp_TilePageButtonClicked(object sender, EventArgs e)
         {
-            Frame.Navigate(typeof(TilePage), MainVM);
+            Frame.Navigate(typeof(TilePage), MainVM, new DrillInNavigationTransitionInfo());
         }
 
         private void NewPlaylistButton_Click(object sender, RoutedEventArgs e)

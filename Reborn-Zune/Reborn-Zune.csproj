@@ -105,6 +105,9 @@
     </Compile>
     <Compile Include="BackgroundApp.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
+    <Compile Include="Control\CompactGridControl.xaml.cs">
+      <DependentUpon>CompactGridControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Control\CustomMediaTransportControl.cs" />
     <Compile Include="Control\CustomPopUpMediaTransportControl.cs" />
     <Compile Include="Control\PlayerPopUp.xaml.cs">
@@ -116,6 +119,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\ILocalListModel.cs" />
     <Compile Include="Model\LocalPlaylistModel.cs" />
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="SplashScreen.xaml.cs">
@@ -215,6 +219,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Control\CompactGridControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Control\PlayerPopUp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

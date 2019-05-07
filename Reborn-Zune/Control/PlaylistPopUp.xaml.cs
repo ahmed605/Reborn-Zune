@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -18,6 +19,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -27,7 +29,7 @@ namespace Reborn_Zune.Control
     public sealed partial class PlaylistPopUp : UserControl
     {
         private MainViewModel MainVM;
-        private LocalAlbumModel model;
+        private ILocalListModel model;
         private FrameworkElement _gridviewItem;
         private Compositor _compositor;
         private Visual _gridviewItemVisual;
@@ -41,26 +43,35 @@ namespace Reborn_Zune.Control
             _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
         }
 
-        //public Vector2 GetTargetPosition()
-        //{
-        //    var size = new Vector2(400f, 400f);
-        //    var x = (Window.Current.Bounds.Width - size.X) / 2;
-        //    var y = (Window.Current.Bounds.Height - size.Y) / 2;
-        //    return new Vector2((float)x, (float)y);
-        //}
-
         public void SetVM(MainViewModel mainVM)
         {
             MainVM = mainVM;
         }
 
-        public void SetModel(LocalAlbumModel localAlbumModel)
+        public void SetModel(ILocalListModel model)
         {
-            model = localAlbumModel;
-            AlbumImage.Source = localAlbumModel.Image;
-            AlbumTitle.Text = localAlbumModel.Album.Title;
-            AlbumArtist.Text = localAlbumModel.Album.Artist.Name;
-            playlist.ItemsSource = localAlbumModel.Musics;
+            this.model = model;
+            //LocalPlaylistModel
+            if (model.isEditable)
+            {
+                PlaylistImages.Visibility = Visibility.Visible;
+                AlbumImage.Visibility = Visibility.Collapsed;
+                AlbumArtist.Visibility = Visibility.Collapsed;
+                PlaylistImages.ThumbanilSource = new ObservableCollection<BitmapImage>(this.model.Musics.Select(m => m.ImageSource).ToList());
+                Title.Text = (this.model as LocalPlaylistModel).Playlist.Name;
+                playlist.ItemsSource = this.model.Musics;
+            }
+            //LocalAlbumModel
+            else
+            {
+                PlaylistImages.Visibility = Visibility.Collapsed;
+                AlbumImage.Visibility = Visibility.Visible;
+                AlbumArtist.Visibility = Visibility.Visible;
+                AlbumImage.Source = (this.model as LocalAlbumModel).Image;
+                Title.Text = (this.model as LocalAlbumModel).Album.Title;
+                AlbumArtist.Text = (this.model as LocalAlbumModel).Album.Artist.Name;
+                playlist.ItemsSource = this.model.Musics;
+            }
         }
 
         public void Show(FrameworkElement parentPanel)
@@ -95,8 +106,6 @@ namespace Reborn_Zune.Control
             offsetAnim.InsertKeyFrame(0f, new Vector3(0f, startY, 0f));
             offsetAnim.InsertKeyFrame(1f, new Vector3(0f, endY, 0f));
             _playlistPopupVisual.StartAnimation("Translation", offsetAnim);
-
-            
         }
 
         public async void Hide()
