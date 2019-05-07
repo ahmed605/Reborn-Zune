@@ -8,6 +8,7 @@
     xmlns:local="using:Reborn_Zune.Control"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Reborn_Zune.Model"
+    xmlns:util="using:Reborn_Zune.Utilities"
     mc:Ignorable="d">
 
     <Grid>
@@ -36,36 +37,49 @@
                     <RowDefinition Height="0.18*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <StackPanel
+                <Grid
                     Grid.Row="0"
                     Margin="0,30,0,0"
-                    VerticalAlignment="Top"
-                    Orientation="Horizontal">
-                    <local:CompactGridControl x:Name="PlaylistImages"
-                                              Width="130"
-                                              Height="130"
-                                              Margin="30,0,0,0"
-                                              HorizontalAlignment="Left"
-                                              Visibility="Collapsed"/>
-                    <Image
-                        x:Name="AlbumImage"
-                        Width="130"
-                        Height="130"
-                        Margin="30,0,0,0"
-                        HorizontalAlignment="Left" />
-                    <StackPanel Margin="15,0,0,0" Orientation="Vertical">
-                        <TextBlock
-                            x:Name="Title"
-                            FontSize="20"
-                            FontWeight="SemiBold" />
-                        <TextBlock
-                            x:Name="AlbumArtist"
-                            FontSize="20"
-                            FontWeight="SemiBold"
-                            Foreground="Gray" />
+                    VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal">
+                        <local:CompactGridControl
+                            x:Name="PlaylistImages"
+                            Width="130"
+                            Height="130"
+                            Margin="30,0,0,0"
+                            HorizontalAlignment="Left"
+                            Visibility="Collapsed" />
+                        <Image
+                            x:Name="AlbumImage"
+                            Width="130"
+                            Height="130"
+                            Margin="30,0,0,0"
+                            HorizontalAlignment="Left" />
+                        <StackPanel Margin="15,0,0,0" Orientation="Vertical">
+                            <TextBlock
+                                x:Name="Title"
+                                FontSize="20"
+                                FontWeight="SemiBold" />
+                            <TextBlock
+                                x:Name="AlbumArtist"
+                                FontSize="20"
+                                FontWeight="SemiBold"
+                                Foreground="Gray" />
+                        </StackPanel>
                     </StackPanel>
-
-                </StackPanel>
+                    <Grid
+                        Margin="0,0,20,5"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom">
+                        <Button
+                            x:Name="OptionButton"
+                            Width="30"
+                            Height="30"
+                            util:ButtonExtension.MenuFlyout="{x:Bind MainVM.}"
+                            Click="OptionButton_Click"
+                            Content="Add To" />
+                    </Grid>
+                </Grid>
 
                 <Grid Grid.Row="1" HorizontalAlignment="Stretch">
                     <Border
