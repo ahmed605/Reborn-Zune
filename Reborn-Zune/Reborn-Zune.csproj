@@ -129,6 +129,7 @@
       <DependentUpon>TilePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="TimeSpanFormatConverter.cs" />
+    <Compile Include="Utilities\ButtonExtension.cs" />
     <Compile Include="Utilities\CompositionExtensions.cs" />
     <Compile Include="Utilities\FluidBitMatrix.cs" />
     <Compile Include="OldMainPage.xaml.cs">
