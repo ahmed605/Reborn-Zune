@@ -14,14 +14,23 @@ namespace Reborn_Zune.Utilities
         public async static Task<BitmapImage> ImageFromBytes(Byte[] bytes)
         {
             BitmapImage image = new BitmapImage();
-            using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+            try
             {
-                await stream.WriteAsync(bytes.AsBuffer());
-                stream.Seek(0);
-                await image.SetSourceAsync(stream);
-                
+                if (bytes.Length == 0) throw new Exception();
+                using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+                {
+                    await stream.WriteAsync(bytes.AsBuffer());
+                    stream.Seek(0);
+                    await image.SetSourceAsync(stream);
+
+                }
+                return image;
             }
-            return image;
+            
+            catch(Exception e)
+            {
+                return image;
+            }
         }
     }
 }
