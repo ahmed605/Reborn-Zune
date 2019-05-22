@@ -202,5 +202,13 @@ namespace Reborn_Zune.ViewModel
                 return Playlists.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
             }
         }
+
+        public void AddSongsToPlaylist(string playlistName, List<Music> enumerable)
+        {
+            MusicLibrary.AddSongsToPlaylist(playlistName, enumerable);
+            Library = MusicLibrary.FetchAll();
+            RaisePropertyChanged(nameof(hasPlaylistReverse));
+            RaisePropertyChanged(nameof(hasPlaylist));
+        }
     }
 }
