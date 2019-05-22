@@ -385,8 +385,9 @@ namespace MusicLibraryService
                         PlaylistId = playlist.Id
                     };
                     _context.MusicInPlaylists.Add(mInP);
+                    _context.SaveChanges();
                 }
-                _context.SaveChanges();
+                
             }
         }
 
