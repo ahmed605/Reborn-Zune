@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.Model
@@ -71,6 +72,14 @@ namespace Reborn_Zune.Model
             get
             {
                 return false;
+            }
+        }
+
+        public Visibility isVisible
+        {
+            get
+            {
+                return Visibility.Visible;
             }
         }
     }

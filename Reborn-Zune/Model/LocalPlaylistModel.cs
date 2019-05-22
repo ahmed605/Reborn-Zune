@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace Reborn_Zune.Model
 {
@@ -48,6 +49,14 @@ namespace Reborn_Zune.Model
             get
             {
                 return true;
+            }
+        }
+
+        public Visibility isVisible
+        {
+            get
+            {
+                return Visibility.Collapsed;
             }
         }
     }
