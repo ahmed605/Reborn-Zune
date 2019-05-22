@@ -57,6 +57,7 @@ namespace Reborn_Zune.Control
                 PlaylistImages.Visibility = Visibility.Visible;
                 AlbumImage.Visibility = Visibility.Collapsed;
                 AlbumArtist.Visibility = Visibility.Collapsed;
+                AddPlaylistButton.Visibility = Visibility.Collapsed;
                 PlaylistImages.ThumbanilSource = new ObservableCollection<BitmapImage>(this.model.Musics.Select(m => m.ImageSource).ToList());
                 Title.Text = (this.model as LocalPlaylistModel).Playlist.Name;
                 playlist.ItemsSource = this.model.Musics;
@@ -64,6 +65,7 @@ namespace Reborn_Zune.Control
             //LocalAlbumModel
             else
             {
+                AddPlaylistButton.Visibility = Visibility.Visible;
                 PlaylistImages.Visibility = Visibility.Collapsed;
                 AlbumImage.Visibility = Visibility.Visible;
                 AlbumArtist.Visibility = Visibility.Visible;
@@ -150,6 +152,12 @@ namespace Reborn_Zune.Control
             MainVM.PlaybackList.ShuffleEnabled = true;
             MainVM.PlayerViewModel.GetPlayer().Play();
             InvokeMediaPopUpEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var playlistName = (sender as MenuFlyoutItem).Text;
+            MainVM.LibraryViewModel.AddSongsToPlaylist(playlistName, model.Musics.Select(m => m.Music).ToList());
         }
     }
 }

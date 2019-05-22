@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:local="using:Reborn_Zune.Control"
+    xmlns:utils="using:Reborn_Zune.Utilities"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Reborn_Zune.Model"
     mc:Ignorable="d">
@@ -36,15 +37,14 @@
                     <RowDefinition Height="0.18*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <StackPanel
-                    Grid.Row="0"
+                <controls:DockPanel Grid.Row="0"
                     Margin="0,30,0,0"
-                    VerticalAlignment="Top"
-                    Orientation="Horizontal">
+                                    VerticalAlignment="Top">
                     <local:CompactGridControl x:Name="PlaylistImages"
                                               Width="130"
                                               Height="130"
                                               Margin="30,0,0,0"
+                                              controls:DockPanel.Dock="Left"
                                               HorizontalAlignment="Left"
                                               Visibility="Collapsed"/>
                     <Image
@@ -52,8 +52,11 @@
                         Width="130"
                         Height="130"
                         Margin="30,0,0,0"
+                        controls:DockPanel.Dock="Left"
                         HorizontalAlignment="Left" />
-                    <StackPanel Margin="15,0,0,0" Orientation="Vertical">
+                    <StackPanel Margin="15,0,0,0" 
+                                Orientation="Vertical"
+                                controls:DockPanel.Dock="Left">
                         <TextBlock
                             x:Name="Title"
                             FontSize="20"
@@ -64,8 +67,25 @@
                             FontWeight="SemiBold"
                             Foreground="Gray" />
                     </StackPanel>
-
-                </StackPanel>
+                    <Button x:Name="AddPlaylistButton" 
+                            Background="Transparent"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            controls:DockPanel.Dock="Right"
+                            BorderBrush="Black"
+                            BorderThickness="1">
+                        <TextBlock Text="Add to" FontSize="13"/>
+                        <Button.Flyout>
+                            <Flyout utils:BindableFlyout.ItemsSource="{x:Bind MainVM.LibraryViewModel.Playlists, Mode=OneWay}">
+                                <utils:BindableFlyout.ItemTemplate>
+                                    <DataTemplate x:DataType="model:LocalPlaylistModel">
+                                        <MenuFlyoutItem Text="{x:Bind Playlist.Name}" Click="MenuFlyoutItem_Click"/>
+                                    </DataTemplate>
+                                </utils:BindableFlyout.ItemTemplate>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </controls:DockPanel>
 
                 <Grid Grid.Row="1" HorizontalAlignment="Stretch">
                     <Border
