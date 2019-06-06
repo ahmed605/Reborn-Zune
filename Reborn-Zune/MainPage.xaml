@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     xmlns:model="using:Reborn_Zune.Model"
+    xmlns:utils="using:Reborn_Zune.Utilities"
     Background="#F1F1F1"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
@@ -92,8 +93,7 @@
                 <Grid>
                     <GridView
                         x:Name="albums"
-                        MaxWidth="1000"
-                        Margin="0,30,0,0"
+                        Margin="0,30,0,70"
                         Padding="0,35,0,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
@@ -104,35 +104,47 @@
                         ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
                         ItemsSource="{x:Bind MainVM.LibraryViewModel.Albums, Mode=OneWay}"
                         SelectionMode="Single">
-                        
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid
+                                    HorizontalAlignment="Center"
+                                    MaximumRowsOrColumns="4"
+                                    Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="model:LocalAlbumModel">
                                 <controls:DockPanel>
-                                    <TextBlock
-                                        Margin="0,5,0,0"
+                                    <StackPanel
+                                        x:Name="TitleAndName"
                                         controls:DockPanel.Dock="Bottom"
-                                        FontFamily="Source Han Sans CN"
-                                        FontSize="18"
-                                        FontWeight="Normal"
-                                        Foreground="Black"
-                                        Text="{x:Bind Album.Title, Mode=OneWay}" />
+                                        Orientation="Vertical">
+                                        <TextBlock
+                                            Margin="0,5,0,0"
+                                            FontFamily="Source Han Sans CN"
+                                            FontSize="18"
+                                            FontWeight="Normal"
+                                            Foreground="Black"
+                                            Text="{x:Bind Album.Title, Mode=OneWay}" />
+                                        <TextBlock
+                                            Margin="0,-3,0,0"
+                                            FontFamily="Source Han Sans CN"
+                                            FontSize="15"
+                                            FontWeight="Normal"
+                                            Foreground="Gray"
+                                            Text="{x:Bind Album.Artist.Name, Mode=OneWay}" />
+                                    </StackPanel>
+
                                     <Grid
                                         Width="175"
                                         Height="175"
-                                        controls:DockPanel.Dock="Top"
-                                        extensions:VisualExtensions.CenterPoint="87.5,87.5,0">
-                                        <FlyoutBase.AttachedFlyout>
-                                            <MenuFlyout>
-                                                <MenuFlyoutItem x:Name="AddToPlaylist" Text="AddToPlaylist"/>
-                                            </MenuFlyout>
-                                        </FlyoutBase.AttachedFlyout>
+                                        controls:DockPanel.Dock="Top">
                                         <controls:DropShadowPanel
                                             HorizontalContentAlignment="Stretch"
                                             VerticalContentAlignment="Stretch"
                                             extensions:VisualExtensions.Opacity="0"
-                                            BlurRadius="30"
-                                            OffsetY="3"
-                                            ShadowOpacity="0.5"
+                                            BlurRadius="20"
+                                            ShadowOpacity="0.4"
                                             Visibility="Collapsed">
                                             <Border />
                                         </controls:DropShadowPanel>
@@ -141,12 +153,59 @@
                                             PlaceholderSource="ms-appx:///Assets/Vap-logo-placeholder.jpg"
                                             Source="{x:Bind Image, Mode=OneWay}"
                                             Stretch="UniformToFill" />
+
+                                        <control:ShadowSpotLightControl
+                                            Width="175"
+                                            Height="175"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            Visibility="Collapsed" />
+                                        <Border
+                                            x:Name="border"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            BorderBrush="Black"
+                                            BorderThickness="1"
+                                            Visibility="Collapsed" />
+                                        <StackPanel
+                                            x:Name="Buttons"
+                                            Margin="0,0,0,5"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Bottom"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            Orientation="Horizontal"
+                                            Visibility="Collapsed">
+                                            <Button
+                                                Width="25"
+                                                Height="25"
+                                                Style="{StaticResource MainPageCircleButtonStyle}"
+                                                Tapped="PlayButton_Tapped">
+                                                <Button.Content>
+                                                    <TextBlock
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        FontWeight="Bold"
+                                                        Text="&#xE768;" />
+                                                </Button.Content>
+                                            </Button>
+                                            <Button
+                                                Width="25"
+                                                Height="25"
+                                                Margin="10,0,0,0"
+                                                Style="{StaticResource MainPageCircleButtonStyle}"
+                                                Tapped="AddToButton_Tapped">
+
+                                                <Button.Content>
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" />
+                                                </Button.Content>
+                                            </Button>
+                                        </StackPanel>
                                     </Grid>
 
                                 </controls:DockPanel>
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
+
                 </Grid>
             </PivotItem>
             <PivotItem>
@@ -198,44 +257,96 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
                         ChoosingItemContainer="GridView_ChoosingItemContainer"
-                        ItemClick="GridView_ItemClick"
                         IsItemClickEnabled="True"
+                        ItemClick="GridView_ItemClick"
                         ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
                         ItemsSource="{x:Bind MainVM.LibraryViewModel.Playlists, Mode=OneWay}"
                         Visibility="{x:Bind MainVM.LibraryViewModel.hasPlaylistReverse, Mode=OneWay}">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid MaximumRowsOrColumns="4" Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
                         <GridView.ItemTemplate>
                             <DataTemplate x:DataType="model:LocalPlaylistModel">
-                                <StackPanel Orientation="Vertical">
-                                    <Grid
-                                        Width="175"
-                                        Height="175"
-                                        extensions:VisualExtensions.CenterPoint="87.5,87.5,0">
-                                        <controls:DropShadowPanel
-                                            HorizontalContentAlignment="Stretch"
-                                            VerticalContentAlignment="Stretch"
-                                            extensions:VisualExtensions.Opacity="0"
-                                            BlurRadius="30"
-                                            OffsetY="3"
-                                            ShadowOpacity="0.5"
-                                            Visibility="Collapsed">
-                                            <Border />
-                                        </controls:DropShadowPanel>
-                                        <controls:ImageEx
-                                            IsCacheEnabled="True"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch"
-                                            Source="ms-appx:///Assets/Vap-logo-placeholder.jpg"
-                                            Stretch="UniformToFill" />
-                                    </Grid>
-
+                                <controls:DockPanel>
                                     <TextBlock
                                         Margin="0,8,0,0"
+                                        controls:DockPanel.Dock="Bottom"
                                         FontFamily="Source Han Sans CN"
                                         FontSize="18"
                                         FontWeight="Normal"
                                         Foreground="Black"
                                         Text="{x:Bind Playlist.Name, Mode=OneWay}" />
-                                </StackPanel>
+                                    <Grid
+                                        Width="175"
+                                        Height="175"
+                                        controls:DockPanel.Dock="Top"
+                                        extensions:VisualExtensions.CenterPoint="87.5,87.5,0">
+                                        <controls:DropShadowPanel
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            BlurRadius="20"
+                                            ShadowOpacity="0.4"
+                                            Visibility="Collapsed">
+                                            <Border />
+                                        </controls:DropShadowPanel>
+                                        <controls:ImageEx
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            IsCacheEnabled="True"
+                                            Source="ms-appx:///Assets/Vap-logo-placeholder.jpg"
+                                            Stretch="UniformToFill" />
+
+                                        <control:ShadowSpotLightControl
+                                            Width="175"
+                                            Height="175"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            Visibility="Collapsed" />
+                                        <Border
+                                            x:Name="border"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            BorderBrush="Black"
+                                            BorderThickness="1"
+                                            Visibility="Collapsed" />
+                                        <StackPanel
+                                            x:Name="Buttons"
+                                            Margin="0,0,0,5"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Bottom"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            Orientation="Horizontal"
+                                            Visibility="Collapsed">
+                                            <Button
+                                                Width="25"
+                                                Height="25"
+                                                Style="{StaticResource MainPageCircleButtonStyle}"
+                                                Tapped="PlayButton_Tapped">
+                                                <Button.Content>
+                                                    <TextBlock
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        FontWeight="Bold"
+                                                        Text="&#xE768;" />
+                                                </Button.Content>
+                                            </Button>
+                                            <Button
+                                                Width="25"
+                                                Height="25"
+                                                Margin="10,0,0,0"
+                                                Style="{StaticResource MainPageCircleButtonStyle}"
+                                                Tapped="AddToButton_Tapped">
+                                                <Button.Content>
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" />
+                                                </Button.Content>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+
+                                </controls:DockPanel>
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
@@ -254,46 +365,18 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
             extensions:VisualExtensions.CenterPoint="50,50,0"
-            IsHitTestVisible="False"
-            PointerEntered="PlayerFloating_PointerEntered"
-            PointerExited="PlayerFloating_PointerExited"
-            Tapped="PlayerFloating_Tapped">
+            Tapped="PlayerFloating_Tapped"
+            Visibility="{x:Bind MainVM.FloatingVisible, Mode=OneWay}">
             <controls:DropShadowPanel
                 HorizontalContentAlignment="Stretch"
                 VerticalContentAlignment="Stretch"
-                extensions:VisualExtensions.Opacity="0"
-                BlurRadius="30"
-                OffsetY="3"
-                ShadowOpacity="0.5"
-                Visibility="Collapsed">
+                BlurRadius="60"
+                OffsetY="5"
+                ShadowOpacity="0.3">
                 <Border />
             </controls:DropShadowPanel>
+            <Image x:Name="CurrentPlayingThumbnailPlaceHolder" Source="ms-appx:///Assets/Vap-logo-placeholder.jpg" />
             <Image x:Name="CurrentPlayingThumbnail" Source="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.PreviewImage, Mode=OneWay}" />
         </Grid>
-
-
-
-        <control:PlaylistPopUp
-            x:Name="PlaylistPopUp"
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            IsHitTestVisible="False"
-            Visibility="Collapsed" />
-
-        <control:PlayerPopUp
-            x:Name="MediaPopUp"
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            IsHitTestVisible="False"
-            MediaList="{x:Bind MainVM.PlayerViewModel.MediaList, Mode=OneWay}"
-            Opacity="0"
-            TilePageButtonClicked="MediaPopUp_TilePageButtonClicked" />
-
-
-
     </Grid>
 </Page>

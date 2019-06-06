@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Reborn_Zune.Control;
 using Reborn_Zune.Model;
 using Reborn_Zune.Utilities;
 using Reborn_Zune.ViewModel;
@@ -41,7 +42,6 @@ namespace Reborn_Zune
         private MainViewModel MainVM { get; set; }
         private Compositor _compositor;
         private Visual _floatingVisual;
-        private bool _isFloatingShown;
         public MainPage()
         {
             this.InitializeComponent();
@@ -49,26 +49,12 @@ namespace Reborn_Zune
             _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
             TitleBarSetting();
             MainVM = new MainViewModel(Dispatcher);
-            MediaPopUp.SetVM(MainVM);
-            PlaylistPopUp.SetVM(MainVM);
             _floatingVisual = PlayerFloating.GetVisual();
-            PlaylistPopUp.InvokeMediaPopUpEvent += PlaylistPopUp_InvokeMediaPopUpEvent;
         }
-
-        private void PlaylistPopUp_InvokeMediaPopUpEvent(object sender, EventArgs e)
-        {
-            if (!_isFloatingShown)
-            {
-                ShowFloating();
-                _isFloatingShown = true;
-                
-            }
-            //MediaPopUp.Show();
-        }
+        
 
         private void ShowFloating()
         {
-
             PlayerFloating.Visibility = Visibility.Visible;
             PlayerFloating.IsHitTestVisible = true;
             var startY = (float)Window.Current.Bounds.Height + _floatingVisual.Size.Y / 2;
@@ -110,51 +96,134 @@ namespace Reborn_Zune
 
             container.PointerEntered += ItemContainer_PointerEntered;
             container.PointerExited += ItemContainer_PointerExited;
-
+            container.Tapped += Container_Tapped;
             
             args.ItemContainer = container;
         }
 
-        private void ItemContainer_PointerExited(object sender, PointerRoutedEventArgs e)
+        private async void Container_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var panel = (sender as FrameworkElement).FindDescendant<DropShadowPanel>();
-            if (panel != null)
+            var rootElement = sender as FrameworkElement;
+            var shadow = rootElement.FindDescendant<DropShadowPanel>();
+            if (shadow != null)
             {
-                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(900) };
-                animation.StartAnimation(panel);
 
-                var parentAnimation = new ScaleAnimation() { To = "1", Duration = TimeSpan.FromMilliseconds(900) };
-                parentAnimation.StartAnimation(panel.Parent as UIElement);
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(shadow);
             }
-            GC.Collect();
+
+            var spotlight = rootElement.FindDescendant<ShadowSpotLightControl>();
+            if (spotlight != null)
+            {
+
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(spotlight);
+            }
+
+            var border = rootElement.FindDescendantByName("border");
+            if (border != null)
+            {
+
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(border);
+            }
+
+            var buttons = rootElement.FindDescendantByName("Buttons");
+            if (buttons != null)
+            {
+
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(buttons);
+            }
+            await Task.Delay(200);
+            shadow.Visibility = Visibility.Collapsed;
+            spotlight.Visibility = Visibility.Collapsed;
+            border.Visibility = Visibility.Collapsed;
+            buttons.Visibility = Visibility.Collapsed;
+
+            
+        }
+
+        private async void ItemContainer_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var rootElement = sender as FrameworkElement;
+            var shadow = rootElement.FindDescendant<DropShadowPanel>();
+            if (shadow != null)
+            {
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(shadow);
+            }
+
+            var spotlight = rootElement.FindDescendant<ShadowSpotLightControl>();
+            if (spotlight != null)
+            {
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(spotlight);
+            }
+
+            var border = rootElement.FindDescendantByName("border");
+            if (border != null)
+            {
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(border);
+            }
+
+            var buttons = rootElement.FindDescendantByName("Buttons");
+            if (buttons != null)
+            {
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(buttons);
+            }
+            await Task.Delay(200);
+            shadow.Visibility = Visibility.Collapsed;
+            spotlight.Visibility = Visibility.Collapsed;
+            border.Visibility = Visibility.Collapsed;
+            buttons.Visibility = Visibility.Collapsed;
         }
 
         private void ItemContainer_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
+            var rootElement = sender as FrameworkElement;
             if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse || e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
             {
-                var panel = (sender as FrameworkElement).FindDescendant<DropShadowPanel>();
-                if (panel != null)
+                var shadow = rootElement.FindDescendant<DropShadowPanel>();
+                if (shadow != null)
                 {
-                    panel.Visibility = Visibility.Visible;
-                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(400) };
-                    animation.StartAnimation(panel);
+                    shadow.Visibility = Visibility.Visible;
+                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(200) };
+                    animation.StartAnimation(shadow);
+                }
 
-                    var parentAnimation = new ScaleAnimation() { To = "1.1", Duration = TimeSpan.FromMilliseconds(400) };
-                    parentAnimation.StartAnimation(panel.Parent as UIElement);
+                var spotlight = rootElement.FindDescendant<ShadowSpotLightControl>();
+                if (spotlight != null)
+                {
+                    spotlight.Visibility = Visibility.Visible;
+                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(200) };
+                    animation.StartAnimation(spotlight);
+                }
+
+                var border = rootElement.FindDescendantByName("border");
+                if (border != null)
+                {
+                    border.Visibility = Visibility.Visible;
+                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(200) };
+                    animation.StartAnimation(border);
+                }
+
+                var buttons = rootElement.FindDescendantByName("Buttons");
+                if (buttons != null)
+                {
+                    buttons.Visibility = Visibility.Visible;
+                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(200), Delay = TimeSpan.FromMilliseconds(300) };
+                    animation.StartAnimation(buttons);
                 }
             }
-            GC.Collect();
         }
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            PlaylistPopUp.SetModel(e.ClickedItem as ILocalListModel);
-            GridView gridView = (GridView)e.OriginalSource;
-            var parentPanel = ((GridViewItem)gridView.ContainerFromItem(e.ClickedItem)).FindDescendant<DropShadowPanel>().Parent as FrameworkElement;
-
-            PlaylistPopUp.Show(parentPanel);
-            GC.Collect();
+            MainVM.SetClickList(e.ClickedItem as ILocalListModel);
+            Frame.Navigate(typeof(PlaylistDetailPage),  MainVM);
         }
 
         private void PlayerFloating_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -190,19 +259,38 @@ namespace Reborn_Zune
 
         private void PlayerFloating_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var panel = (sender as FrameworkElement).FindDescendant<DropShadowPanel>().Parent as FrameworkElement;
-            MediaPopUp.Show(panel);
-            
+            Frame.Navigate(typeof(TilePage), MainVM);
         }
 
-        private void MediaPopUp_TilePageButtonClicked(object sender, EventArgs e)
-        {
-            Frame.Navigate(typeof(TilePage), MainVM, new DrillInNavigationTransitionInfo());
-        }
 
         private void NewPlaylistButton_Click(object sender, RoutedEventArgs e)
         {
             MainVM.LibraryViewModel.CreatePlaylist(PlaylistName.Text);
+        }
+
+        private void PlayButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var album = (sender as Button).DataContext as ILocalListModel;
+            MainVM.SetMediaList(album);
+            
+            
+
+            if(MainVM.FloatingVisible == Visibility.Collapsed)
+            {
+                MainVM.FloatingVisible = Visibility.Visible;
+                var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+                offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
+                offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
+                offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
+                _floatingVisual.StartAnimation("Translation", offSetAnimation);
+            }
+            
+            e.Handled = true;
+        }
+
+        private void AddToButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }
