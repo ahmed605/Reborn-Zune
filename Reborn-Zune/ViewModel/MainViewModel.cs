@@ -12,6 +12,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Imaging;
 #pragma warning disable 0169
 namespace Reborn_Zune.ViewModel
 {
@@ -21,8 +22,14 @@ namespace Reborn_Zune.ViewModel
         public CoreDispatcher dispatcher;
         private LibraryViewModel _libraryViewModel;
         private PlayerViewModel _playerViewModel;
+        private DetailViewModel _detailViewmodel;
         //private TileViewModel _tileViewModel;
         public MediaPlayer _player = PlaybackService.Instance.Player;
+        private ILocalListModel _clickedList;
+        private ObservableCollection<LocalAlbumModel> _albumList;
+        private ObservableCollection<LocalPlaylistModel> _playlistList;
+        private ObservableCollection<string> _playlistNameList;
+        private Visibility _floatingVisible = Visibility.Collapsed;
         public bool _isStop = true;
         #endregion
 
@@ -33,18 +40,29 @@ namespace Reborn_Zune.ViewModel
             LibraryViewModel = new LibraryViewModel();
             LibraryViewModel.InitializeFinished += LibraryViewModel_InitializeFinished;
             PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
-            //TileViewModel = new TileViewModel();
-            
         }
 
         private void LibraryViewModel_InitializeFinished(object sender, EventArgs e)
         {
-            //var thumbnails = LibraryViewModel.Thumbnails;
-            //TileViewModel.CreateTiles(thumbnails);
-            //FirstPanelList = new ObservableCollection<LocalArtistModel>(LibraryViewModel.GetLocalArtists());
-            //SecondPanelList = LibraryViewModel.Albums;
-            //ThirdPanelList = LibraryViewModel.Musics;
+            PlaylistNameList = new ObservableCollection<string>(LibraryViewModel.Playlists.Select(p => p.Playlist.Name).ToList());
         }
+
+        public void SetMediaList()
+        {
+            if (PlayBackListConsistencyDetect(DetailViewModel.Musics))
+                PlaybackList = ToPlayBackList(DetailViewModel.Musics);
+            PlayerViewModel.MediaList = new MediaListViewModel(DetailViewModel.Musics, PlaybackList, dispatcher);
+        }
+
+        public void SetMediaList(ILocalListModel model)
+        {
+            if (PlayBackListConsistencyDetect(model.Musics))
+                PlaybackList = ToPlayBackList(model.Musics);
+            PlayerViewModel.MediaList = new MediaListViewModel(model.Musics, PlaybackList, dispatcher);
+        }
+
+        //public void 
+
         #endregion
 
         #region Properties
@@ -77,10 +95,106 @@ namespace Reborn_Zune.ViewModel
             }
         }
 
+        public DetailViewModel DetailViewModel
+        {
+            get
+            {
+                return _detailViewmodel;
+            }
+            set
+            {
+                if(_detailViewmodel != value)
+                {
+                    _detailViewmodel = value;
+                    RaisePropertyChanged(() => DetailViewModel);
+                }
+            }
+        }
+
         public MediaPlaybackList PlaybackList
         {
             get { return _player.Source as MediaPlaybackList; }
             set { _player.Source = value; }
+        }
+
+        public ILocalListModel ClickedList
+        {
+            get
+            {
+                return _clickedList;
+            }
+            set
+            {
+                if(_clickedList != value)
+                {
+                    _clickedList = value;
+                    RaisePropertyChanged(() => ClickedList);
+                }
+            }
+        }
+
+        public ObservableCollection<LocalAlbumModel> AlbumList
+        {
+            get
+            {
+                return _albumList;
+            }
+            set
+            {
+                if(_albumList != value)
+                {
+                    _albumList = value;
+                    RaisePropertyChanged(() => AlbumList);
+                }
+            }
+        }
+
+        public ObservableCollection<LocalPlaylistModel> PlaylistList
+        {
+            get
+            {
+                return _playlistList;
+            }
+            set
+            {
+                if(_playlistList != value)
+                {
+                    _playlistList = value;
+                    RaisePropertyChanged(() => PlaylistList);
+                }
+            }
+        }
+
+        public ObservableCollection<string> PlaylistNameList
+        {
+            get
+            {
+                return _playlistNameList;
+            }
+            set
+            {
+                if(_playlistNameList != value)
+                {
+                    _playlistNameList = value;
+                    RaisePropertyChanged(() => PlaylistNameList);
+                }
+            }
+        }
+
+        public Visibility FloatingVisible
+        {
+            get
+            {
+                return _floatingVisible;
+            }
+            set
+            {
+                if (_floatingVisible != value)
+                {
+                    _floatingVisible = value;
+                    RaisePropertyChanged(() => FloatingVisible);
+                }
+            }
         }
 
         #endregion
@@ -108,28 +222,38 @@ namespace Reborn_Zune.ViewModel
             return playbackList;
         }
 
-        public void ShowMediaPopUp()
+
+        public void SetClickList(ILocalListModel clickedItem)
         {
-            //throw new NotImplementedException();
+            if(clickedItem is LocalAlbumModel)
+            {
+                var item = clickedItem as LocalAlbumModel;
+                DetailViewModel = new DetailViewModel(item.Image, item.Album.Title, item.Album.Artist.Name, item.Musics);
+            }
+            else
+            {
+                var item = clickedItem as LocalPlaylistModel;
+                DetailViewModel = new DetailViewModel(new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg")), item.Playlist.Name, "", item.Musics);
+            }
         }
 
-        //private bool PlayBackListConsistencyDetect(ObservableCollection<LocalMusicModel> currentList)
-        //{
-        //    if (PlaybackList == null)
-        //        return true;
+        private bool PlayBackListConsistencyDetect(ObservableCollection<LocalMusicModel> currentList)
+        {
+            if (PlaybackList == null)
+                return true;
 
-        //    // Verify consistency of the lists that were passed in
-        //    var mediaListIds = currentList.Select(i => i.MusicID);
-        //    var playbackListIds = PlaybackList.Items.Select(
-        //        i => (string)i.Source.CustomProperties.SingleOrDefault(
-        //            p => p.Key == LocalMusicModel.MediaItemIdKey).Value);
+            // Verify consistency of the lists that were passed in
+            var mediaListIds = currentList.Select(i => i.MusicID);
+            var playbackListIds = PlaybackList.Items.Select(
+                i => (string)i.Source.CustomProperties.SingleOrDefault(
+                    p => p.Key == LocalMusicModel.MediaItemIdKey).Value);
 
-        //    if (!mediaListIds.SequenceEqual(playbackListIds))
-        //        return true;
+            if (!mediaListIds.SequenceEqual(playbackListIds))
+                return true;
 
-        //    return false;
+            return false;
 
-        //}
+        }
 
         #endregion
 

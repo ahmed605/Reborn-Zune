@@ -186,7 +186,6 @@ namespace Reborn_Zune.ViewModel
             RaisePropertyChanged(nameof(hasPlaylist));
         }
 
-
         public Visibility hasPlaylist
         {
             get
@@ -207,8 +206,8 @@ namespace Reborn_Zune.ViewModel
         {
             MusicLibrary.AddSongsToPlaylist(playlistName, enumerable);
             Library = MusicLibrary.FetchAll();
-            RaisePropertyChanged(nameof(hasPlaylistReverse));
-            RaisePropertyChanged(nameof(hasPlaylist));
+            Playlists.Clear();
+            GetLocalPlaylists();
         }
     }
 }
