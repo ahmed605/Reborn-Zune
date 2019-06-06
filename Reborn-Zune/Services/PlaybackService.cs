@@ -27,7 +27,7 @@ namespace Reborn_Zune.Services
         public PlaybackService()
         {
             Player = new MediaPlayer();
-            Player.AutoPlay = false ;
+            Player.AutoPlay = true ;
         }
     }
 }

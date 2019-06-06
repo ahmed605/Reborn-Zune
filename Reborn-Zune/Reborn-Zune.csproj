@@ -110,17 +110,17 @@
     </Compile>
     <Compile Include="Control\CustomMediaTransportControl.cs" />
     <Compile Include="Control\CustomPopUpMediaTransportControl.cs" />
-    <Compile Include="Control\PlayerPopUp.xaml.cs">
-      <DependentUpon>PlayerPopUp.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Control\PlaylistPopUp.xaml.cs">
-      <DependentUpon>PlaylistPopUp.xaml</DependentUpon>
+    <Compile Include="Control\ShadowSpotLightControl.xaml.cs">
+      <DependentUpon>ShadowSpotLightControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\ILocalListModel.cs" />
     <Compile Include="Model\LocalPlaylistModel.cs" />
+    <Compile Include="PlaylistDetailPage.xaml.cs">
+      <DependentUpon>PlaylistDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="SplashScreen.xaml.cs">
       <DependentUpon>SplashScreen.xaml</DependentUpon>
@@ -142,9 +142,11 @@
     <Compile Include="Control\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\SpotLight.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="Control\VariableSizedWrapPanel.cs" />
+    <Compile Include="ViewModel\DetailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MediaItemViewModel.cs" />
     <Compile Include="ViewModel\MediaListViewModel.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="ViewModel\PlaybackSessionViewModel.cs" />
     <Compile Include="ViewModel\PlayerViewModel.cs" />
     <Compile Include="ViewModel\TileViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -159,6 +162,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\icons8-back-arrow-96.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
@@ -224,11 +228,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Control\PlayerPopUp.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Control\PlaylistPopUp.xaml">
+    <Page Include="Control\ShadowSpotLightControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -241,6 +241,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Control\Tile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PlaylistDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
