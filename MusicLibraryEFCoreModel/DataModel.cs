@@ -8,7 +8,7 @@ namespace MusicLibraryEFCoreModel
     {
         public Music()
         {
-            Id = Guid.NewGuid().ToString();
+           
         }
 
         public string Id { get; set; }
@@ -27,7 +27,7 @@ namespace MusicLibraryEFCoreModel
     {
         public Album()
         {
-            Id = Guid.NewGuid().ToString();
+            
         }
         public string Id { get; set; }
         public string Title { get; set; }
@@ -42,7 +42,7 @@ namespace MusicLibraryEFCoreModel
     {
         public Artist()
         {
-            Id = Guid.NewGuid().ToString();
+            
         }
         public string Id { get; set; }
         public string Name { get; set; }
@@ -54,7 +54,7 @@ namespace MusicLibraryEFCoreModel
     {
         public Playlist()
         {
-            Id = Guid.NewGuid().ToString();
+            
         }
 
         public string Id { get; set; }
@@ -75,7 +75,7 @@ namespace MusicLibraryEFCoreModel
     {
         public Thumbnail()
         {
-            Id = Guid.NewGuid().ToString();
+            
         }
 
         public string Id { get; set; }

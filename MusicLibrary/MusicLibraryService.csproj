@@ -120,8 +120,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="LibraryService.cs" />
-    <Compile Include="DataBaseService.cs" />
     <Compile Include="MusicLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\MusicLibrary.rd.xml" />

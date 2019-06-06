@@ -94,7 +94,11 @@ namespace MusicLibraryEFCoreModel
                     .HasMaxLength(450)
                     .HasColumnName("ArtistId");
 
-                entity.HasKey("Id");
+                entity.HasKey(a => a.Id);
+
+                entity.HasIndex("Id")
+                    .IsUnique()
+                    .HasName("UQ__Album__AUQKR5RFNOUO6UFR");
 
                 entity.ToTable("Album");
 
@@ -122,7 +126,11 @@ namespace MusicLibraryEFCoreModel
                     .IsUnicode()
                     .HasColumnName("Name");
 
-                entity.HasKey("Id");
+                entity.HasKey(a => a.Id);
+
+                entity.HasIndex("Id")
+                    .IsUnique()
+                    .HasName("UQ__Artist__AUQKR5RFNOUO6UFR");
 
                 entity.ToTable("Artist");
             });
@@ -140,7 +148,11 @@ namespace MusicLibraryEFCoreModel
                     .IsUnicode()
                     .HasColumnName("Name");
 
-                entity.HasKey("Id");
+                entity.HasKey(e => e.Id);
+
+                entity.HasIndex("Id")
+                    .IsUnique()
+                    .HasName("UQ__Playlist__AUQKR5RFNOUO6UFR");
 
                 entity.ToTable("Playlst");
             });
@@ -159,7 +171,7 @@ namespace MusicLibraryEFCoreModel
                 .HasMaxLength(450)
                 .HasColumnName("PlaylistId");
 
-            entity.HasKey(new string[] { "MusicId", "PlaylistId"});
+            entity.HasKey(e => new { e.MusicId, e.PlaylistId });
 
                 entity.ToTable("MusicInPlaylist");
 
@@ -189,6 +201,10 @@ namespace MusicLibraryEFCoreModel
                     .HasColumnName("Image");
 
                 entity.HasKey("Id");
+
+                entity.HasIndex("Id")
+                    .IsUnique()
+                    .HasName("UQ__Thumbnail__AUQKR5RFNOUO6UFR");
 
                 entity.ToTable("Thumbnail");
 

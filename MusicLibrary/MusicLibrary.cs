@@ -154,7 +154,8 @@ namespace MusicLibraryService
                     {
                         thumb.Add(new Thumbnail
                         {
-                            Image = bytearray
+                            Image = bytearray,
+                            Id = Guid.NewGuid().ToString()
                         });
                         _context.Thumbnails.Add(thumb[0]);
                         _context.SaveChanges();
@@ -166,7 +167,8 @@ namespace MusicLibraryService
                     {
                         artist.Add(new Artist
                         {
-                            Name = artistname
+                            Name = artistname,
+                            Id = Guid.NewGuid().ToString()
                         });
                         _context.Artists.Add(artist[0]);
                         _context.SaveChanges();
@@ -180,7 +182,8 @@ namespace MusicLibraryService
                         {
                             Title = albumtitle,
                             ArtistId = artist[0].Id,
-                            ThumbnailId = thumb[0].Id
+                            ThumbnailId = thumb[0].Id,
+                            Id = Guid.NewGuid().ToString()
                         });
                         _context.Albums.Add(album[0]);
                         _context.SaveChanges();
@@ -193,7 +196,8 @@ namespace MusicLibraryService
                         Title = tags.Title == null ? Path.GetFileNameWithoutExtension(File.Path) : tags.Title,
                         AlbumId = album[0].Id,
                         ArtistId = artist[0].Id,
-                        ThumbnailId = thumb[0].Id
+                        ThumbnailId = thumb[0].Id,
+                        Id = Guid.NewGuid().ToString()
                     };
                     _context.Musics.Add(Music);
                     _context.SaveChanges();
@@ -379,9 +383,7 @@ namespace MusicLibraryService
                 {
                     var mInP = new MusicInPlaylist
                     {
-                        Music = item,
                         MusicId = item.Id,
-                        Playlist = playlist,
                         PlaylistId = playlist.Id
                     };
                     _context.MusicInPlaylists.Add(mInP);
@@ -413,7 +415,6 @@ namespace MusicLibraryService
             }
         }
     }
-
     static class LibraryService
     {
         public static async Task<List<KeyValuePair<StorageLibraryChangeType, object>>> Initialize(bool IsFirstUse)

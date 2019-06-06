@@ -9,8 +9,8 @@ using MusicLibraryEFCoreModel;
 namespace MusicLibraryEFCoreModel.Migrations
 {
     [DbContext(typeof(MusicLibraryDbContext))]
-    [Migration("20190415213839_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20190522015758_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,10 @@ namespace MusicLibraryEFCoreModel.Migrations
 
                     b.HasIndex("ArtistId");
 
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasName("UQ__Album__AUQKR5RFNOUO6UFR");
+
                     b.HasIndex("ThumbnailId")
                         .IsUnique();
 
@@ -63,6 +67,10 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .IsUnicode(true);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasName("UQ__Artist__AUQKR5RFNOUO6UFR");
 
                     b.ToTable("Artist");
                 });
@@ -88,8 +96,6 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .HasColumnName("Path")
                         .IsUnicode(true);
 
-                    b.Property<string>("PlaylistId");
-
                     b.Property<string>("ThumbnailId")
                         .HasColumnName("ThumbnailId")
                         .IsUnicode(true);
@@ -108,8 +114,6 @@ namespace MusicLibraryEFCoreModel.Migrations
                     b.HasIndex("Id")
                         .IsUnique()
                         .HasName("UQ__Music__AUQKR5RFNOUO6UFR");
-
-                    b.HasIndex("PlaylistId");
 
                     b.HasIndex("ThumbnailId");
 
@@ -150,6 +154,10 @@ namespace MusicLibraryEFCoreModel.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasName("UQ__Playlist__AUQKR5RFNOUO6UFR");
+
                     b.ToTable("Playlst");
                 });
 
@@ -168,6 +176,10 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .IsUnicode(true);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasName("UQ__Thumbnail__AUQKR5RFNOUO6UFR");
 
                     b.ToTable("Thumbnail");
                 });
@@ -196,10 +208,6 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .WithMany("Musics")
                         .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MusicLibraryEFCoreModel.Playlist")
-                        .WithMany("Musics")
-                        .HasForeignKey("PlaylistId");
 
                     b.HasOne("MusicLibraryEFCoreModel.Thumbnail", "Thumbnail")
                         .WithMany("Musics")
