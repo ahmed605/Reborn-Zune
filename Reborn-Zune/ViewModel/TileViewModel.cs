@@ -150,11 +150,11 @@ namespace Reborn_Zune.ViewModel
         {
             Random rnd = new Random();
             int val = rnd.Next(0,100);
-            if(val < 7)
+            if(val < 5)
             {
                 return 4;
             }
-            else if(val < 30)
+            else if(val < 25)
             {
                 return 3;
             }
