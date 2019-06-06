@@ -29,6 +29,7 @@
                 ItemHeight="70"
                 ItemWidth="70"
                 ItemsSource="{x:Bind TileVM.Tiles, Mode=OneWay}"
+                Loaded="Tiles_Loaded"
                 Orientation="Vertical" />
             <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Border.Background>

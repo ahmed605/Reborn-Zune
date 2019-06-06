@@ -9,12 +9,15 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid BorderBrush="Black" BorderThickness=".8">
-        <Image
-            x:Name="Img"
-            Source="{Binding Path=Thumbnail, ElementName=parent}"
-            Stretch="UniformToFill" />
-
-
+    <Grid
+        Background="Black"
+        BorderBrush="Black"
+        BorderThickness=".8">
+        <Grid x:Name="ImgGrid">
+            <Image
+                x:Name="Img"
+                Source="{Binding Path=Thumbnail, ElementName=parent}"
+                Stretch="UniformToFill" />
+        </Grid>
     </Grid>
 </UserControl>

@@ -22,6 +22,7 @@ namespace Reborn_Zune.ViewModel
 
         #region Fields
         private CoreDispatcher dispatcher;
+        private Random rnd = new Random();
         private PlayerViewModel _playerViewModel;
         private ObservableCollection<BitmapImage> _bitmapList;
         private ObservableCollection<UIElement> _tiles;
@@ -58,7 +59,7 @@ namespace Reborn_Zune.ViewModel
             var maxViewPixel = (ActualWidth / RawPVP) * (ActualWidth / RawPVP);
             var tileViewPixel = 4900 / RawPVP;
             var percentage = 1 + (RawPVP+4) / 10;
-            MaxTileNumer = (int)((maxViewPixel / tileViewPixel) * (0.22 * percentage));
+            MaxTileNumer = (int)((maxViewPixel / tileViewPixel) * (0.22 * 1));
         }
         #endregion
 
@@ -148,8 +149,7 @@ namespace Reborn_Zune.ViewModel
         #region Helpers
         private int Spans(int i)
         {
-            Random rnd = new Random();
-            int val = rnd.Next(0,100);
+            int val = rnd.Next(0,200);
             if(val < 5)
             {
                 return 4;
@@ -167,7 +167,6 @@ namespace Reborn_Zune.ViewModel
         private void CreateTile()
         {
             var a = new ObservableCollection<UIElement>();
-            Random rnd = new Random();
             for (int i = 0; i < MaxTileNumer; i++)
             {
                 int factor = Spans(i);

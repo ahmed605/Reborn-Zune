@@ -1,6 +1,8 @@
 ﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Reborn_Zune.Control;
+using Reborn_Zune.Utilities;
 using Reborn_Zune.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -8,13 +10,17 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
 using Windows.Graphics.Effects;
+using Windows.System.Threading;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Composition.Effects;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,6 +29,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -36,7 +43,7 @@ namespace Reborn_Zune
     {
         private const float lightDepth = 200f;
         private const int animationDelay = 600;
-        private const int animationDuration = 70;
+        private const int animationDuration = 120;
         private CompositionEffectFactory _effectFactory;
         private Random _random = new Random();
         private Compositor _compositor;
@@ -80,10 +87,10 @@ namespace Reborn_Zune
             _secondPointLight = _compositor.CreatePointLight();
             _pointLight.Offset = new Vector3(-2500f, -2500f, 300f);
             _secondPointLight.Offset = new Vector3(-2500f, -2500f, 300f);
-            _pointLight.Intensity = 1.5f;
-            _secondPointLight.Intensity = 1.5f;
+            _pointLight.Intensity = 1.3f;
+            _secondPointLight.Intensity = 1.3f;
             _ambientLight = _compositor.CreateAmbientLight();
-            _ambientLight.Intensity = 0.25f;
+            _ambientLight.Intensity = 0.20f;
             _ambientLight.Color = "#d3d3d3".ToColor();
             IGraphicsEffect graphicsEffect = new CompositeEffect()
             {
@@ -99,7 +106,7 @@ namespace Reborn_Zune
                                         new SceneLightingEffect()
                                         {
                                             AmbientAmount = 0,
-                                            DiffuseAmount = 30f,
+                                            DiffuseAmount = 35f,
                                             SpecularAmount = 0,
                                             NormalMapSource = new CompositionEffectSourceParameter("NormalMap"),
                                         }
@@ -212,6 +219,32 @@ namespace Reborn_Zune
         private void CustomMTC_ListViewGridUnChecked(object sender, EventArgs e)
         {
 
+        }
+
+        private void Tiles_Loaded(object sender, RoutedEventArgs e)
+        {
+            TimeSpan period = TimeSpan.FromSeconds(5);
+            ThreadPoolTimer PeriodicTimer = ThreadPoolTimer.CreatePeriodicTimer(async (source) =>
+            {
+                Random rnd = new Random();
+                await Dispatcher.RunAsync(CoreDispatcherPriority.High,
+                    () =>
+                    {
+
+                        int imgSouceIdx = rnd.Next(TileVM.BitmapList.Count);
+                        int tileIdx = rnd.Next(TileVM.Tiles.Count);
+                        var imgSource = TileVM.BitmapList[imgSouceIdx];
+                        var tile = TileVM.Tiles[tileIdx] as Tile;
+
+                        tile.UpdateThumbnail(_compositor, imgSource);
+                    });
+
+            }, period);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
