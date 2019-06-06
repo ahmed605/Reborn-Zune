@@ -20,9 +20,9 @@
 
             <custom_controls:VariableSizedWrapPanel
                 x:Name="tiles"
-                Width="2580"
-                Height="1200"
-                Margin="-20,-20,-1784,-100"
+                Width="{x:Bind TileVM.ActualWidth, Mode=OneWay}"
+                Height="{x:Bind TileVM.ActualHeight, Mode=OneWay}"
+                Margin="-50,-50,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 IsComposing="True"
@@ -82,7 +82,8 @@
             Margin="0,0,36,80"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Background="Black">
+            Background="Black"
+            Visibility="Collapsed">
             <ListView
                 x:Name="listview"
                 Margin="20,20,0,47"

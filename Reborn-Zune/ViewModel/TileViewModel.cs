@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Graphics.Display;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -25,6 +26,9 @@ namespace Reborn_Zune.ViewModel
         private ObservableCollection<BitmapImage> _bitmapList;
         private ObservableCollection<UIElement> _tiles;
         private ObservableCollection<BitmapImage> thumbnails;
+        private double _actualWidth;
+        private double _actualHeight;
+        private int _maxTileNumber;
         #endregion
 
         #region Constructor
@@ -32,13 +36,28 @@ namespace Reborn_Zune.ViewModel
         {
             BitmapList = new ObservableCollection<BitmapImage>();
             Tiles = new ObservableCollection<UIElement>();
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            
         }
 
         public TileViewModel(ObservableCollection<BitmapImage> thumbnails)
         {
             BitmapList = thumbnails;
             Tiles = new ObservableCollection<UIElement>();
+            CalculateScreeInfo();
             CreateTile();
+            
+        }
+
+        private void CalculateScreeInfo()
+        {
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            ActualHeight = displayInformation.ScreenHeightInRawPixels + 70 * 2;
+            ActualWidth = displayInformation.ScreenWidthInRawPixels + 70 * 1;
+            var RawPVP = displayInformation.RawPixelsPerViewPixel;
+            var maxViewPixel = (ActualWidth / RawPVP) * (ActualWidth / RawPVP);
+            var tileViewPixel = 4900 / RawPVP;
+            MaxTileNumer = (int)((maxViewPixel / tileViewPixel) * 0.25);
         }
         #endregion
 
@@ -71,6 +90,54 @@ namespace Reborn_Zune.ViewModel
                 {
                     _tiles = value;
                     RaisePropertyChanged(() => Tiles);
+                }
+            }
+        }
+
+        public double ActualWidth
+        {
+            get
+            {
+                return _actualWidth;
+            }
+            set
+            {
+                if(_actualWidth != value)
+                {
+                    _actualWidth = value;
+                    RaisePropertyChanged(() => ActualWidth);
+                }
+            }
+        }
+
+        public double ActualHeight
+        {
+            get
+            {
+                return _actualHeight;
+            }
+            set
+            {
+                if(_actualHeight != value)
+                {
+                    _actualHeight = value;
+                    RaisePropertyChanged(() => ActualHeight);
+                }
+            }
+        }
+
+        public int MaxTileNumer
+        {
+            get
+            {
+                return _maxTileNumber;
+            }
+            set
+            {
+                if(_maxTileNumber != value)
+                {
+                    _maxTileNumber = value;
+                    RaisePropertyChanged(() => MaxTileNumer);
                 }
             }
         }
@@ -154,6 +221,24 @@ namespace Reborn_Zune.ViewModel
                     return 4;
                 case 252:
                     return 3;
+                case 255:
+                    return 4;
+                case 262:
+                    return 3;
+                case 273:
+                    return 4;
+                case 277:
+                    return 4;
+                case 280:
+                    return 3;
+                case 283:
+                    return 3;
+                case 290:
+                    return 4;
+                case 295:
+                    return 3;
+                case 300:
+                    return 3;
                 default:
                     return 1;
 
@@ -164,7 +249,7 @@ namespace Reborn_Zune.ViewModel
         {
             var a = new ObservableCollection<UIElement>();
             Random rnd = new Random();
-            for (int i = 0; i < 300; i++)
+            for (int i = 0; i < MaxTileNumer; i++)
             {
                 int factor = Spans(i);
                 int id = rnd.Next(BitmapList.Count);
