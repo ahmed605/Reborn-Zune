@@ -57,7 +57,8 @@ namespace Reborn_Zune.ViewModel
             var RawPVP = displayInformation.RawPixelsPerViewPixel;
             var maxViewPixel = (ActualWidth / RawPVP) * (ActualWidth / RawPVP);
             var tileViewPixel = 4900 / RawPVP;
-            MaxTileNumer = (int)((maxViewPixel / tileViewPixel) * 0.25);
+            var percentage = 1 + (RawPVP+4) / 10;
+            MaxTileNumer = (int)((maxViewPixel / tileViewPixel) * (0.22 * percentage));
         }
         #endregion
 
@@ -147,101 +148,19 @@ namespace Reborn_Zune.ViewModel
         #region Helpers
         private int Spans(int i)
         {
-            switch (i)
+            Random rnd = new Random();
+            int val = rnd.Next(0,100);
+            if(val < 7)
             {
-                case 1:
-                    return 4;
-                case 3:
-                    return 3;
-                case 9:
-                    return 3;
-                case 23:
-                    return 3;
-                case 27:
-                    return 3;
-                case 32:
-                    return 3;
-                case 39:
-                    return 3;
-                case 42:
-                    return 3;
-                case 50:
-                    return 4;
-                case 52:
-                    return 3;
-                case 59:
-                    return 3;
-                case 65:
-                    return 3;
-                case 70:
-                    return 3;
-                case 82:
-                    return 3;
-                case 90:
-                    return 3;
-                case 98:
-                    return 3;
-                case 100:
-                    return 3;
-                case 103:
-                    return 4;
-                case 110:
-                    return 3;
-                case 118:
-                    return 3;
-                case 120:
-                    return 3;
-                case 121:
-                    return 3;
-                case 130:
-                    return 3;
-                case 140:
-                    return 3;
-                case 147:
-                    return 4;
-                case 155:
-                    return 3;
-                case 160:
-                    return 3;
-                case 166:
-                    return 3;
-                case 170:
-                    return 3;
-                case 175:
-                    return 3;
-                case 185:
-                    return 4;
-                case 200:
-                    return 4;
-                case 210:
-                    return 3;
-                case 217:
-                    return 3;
-                case 220:
-                    return 4;
-                case 252:
-                    return 3;
-                case 255:
-                    return 4;
-                case 262:
-                    return 3;
-                case 273:
-                    return 4;
-                case 277:
-                    return 4;
-                case 280:
-                    return 3;
-                case 283:
-                    return 3;
-                case 290:
-                    return 4;
-                case 295:
-                    return 3;
-                case 300:
-                    return 3;
-                default:
-                    return 1;
-
+                return 4;
+            }
+            else if(val < 30)
+            {
+                return 3;
+            }
+            else
+            {
+                return 1;
             }
         }
 
