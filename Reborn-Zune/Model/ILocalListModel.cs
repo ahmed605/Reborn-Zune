@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 
 namespace Reborn_Zune.Model
 {
@@ -13,6 +14,12 @@ namespace Reborn_Zune.Model
         bool isEditable { get; }
 
         Visibility isVisible { get; }
+
+        ImageSource GetImage();
+
+        string GetTitle();
+
+        string GetArtist();
 
         ObservableCollection<LocalMusicModel> Musics { get; set; }
     }

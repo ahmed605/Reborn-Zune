@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.Model
@@ -25,6 +26,21 @@ namespace Reborn_Zune.Model
         {
             Image = await Utility.ImageFromBytes(Album.Thumbnail.Image);
             
+        }
+
+        public ImageSource GetImage()
+        {
+            return Image;
+        }
+
+        public string GetTitle()
+        {
+            return Album.Title;
+        }
+
+        public string GetArtist()
+        {
+            return Album.Artist.Name;
         }
         #endregion
 

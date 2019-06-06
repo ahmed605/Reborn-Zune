@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.Model
 {
@@ -58,6 +60,21 @@ namespace Reborn_Zune.Model
             {
                 return Visibility.Collapsed;
             }
+        }
+
+        public ImageSource GetImage()
+        {
+            return new BitmapImage(new Uri("ms-appx:///Assets/LargeTile.scale-400.png"));
+        }
+
+        public string GetTitle()
+        {
+            return Playlist.Name;
+        }
+
+        public string GetArtist()
+        {
+            return "Various Artists";
         }
     }
 }
