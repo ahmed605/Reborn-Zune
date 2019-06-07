@@ -2,6 +2,7 @@
     x:Class="Reborn_Zune.PlaylistDetailPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
@@ -31,14 +32,16 @@
             VerticalAlignment="Top"
             Orientation="Vertical">
             <Image
-                Width="220"
-                Height="220"
-                Source="{x:Bind MainVM.DetailViewModel.Thumbnail}" />
+                x:Name="ThumbnailImage"
+                Width="270"
+                Height="270"
+                Source="{x:Bind MainVM.DetailViewModel.Thumbnail, Mode=OneWay}" />
             <Button
                 x:Name="PlayButton"
                 Margin="0,35,0,0"
                 HorizontalAlignment="Center"
                 HorizontalContentAlignment="Stretch"
+                extensions:VisualExtensions.Opacity="0"
                 Background="Transparent"
                 Style="{StaticResource NoPointerOverButtonStyle}"
                 Tapped="PlayButton_Tapped">
@@ -90,6 +93,7 @@
                 Margin="0,20,0,0"
                 HorizontalAlignment="Center"
                 HorizontalContentAlignment="Stretch"
+                extensions:VisualExtensions.Opacity="0"
                 Background="Transparent"
                 Style="{StaticResource NoPointerOverButtonStyle}">
                 <Button.Content>
@@ -144,17 +148,28 @@
             VerticalAlignment="Top"
             Orientation="Vertical">
             <TextBlock
+                x:Name="TitleTextBlock"
+                extensions:VisualExtensions.Opacity="0"
                 FontSize="45"
                 FontWeight="Bold"
-                Text="{x:Bind MainVM.DetailViewModel.Title}" />
-            <TextBlock FontSize="30" Text="{x:Bind MainVM.DetailViewModel.Artist}" />
-            <TextBlock FontSize="28" Text="2019" />
+                Text="{x:Bind MainVM.DetailViewModel.Title, Mode=OneWay}" />
+            <TextBlock
+                x:Name="AlbumNameTextBlock"
+                extensions:VisualExtensions.Opacity="0"
+                FontSize="30"
+                Text="{x:Bind MainVM.DetailViewModel.Artist, Mode=OneWay}" />
+            <TextBlock
+                x:Name="AlbumYearTextBlock"
+                extensions:VisualExtensions.Opacity="0"
+                FontSize="28"
+                Text="2019" />
             <ListView
                 x:Name="list"
                 Height="425"
                 Margin="3,60,0,0"
                 HorizontalAlignment="Left"
-                ItemsSource="{x:Bind MainVM.DetailViewModel.Musics}">
+                extensions:VisualExtensions.Opacity="0"
+                ItemsSource="{x:Bind MainVM.DetailViewModel.Musics, Mode=OneWay}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -221,6 +236,7 @@
             Padding="0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
+            extensions:VisualExtensions.Opacity="0"
             Background="Transparent"
             Style="{StaticResource NoPointerOverButtonStyle}"
             Tapped="ExitButton_Tapped">

@@ -42,6 +42,7 @@ namespace Reborn_Zune
         private MainViewModel MainVM { get; set; }
         private Compositor _compositor;
         private Visual _floatingVisual;
+        private object  _storedItem;
         public MainPage()
         {
             this.InitializeComponent();
@@ -141,7 +142,24 @@ namespace Reborn_Zune
             border.Visibility = Visibility.Collapsed;
             buttons.Visibility = Visibility.Collapsed;
 
-            
+
+            _storedItem = (sender as GridViewItem).Content;
+            //clickGridViewItem = rootElement.FindDescendant<ImageEx>();
+            MainVM.SetClickList((e.OriginalSource as FrameworkElement).DataContext as ILocalListModel);
+            var gridView = rootElement.FindAscendant<GridView>();
+            if(gridView.Name == "albums")
+            {
+                var ca1 = albums.PrepareConnectedAnimation("ca1", _storedItem, "Thumbnail");
+            }
+            else
+            {
+                var ca1 = playlists.PrepareConnectedAnimation("ca1", _storedItem, "Thumbnail");
+            }
+
+
+            //ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("Image", clickGridViewItem);
+            //albums.PrepareConnectedAnimation("portrait", dcontext, "Thumbnail");
+            Frame.Navigate(typeof(PlaylistDetailPage), MainVM, new SuppressNavigationTransitionInfo());
         }
 
         private async void ItemContainer_PointerExited(object sender, PointerRoutedEventArgs e)
@@ -219,12 +237,9 @@ namespace Reborn_Zune
                 }
             }
         }
+        
+        
 
-        private void GridView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            MainVM.SetClickList(e.ClickedItem as ILocalListModel);
-            Frame.Navigate(typeof(PlaylistDetailPage),  MainVM);
-        }
 
         private void PlayerFloating_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
@@ -259,7 +274,7 @@ namespace Reborn_Zune
 
         private void PlayerFloating_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Frame.Navigate(typeof(TilePage), MainVM);
+            Frame.Navigate(typeof(TilePage), MainVM, new DrillInNavigationTransitionInfo());
         }
 
 
@@ -273,8 +288,6 @@ namespace Reborn_Zune
             var album = (sender as Button).DataContext as ILocalListModel;
             MainVM.SetMediaList(album);
             
-            
-
             if(MainVM.FloatingVisible == Visibility.Collapsed)
             {
                 MainVM.FloatingVisible = Visibility.Visible;
@@ -291,6 +304,38 @@ namespace Reborn_Zune
         private void AddToButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private async void Albums_Loaded(object sender, RoutedEventArgs e)
+        {
+            if(_storedItem != null)
+            {
+                albums.ScrollIntoView(_storedItem, ScrollIntoViewAlignment.Default);
+                ConnectedAnimation animation =
+            ConnectedAnimationService.GetForCurrentView().GetAnimation("ca2");
+                
+                if (animation != null)
+                {
+                    await albums.TryStartConnectedAnimationAsync(
+                        animation, _storedItem, "Thumbnail");
+                }
+            }
+        }
+
+        private async void Playlists_Loaded(object sender, RoutedEventArgs e)
+        {
+            if(_storedItem != null)
+            {
+                playlists.ScrollIntoView(_storedItem, ScrollIntoViewAlignment.Default);
+                ConnectedAnimation animation =
+            ConnectedAnimationService.GetForCurrentView().GetAnimation("ca2");
+
+                if (animation != null)
+                {
+                    await playlists.TryStartConnectedAnimationAsync(
+                        animation, _storedItem, "Thumbnail");
+                }
+            }
         }
     }
 }

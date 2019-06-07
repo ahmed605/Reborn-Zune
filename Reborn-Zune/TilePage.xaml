@@ -83,8 +83,7 @@
             Margin="0,0,36,80"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Background="Black"
-            Visibility="Collapsed">
+            Background="Black">
             <ListView
                 x:Name="listview"
                 Margin="20,20,0,47"

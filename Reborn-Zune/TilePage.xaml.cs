@@ -192,6 +192,7 @@ namespace Reborn_Zune
             TileMediaElement.SetMediaPlayer(MainVM._player);
             base.OnNavigatedTo(e);
         }
+        
 
         private void CustomMTC_ExitButtonClicked(object sender, EventArgs e)
         {

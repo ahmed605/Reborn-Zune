@@ -17,6 +17,7 @@ namespace Reborn_Zune.ViewModel
         private string _title;
         private string _artist;
         private ObservableCollection<LocalMusicModel> _musics;
+        private bool _animate = false;
 
         public DetailViewModel(BitmapImage image, string title, string artist, ObservableCollection<LocalMusicModel> musics)
         {
@@ -86,6 +87,22 @@ namespace Reborn_Zune.ViewModel
                 {
                     _musics = value;
                     RaisePropertyChanged(() => Musics);
+                }
+            }
+        }
+
+        public bool Animate
+        {
+            get
+            {
+                return _animate;
+            }
+            set
+            {
+                if(_animate != value)
+                {
+                    _animate = value;
+                    RaisePropertyChanged(() => Animate);
                 }
             }
         }
