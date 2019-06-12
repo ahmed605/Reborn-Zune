@@ -228,12 +228,13 @@ namespace Reborn_Zune.ViewModel
             if(clickedItem is LocalAlbumModel)
             {
                 var item = clickedItem as LocalAlbumModel;
-                DetailViewModel = new DetailViewModel(item.Image, item.Album.Title, item.Album.Artist.Name, item.Musics);
+                DetailViewModel = new DetailViewModel(item.Image, item.Title, item.AlbumArtist, item.Year, item.Musics);
+
             }
             else
             {
                 var item = clickedItem as LocalPlaylistModel;
-                DetailViewModel = new DetailViewModel(new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg")), item.Playlist.Name, "", item.Musics);
+                DetailViewModel = new DetailViewModel(new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg")), item.Playlist.Name, "Various Artist", "",item.Musics);
             }
         }
 
@@ -243,7 +244,7 @@ namespace Reborn_Zune.ViewModel
                 return true;
 
             // Verify consistency of the lists that were passed in
-            var mediaListIds = currentList.Select(i => i.MusicID);
+            var mediaListIds = currentList.Select(i => i.Music.Id);
             var playbackListIds = PlaybackList.Items.Select(
                 i => (string)i.Source.CustomProperties.SingleOrDefault(
                     p => p.Key == LocalMusicModel.MediaItemIdKey).Value);

@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using MusicLibraryEFCoreModel;
+using Reborn_Zune.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,7 +17,7 @@ namespace Reborn_Zune.Model
     {
         public LocalPlaylistModel()
         {
-
+            Musics = new ObservableCollection<LocalMusicModel>();
         }
 
 
@@ -46,6 +47,7 @@ namespace Reborn_Zune.Model
             }
         }
 
+        public LibraryViewModel LibraryViewModel { get; set; }
         public bool isEditable
         {
             get

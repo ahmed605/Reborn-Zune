@@ -65,13 +65,13 @@
                     HorizontalAlignment="Left"
                     FontSize="24"
                     Foreground="White"
-                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Artist.Name, Mode=OneWay}" />
+                    Text="artistname" />
                 <TextBlock
                     Margin="0,9,0,0"
                     HorizontalAlignment="Left"
                     FontSize="24"
                     Foreground="White"
-                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Album.Title, Mode=OneWay}" />
+                    Text="title" />
             </StackPanel>
         </StackPanel>
 
@@ -104,7 +104,7 @@
                                 HorizontalAlignment="Left"
                                 FontSize="12"
                                 Foreground="DarkGray"
-                                Text="{x:Bind Music.Artist.Name, Mode=OneWay}" />
+                                Text="name" />
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>

@@ -81,7 +81,7 @@ namespace Reborn_Zune.ViewModel
             this.dispatcher = dispatcher;
 
             // Verify consistency of the lists that were passed in
-            var mediaListIds = mediaList.Select(i => i.MusicID);
+            var mediaListIds = mediaList.Select(i => i.Music.Id);
             
             var playbackListIds = playbackList.Items.Select(
                 i => (string)i.Source.CustomProperties.SingleOrDefault(

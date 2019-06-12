@@ -12,24 +12,27 @@ namespace Reborn_Zune.Model
     public class LocalArtistModel : ObservableObject
     {
         #region Constructor
-        public LocalArtistModel(Artist artist, ObservableCollection<LocalAlbumModel> albums)
+        public LocalArtistModel()
         {
-            Artist = artist;
-            Albums = new ObservableCollection<LocalAlbumModel>(albums.Where(a => a.Album.Artist == Artist).ToList());
-            Musics = new ObservableCollection<LocalMusicModel>(Albums.SelectMany(a => a.Musics).ToList());
+            Albums = new ObservableCollection<LocalAlbumModel>();
+            Musics = new ObservableCollection<LocalMusicModel>();
         }
         #endregion
 
-        private Artist _artist;
-        public Artist Artist
+        private string _name;
+        public string Name
         {
             get
             {
-                return _artist;
+                return _name;
             }
             set
             {
-                Set<Artist>(() => this.Artist, ref _artist, value);
+                if(_name != value)
+                {
+                    _name = value;
+                    RaisePropertyChanged(() => Name);
+                }
             }
         }
 

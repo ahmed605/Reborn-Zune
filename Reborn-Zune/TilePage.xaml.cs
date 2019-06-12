@@ -233,7 +233,7 @@ namespace Reborn_Zune
                     {
 
                         int imgSouceIdx = rnd.Next(TileVM.BitmapList.Count);
-                        int tileIdx = rnd.Next(TileVM.Tiles.Count);
+                        int tileIdx = rnd.Next((int)(TileVM.Tiles.Count * 0.8));
                         var imgSource = TileVM.BitmapList[imgSouceIdx];
                         var tile = TileVM.Tiles[tileIdx] as Tile;
 
@@ -241,11 +241,6 @@ namespace Reborn_Zune
                     });
 
             }, period);
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
     }
 }

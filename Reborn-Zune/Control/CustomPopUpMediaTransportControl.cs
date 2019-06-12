@@ -110,7 +110,7 @@ namespace Reborn_Zune.Control
             {
                 if (MusicThumbnail != null)
                 {
-                    MusicThumbnail.Source = model.MediaItem.ImageSource;
+                    MusicThumbnail.Source = model.MediaItem.Music.Thumbnail.Image;
                 }
                 if (TopMusicTextBlock != null)
                 {
@@ -118,7 +118,8 @@ namespace Reborn_Zune.Control
                 }
                 if (TopArtistTextBlock != null)
                 {
-                    TopArtistTextBlock.Text = "Artist: " + model.MediaItem.Music.Artist.Name;
+                    //TopArtistTextBlock.Text = "Artist: " + model.MediaItem.Music.Artist.Name;
+                    TopArtistTextBlock.Text = "Artist: ";
                 }
                 if (MusicTitle != null)
                 {

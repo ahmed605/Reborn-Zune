@@ -16,14 +16,16 @@ namespace Reborn_Zune.ViewModel
         private BitmapImage _thumbnail;
         private string _title;
         private string _artist;
+        private string _albumYear;
         private ObservableCollection<LocalMusicModel> _musics;
         private bool _animate = false;
 
-        public DetailViewModel(BitmapImage image, string title, string artist, ObservableCollection<LocalMusicModel> musics)
+        public DetailViewModel(BitmapImage image, string title, string artist, string year, ObservableCollection<LocalMusicModel> musics)
         {
             Thumbnail = image;
             Title = title;
             Artist = artist;
+            AlbumYear = year;
             Musics = musics;
         }
 
@@ -87,6 +89,22 @@ namespace Reborn_Zune.ViewModel
                 {
                     _musics = value;
                     RaisePropertyChanged(() => Musics);
+                }
+            }
+        }
+
+        public string AlbumYear
+        {
+            get
+            {
+                return _albumYear;
+            }
+            set
+            {
+                if(_albumYear != AlbumYear)
+                {
+                    _albumYear = value;
+                    RaisePropertyChanged(() => AlbumYear);
                 }
             }
         }

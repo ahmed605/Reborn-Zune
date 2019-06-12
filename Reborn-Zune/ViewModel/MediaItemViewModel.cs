@@ -48,7 +48,7 @@ namespace Reborn_Zune.ViewModel
 
                 // Don't have one, try to rebind to one in the list
                 playbackItem = listViewModel.PlaybackList.Items.SingleOrDefault(pi =>
-                    (string)pi.Source.CustomProperties[MediaItem.GetMediaItemIdKey] == MediaItem.MusicID);
+                    (string)pi.Source.CustomProperties[MediaItem.GetMediaItemIdKey] == MediaItem.Music.Id);
 
                 if (playbackItem != null)
                     return playbackItem;
@@ -75,7 +75,7 @@ namespace Reborn_Zune.ViewModel
             // The reason we cache here is to avoid audio gaps 
             // between tracks on transitions when changing artwork.
             
-            PreviewImage = mediaItem.ImageSource;
+            PreviewImage = mediaItem.Music.Thumbnail.Image;
         }
         
     }

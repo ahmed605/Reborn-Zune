@@ -60,19 +60,19 @@ namespace Reborn_Zune.Control
             LinearEasingFunction linear = _compositor.CreateLinearEasingFunction();
             rotationAnimation.InsertKeyFrame(0f, 0f, linear);
             rotationAnimation.InsertKeyFrame(1f, 90f, linear);
-            rotationAnimation.Duration = TimeSpan.FromMilliseconds(600);
+            rotationAnimation.Duration = TimeSpan.FromMilliseconds(400);
             rotationAnimation.Target = "RotationAngleInDegrees";
             ScalarKeyFrameAnimation opacityAnimation = _compositor.CreateScalarKeyFrameAnimation();
             opacityAnimation.InsertKeyFrame(1f, 0);
             opacityAnimation.Duration = TimeSpan.FromMilliseconds(200);
-            opacityAnimation.DelayTime = TimeSpan.FromMilliseconds(550);
+            opacityAnimation.DelayTime = TimeSpan.FromMilliseconds(250);
             opacityAnimation.Target = "Opacity";
             fadeoutAnim.Add(rotationAnimation);
             fadeoutAnim.Add(opacityAnimation);
 
             tileVisual.StartAnimationGroup(fadeoutAnim);
 
-            await Task.Delay(800);
+            await Task.Delay(500);
             Thumbnail = imgSource;
 
 
@@ -82,18 +82,19 @@ namespace Reborn_Zune.Control
             ScalarKeyFrameAnimation rotationAnim = _compositor.CreateScalarKeyFrameAnimation();
             rotationAnim.InsertKeyFrame(0f, 270, linear);
             rotationAnim.InsertKeyFrame(1f, 360, linear);
-            rotationAnim.Duration = TimeSpan.FromMilliseconds(600);
-            rotationAnim.DelayTime = TimeSpan.FromMilliseconds(400);
+            rotationAnim.Duration = TimeSpan.FromMilliseconds(550);
+            rotationAnim.DelayTime = TimeSpan.FromMilliseconds(200);
             rotationAnim.Target = "RotationAngleInDegrees";
             ScalarKeyFrameAnimation opacityAnim2 = _compositor.CreateScalarKeyFrameAnimation();
             opacityAnim2.InsertKeyFrame(0f, 0f);
             opacityAnim2.InsertKeyFrame(1f, 1f);
-            opacityAnim2.Duration = TimeSpan.FromMilliseconds(2500);
-            opacityAnim2.DelayTime = TimeSpan.FromMilliseconds(400);
+            opacityAnim2.Duration = TimeSpan.FromMilliseconds(600);
+            opacityAnim2.DelayTime = TimeSpan.FromMilliseconds(250);
             opacityAnim2.Target = "Opacity";
             fadeoutAnim.Add(rotationAnim);
             fadeoutAnim.Add(opacityAnim2);
             tileVisual.StartAnimationGroup(fadeoutAnim);
+
         }
     }
 }

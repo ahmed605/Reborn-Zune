@@ -59,7 +59,7 @@ namespace Reborn_Zune.ViewModel
             var maxViewPixel = (ActualWidth / RawPVP) * (ActualWidth / RawPVP);
             var tileViewPixel = 4900 / RawPVP;
             var percentage = 1 + (RawPVP+4) / 10;
-            MaxTileNumer = (int)((maxViewPixel / tileViewPixel) * (0.22 * 1));
+            MaxTileNumer = (int)((maxViewPixel / tileViewPixel) * (0.22 * percentage));
         }
         #endregion
 

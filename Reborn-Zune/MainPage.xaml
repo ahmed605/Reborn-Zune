@@ -92,9 +92,12 @@
                         Text="&#xE73B;" />
                 </PivotItem.Header>
                 <Grid>
+                    <Grid>
+                        
+                    </Grid>
                     <GridView
                         x:Name="albums"
-                        Margin="0,30,0,70"
+                        Margin="0,60,0,70"
                         Padding="0,35,0,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
@@ -125,14 +128,26 @@
                                             FontSize="18"
                                             FontWeight="Normal"
                                             Foreground="Black"
-                                            Text="{x:Bind Album.Title, Mode=OneWay}" />
-                                        <TextBlock
-                                            Margin="0,-3,0,0"
-                                            FontFamily="Source Han Sans CN"
-                                            FontSize="15"
-                                            FontWeight="Normal"
-                                            Foreground="Gray"
-                                            Text="{x:Bind Album.Artist.Name, Mode=OneWay}" />
+                                            Text="{x:Bind Title, Mode=OneWay}" />
+                                        <StackPanel Margin="0,-3,0,0" Orientation="Horizontal"
+                                                    Width="175">
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontFamily="Source Han Sans CN"
+                                                FontSize="15"
+                                                FontWeight="Normal"
+                                                Foreground="Gray"
+                                                Text="{x:Bind AlbumArtist, Mode=OneWay}" />
+                                            <TextBlock
+                                                Margin="3,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontFamily="Source Han Sans CN"
+                                                FontSize="15"
+                                                FontWeight="Normal"
+                                                Foreground="Gray"
+                                                Text="{x:Bind Year, Mode=OneWay}" />
+                                        </StackPanel>
+
                                     </StackPanel>
 
                                     <Grid
@@ -150,7 +165,6 @@
                                         </controls:DropShadowPanel>
                                         <controls:ImageEx
                                             x:Name="Thumbnail"
-                                            IsCacheEnabled="True"
                                             PlaceholderSource="ms-appx:///Assets/Vap-logo-placeholder.jpg"
                                             Source="{x:Bind Image, Mode=OneWay}"
                                             Stretch="UniformToFill" />
@@ -189,12 +203,24 @@
                                                 </Button.Content>
                                             </Button>
                                             <Button
+                                                x:Name="AlbumAddTo"
                                                 Width="25"
                                                 Height="25"
                                                 Margin="10,0,0,0"
                                                 Style="{StaticResource MainPageCircleButtonStyle}"
                                                 Tapped="AddToButton_Tapped">
-
+                                                <Button.Flyout>
+                                                    <Flyout utils:BindableFlyout.ItemsSource="{x:Bind LibraryViewModel.Playlists, Mode=OneWay}">
+                                                        <utils:BindableFlyout.ItemTemplate>
+                                                            <DataTemplate x:DataType="model:LocalPlaylistModel">
+                                                                <MenuFlyoutItem
+                                                                    x:Name="AddToPlaylistFlyout"
+                                                                    Tapped="AddToPlaylistFlyout_Tapped"
+                                                                    Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                                            </DataTemplate>
+                                                        </utils:BindableFlyout.ItemTemplate>
+                                                    </Flyout>
+                                                </Button.Flyout>
                                                 <Button.Content>
                                                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" />
                                                 </Button.Content>
@@ -206,7 +232,6 @@
                             </DataTemplate>
                         </GridView.ItemTemplate>
                     </GridView>
-
                 </Grid>
             </PivotItem>
             <PivotItem>
@@ -234,11 +259,15 @@
                                 Background="Transparent"
                                 Content="new playlist">
                                 <Button.Flyout>
-                                    <Flyout>
+                                    <Flyout x:Name="AddPlaylistFlyout">
                                         <StackPanel>
                                             <TextBlock Text="new playlist" />
                                             <TextBox x:Name="PlaylistName" Margin="0,10,0,0" />
-                                            <TextBlock Margin="0,10,0,0" Text="Already have playlist with this name" />
+                                            <TextBlock
+                                                x:Name="UnAvailableHint"
+                                                Margin="0,10,0,0"
+                                                Text="Already have playlist with this name"
+                                                Visibility="Collapsed" />
                                             <Button
                                                 x:Name="newPlaylistButton"
                                                 Margin="0,10,0,0"
@@ -296,7 +325,6 @@
                                             x:Name="Thumbnail"
                                             HorizontalAlignment="Stretch"
                                             VerticalAlignment="Stretch"
-                                            IsCacheEnabled="True"
                                             Source="ms-appx:///Assets/Vap-logo-placeholder.jpg"
                                             Stretch="UniformToFill" />
 
@@ -334,11 +362,24 @@
                                                 </Button.Content>
                                             </Button>
                                             <Button
+                                                x:Name="PlaylistAddTo"
                                                 Width="25"
                                                 Height="25"
                                                 Margin="10,0,0,0"
                                                 Style="{StaticResource MainPageCircleButtonStyle}"
-                                                Tapped="AddToButton_Tapped">
+                                                Tapped="PlaylistAddTo_Tapped">
+                                                <Button.Flyout>
+                                                    <Flyout utils:BindableFlyout.ItemsSource="{x:Bind LibraryViewModel.Playlists, Mode=OneWay}">
+                                                        <utils:BindableFlyout.ItemTemplate>
+                                                            <DataTemplate x:DataType="model:LocalPlaylistModel">
+                                                                <MenuFlyoutItem
+                                                                    x:Name="AddToPlaylistFlyout"
+                                                                    Tapped="AddToPlaylistFlyout_Tapped"
+                                                                    Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                                            </DataTemplate>
+                                                        </utils:BindableFlyout.ItemTemplate>
+                                                    </Flyout>
+                                                </Button.Flyout>
                                                 <Button.Content>
                                                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" />
                                                 </Button.Content>

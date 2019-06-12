@@ -193,7 +193,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
                                 FontSize="14"
-                                Text="02:30" />
+                                Text="{x:Bind Music.Duration}" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

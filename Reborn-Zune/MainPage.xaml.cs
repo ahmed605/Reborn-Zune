@@ -156,9 +156,6 @@ namespace Reborn_Zune
                 var ca1 = playlists.PrepareConnectedAnimation("ca1", _storedItem, "Thumbnail");
             }
 
-
-            //ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("Image", clickGridViewItem);
-            //albums.PrepareConnectedAnimation("portrait", dcontext, "Thumbnail");
             Frame.Navigate(typeof(PlaylistDetailPage), MainVM, new SuppressNavigationTransitionInfo());
         }
 
@@ -280,7 +277,16 @@ namespace Reborn_Zune
 
         private void NewPlaylistButton_Click(object sender, RoutedEventArgs e)
         {
-            MainVM.LibraryViewModel.CreatePlaylist(PlaylistName.Text);
+            
+            bool result = MainVM.LibraryViewModel.CreatePlaylist(PlaylistName.Text);
+            if (result)
+            {
+                AddPlaylistFlyout.Hide();
+            }
+            else
+            {
+                UnAvailableHint.Visibility = Visibility.Visible;
+            }
         }
 
         private void PlayButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -301,10 +307,7 @@ namespace Reborn_Zune
             e.Handled = true;
         }
 
-        private void AddToButton_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-        }
+        
 
         private async void Albums_Loaded(object sender, RoutedEventArgs e)
         {
@@ -336,6 +339,37 @@ namespace Reborn_Zune
                         animation, _storedItem, "Thumbnail");
                 }
             }
+        }
+
+        private void AddToPlaylistFlyout_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var datacontext = (sender as FrameworkElement).DataContext as LocalPlaylistModel;
+            var album = MainVM.LibraryViewModel.AlbumAddToPlaylist;
+
+            if(album is LocalAlbumModel)
+            {
+                MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
+            }
+            else
+            {
+                if(album.GetTitle() != datacontext.GetTitle())
+                {
+                    MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
+                }
+            }
+            
+        }
+
+        private void AddToButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            MainVM.LibraryViewModel.AlbumAddToPlaylist = (sender as Button).DataContext as ILocalListModel;
+            e.Handled = true;
+        }
+
+        private void PlaylistAddTo_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            MainVM.LibraryViewModel.AlbumAddToPlaylist = (sender as Button).DataContext as ILocalListModel;
+            e.Handled = true;
         }
     }
 }
