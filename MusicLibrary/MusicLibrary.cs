@@ -9,15 +9,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TagLib;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace MusicLibraryService
 {
     public static class MusicLibrary
     {
+        public static Library Library { get; set; }
         public static event EventHandler InitializeFinished;
-        public static event EventHandler FetchAllFinished;
+        public static event EventHandler FetchSucceed;
+        
         public static async void Initialize(bool IsFirstUse)
         {
             try
@@ -52,13 +58,31 @@ namespace MusicLibraryService
                         DataBaseService.Update((KeyValuePair<string, string>)i.Value);
                     }
                 }
-
                 InitializeFinished?.Invoke(null, EventArgs.Empty);
+
             }
             catch(Exception e)
             {
                 Debug.WriteLine(e.ToString());
             }
+        }
+
+        public static async Task FetchLibrary()
+        {
+            try
+            {
+                var library = DataBaseService.FetchAll();
+                library.RenderThumbnail();
+                await library.GetFiles();
+                Library = library;
+                FetchSucceed?.Invoke(Library, EventArgs.Empty);
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+                
+            }
+            
         }
 
         public static void AddSongsToPlaylist(string v, List<Music> musics)
@@ -66,40 +90,32 @@ namespace MusicLibraryService
             DataBaseService.AddSongsToPlaylist(v, musics);
         }
 
-        public static Library FetchAll()
+        public static bool CreatePlaylist(string playlistName)
         {
-            try
+            if (!DataBaseService.PlaylistNameAvailable(playlistName))
             {
-                var result = DataBaseService.FetchAll();
-                FetchAllFinished?.Invoke(null, EventArgs.Empty);
-                return result;
+                return false;
             }
-            catch(Exception e)
+            else
             {
-                Debug.WriteLine(e.ToString());
-                return new Library();
-            }
-        }
-
-        public static async void AddSong(StorageFile file)
-        {
-            await DataBaseService.Add(file);
-        }
-
-        public static void DeleteSong(string filepath)
-        {
-            DataBaseService.Delete(filepath);
-        }
-
-        public static void CreatePlaylist(string playlistName)
-        {
-            if(DataBaseService.CheckPlaylistName(playlistName))
                 DataBaseService.CreatePlaylist(playlistName);
+                return true;
+            }
+        }
+
+        public static Library FetchPlaylist()
+        {
+            var library = DataBaseService.FetchAll();
+            return library;
         }
     }
 
     static class DataBaseService
     {
+        private const string UNKNOWN_ARTIST = "Unknown Artist";
+        private const string UNKNOWN_ALBUM = "Unknown Album";
+        private const string UNKNOWN_YEAR = "Unknown Year";
+
         public static void Initialize()
         {
             try
@@ -116,87 +132,47 @@ namespace MusicLibraryService
 
         }
 
-        public static string ByteArrayToString(byte[] ba)
-        {
-            StringBuilder hex = new StringBuilder(ba.Length * 2);
-            foreach (byte b in ba)
-                hex.AppendFormat("{0:x2}", b);
-            return hex.ToString();
-        }
-
         public static async Task Add(StorageFile File)
         {
             try
             {
                 Debug.WriteLine(File.Name + " Music meta data start retreiving");
-                var fileStream = await File.OpenStreamForReadAsync();
 
-                var tagFile = TagLib.File.Create(new StreamFileAbstraction(File.Name,
-                                 fileStream, fileStream));
 
-                var types = tagFile.TagTypes;
+                var thumbnail = await File.GetThumbnailAsync(ThumbnailMode.MusicView, 100, ThumbnailOptions.ReturnOnlyIfCached);
+                var properties = await File.Properties.GetMusicPropertiesAsync();
 
-                if ((types & (TagTypes.Id3v1 | TagTypes.Id3v2)) == (TagTypes.Id3v1 | TagTypes.Id3v2))
-                {
-                    types = TagTypes.Id3v2;
-                }
-
-                var tags = tagFile.GetTag(types);
-
-                var bytearray = tags.Pictures.Length == 0 ? new byte[] { } : tags.Pictures[0].Data.Data;
-                var artistname = tags.Performers.Length == 0 ? "Unknown Artist" : tags.Performers[0];
-                var albumtitle = tags.Album != null ? tags.Album : "Unknown Album";
+                var path = File.Path;
+                var bytearray = await ConvertThumbnailToBytesAsync(thumbnail);
+                var artistName = properties.Artist != "" ? properties.Artist : UNKNOWN_ARTIST;
+                var albumArtistName = properties.AlbumArtist != "" ? properties.AlbumArtist : UNKNOWN_ARTIST;
+                var albumTitle = properties.Album != "" ? properties.Album : UNKNOWN_ALBUM;
+                var duration = properties.Duration.ToString(@"mm\:ss");
+                var albumYear = properties.Year != 0 ? properties.Year.ToString() : UNKNOWN_YEAR;
+                var songTitle = properties.Title != "" ? properties.Title : Path.GetFileNameWithoutExtension(File.Path);
 
                 using (var _context = new MusicLibraryDbContext())
                 {
-                    var thumb = _context.Thumbnails.Where(m => m.Image == bytearray).ToList();
-                    if (thumb.Count == 0)
+                    var thumb = new Thumbnail
                     {
-                        thumb.Add(new Thumbnail
-                        {
-                            Image = bytearray,
-                            Id = Guid.NewGuid().ToString()
-                        });
-                        _context.Thumbnails.Add(thumb[0]);
-                        _context.SaveChanges();
-                    }
+                        ImageBytes = bytearray,
+                        Id = Guid.NewGuid().ToString()
+                    };
+                    _context.Thumbnails.Add(thumb);
+                    _context.SaveChanges();
                     Debug.WriteLine("Thumbnail Done");
-
-                    var artist = _context.Artists.Where(a => a.Name == artistname).ToList();
-                    if (artist.Count == 0)
-                    {
-                        artist.Add(new Artist
-                        {
-                            Name = artistname,
-                            Id = Guid.NewGuid().ToString()
-                        });
-                        _context.Artists.Add(artist[0]);
-                        _context.SaveChanges();
-                    }
-                    Debug.WriteLine("Artist Done");
-
-                    var album = _context.Albums.Where(a => a.Title == albumtitle).ToList();
-                    if (album.Count == 0)
-                    {
-                        album.Add(new Album
-                        {
-                            Title = albumtitle,
-                            ArtistId = artist[0].Id,
-                            ThumbnailId = thumb[0].Id,
-                            Id = Guid.NewGuid().ToString()
-                        });
-                        _context.Albums.Add(album[0]);
-                        _context.SaveChanges();
-                    }
-                    Debug.WriteLine("Album Done");
 
                     Music Music = new Music
                     {
-                        Path = File.Path,
-                        Title = tags.Title == null ? Path.GetFileNameWithoutExtension(File.Path) : tags.Title,
-                        AlbumId = album[0].Id,
-                        ArtistId = artist[0].Id,
-                        ThumbnailId = thumb[0].Id,
+                        Path = path,
+                        Title = songTitle,
+                        AlbumTitle = albumTitle,
+                        Artist = artistName,
+                        AlbumArtist = albumArtistName,
+                        Year = albumYear,
+                        ThumbnailId = thumb.Id,
+                        Duration = duration,
+                        
                         Id = Guid.NewGuid().ToString()
                     };
                     _context.Musics.Add(Music);
@@ -208,6 +184,21 @@ namespace MusicLibraryService
             catch (Exception e)
             {
                 Debug.WriteLine(e.ToString());
+            }
+        }
+
+        private static async Task<byte[]> ConvertThumbnailToBytesAsync(StorageItemThumbnail thumbnail)
+        {
+            if(thumbnail == null)
+            {
+                return new byte[0];
+            }
+            byte[] result = new byte[thumbnail.Size];
+            using(var reader = new DataReader(thumbnail))
+            {
+                await reader.LoadAsync((uint)thumbnail.Size);
+                reader.ReadBytes(result);
+                return result;
             }
         }
 
@@ -233,6 +224,7 @@ namespace MusicLibraryService
             try
             {
                 Debug.WriteLine(File.Name + " Music meta data start retreiving");
+                var properties = await File.Properties.GetMusicPropertiesAsync();
                 var fileStream = await File.OpenStreamForReadAsync();
 
                 var tagFile = TagLib.File.Create(new StreamFileAbstraction(File.Name,
@@ -247,40 +239,37 @@ namespace MusicLibraryService
 
                 var tags = tagFile.GetTag(types);
 
-                byte[] imageBytes = tags.Pictures.Length == 0 ? new byte[] { } : tags.Pictures[0].Data.Data;
-                string artistname = tags.Performers.Length == 0 ? "Unknown Artist" : tags.Performers[0];
-                string AlbumTitle = tags.Album != null ? tags.Album : "Unknown Album";
-                string path = File.Path;
-                string Title = tags.Title == null ? Path.GetFileNameWithoutExtension(File.Path) : tags.Title;
+                var path = File.Path;
+                var bytearray = tags.Pictures.Length == 0 ? new byte[] { } : tags.Pictures[0].Data.Data;
+                var artistName = properties.Artist != "" ? properties.AlbumArtist : UNKNOWN_ARTIST;
+                var albumArtistName = properties.AlbumArtist != null ? properties.AlbumArtist : UNKNOWN_ARTIST;
+                var albumTitle = properties.Album != "" ? properties.Album : UNKNOWN_ALBUM;
+                var duration = properties.Duration.ToString(@"mm\:ss");
+                var albumYear = properties.Year != 0 ? properties.Year.ToString() : UNKNOWN_YEAR;
+                var songTitle = properties.Title != "" ? properties.Title : Path.GetFileNameWithoutExtension(File.Path);
 
                 Debug.WriteLine("Access into database");
                 using (var _context = new MusicLibraryDbContext())
                 {
                     Music music = _context.Musics.Where(m => m.Path == path).First();
                     Thumbnail thumbnail = _context.Thumbnails.Where(t => t.Id == music.ThumbnailId).First();
-                    Artist artist = _context.Artists.Where(a => a.Id == music.ArtistId).First();
-                    Album album = _context.Albums.Where(a => a.Id == music.AlbumId).First();
 
-                    if (music.Title != Title)
+                    music.Artist = artistName;
+                    music.AlbumArtist = albumArtistName;
+                    music.AlbumTitle = albumTitle;
+                    music.Title = songTitle;
+                    music.Year = albumYear;
+                    music.Duration = duration;
+
+                    _context.Musics.Update(music);
+
+                    if (thumbnail.ImageBytes != bytearray)
                     {
-                        music.Title = Title;
-                        _context.Musics.Update(music);
-                    }
-                    if (thumbnail.Image != imageBytes)
-                    {
-                        thumbnail.Image = imageBytes;
+                        thumbnail.ImageBytes = bytearray;
                         _context.Thumbnails.Update(thumbnail);
                     }
-                    if (album.Title != AlbumTitle)
-                    {
-                        album.Title = AlbumTitle;
-                        _context.Albums.Update(album);
-                    }
-                    if (artist.Name != artistname)
-                    {
-                        artist.Name = artistname;
-                        _context.Artists.Update(artist);
-                    }
+                    
+                
                     _context.SaveChanges();
                 }
                 Debug.WriteLine("Update Succeed");
@@ -313,30 +302,22 @@ namespace MusicLibraryService
 
         public static Library FetchAll()
         {
-            Library viewModel = new Library();
+            Library library = new Library();
             try
             {
                 using (var _context = new MusicLibraryDbContext())
                 {
-                    var musics = _context.Musics.Select(m => m).ToList();
-                    var albums = _context.Albums.Select(a => a).ToList();
-                    var artists = _context.Artists.Select(a => a).ToList();
-                    var musicplaylists = _context.MusicInPlaylists.Select(m => m).ToList();
-                    var playlists = _context.Playlists.Select(p => p).ToList();
-                    var thumbnails = _context.Thumbnails.Select(t => t).ToList();
-                    viewModel.musics = musics;
-                    viewModel.albums = albums;
-                    viewModel.artists = artists;
-                    viewModel.playlists = playlists;
-                    viewModel.thumbnails = thumbnails;
-                    viewModel.mInP = musicplaylists;
+                    library._musics = _context.Musics.Select(m => m).ToList();
+                    library._mInP = _context.MusicInPlaylists.Select(m => m).ToList();
+                    library._playlists = _context.Playlists.Select(p => p).ToList();
+                    library._thumbnails = _context.Thumbnails.Select(t => t).ToList();
                 }
-                return viewModel;
+                return library;
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.ToString());
-                return viewModel;
+                return library;
             }
         }
 
@@ -344,7 +325,8 @@ namespace MusicLibraryService
         {
             Playlist playlist = new Playlist
             {
-                Name = playlistName
+                Name = playlistName,
+                Id = Guid.NewGuid().ToString()
             };
             using (var _context = new MusicLibraryDbContext())
             {
@@ -364,7 +346,7 @@ namespace MusicLibraryService
             }
         }
 
-        public static void DelPlaylist(string playlistName)
+        public static void DeletePlaylist(string playlistName)
         {
             using (var _context = new MusicLibraryDbContext())
             {
@@ -407,11 +389,11 @@ namespace MusicLibraryService
             }
         }
 
-        public static bool CheckPlaylistName(string playlistName)
+        public static bool PlaylistNameAvailable(string playlistName)
         {
             using (var _context = new MusicLibraryDbContext())
             {
-                return (_context.Playlists.Where(p => p.Name == playlistName).Count() == 0);
+                return (_context.Playlists.Where(p => p.Name == playlistName).FirstOrDefault() == null);
             }
         }
     }
@@ -529,11 +511,30 @@ namespace MusicLibraryService
     }
     public class Library
     {
-        public List<Music> musics { get; set; }
-        public List<Album> albums { get; set; }
-        public List<Artist> artists { get; set; }
-        public List<Playlist> playlists { get; set; }
-        public List<Thumbnail> thumbnails { get; set; }
-        public List<MusicInPlaylist> mInP { get; set; }
+        public List<Music> _musics { get; set; }
+        public List<Playlist> _playlists { get; set; }
+        public List<Thumbnail> _thumbnails { get; set; }
+        public List<MusicInPlaylist> _mInP { get; set; }
+
+        public void RenderThumbnail()
+        {
+           foreach(var item in _thumbnails)
+            {
+                item.GetBitmapImage();
+            }
+        }
+
+        public async Task GetFiles()
+        {
+            foreach(var song in _musics)
+            {
+                await GetFileAsync(song);
+            }
+        }
+
+        private async Task GetFileAsync(Music song)
+        {
+            song.File = await StorageFile.GetFileFromPathAsync(song.Path);
+        }
     }
 }
