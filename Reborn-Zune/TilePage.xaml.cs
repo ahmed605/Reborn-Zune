@@ -92,31 +92,7 @@ namespace Reborn_Zune
             _ambientLight = _compositor.CreateAmbientLight();
             _ambientLight.Intensity = 0.20f;
             _ambientLight.Color = "#d3d3d3".ToColor();
-            IGraphicsEffect graphicsEffect = new CompositeEffect()
-            {
-                Mode = CanvasComposite.DestinationIn,
-                Sources =
-                            {
-                                new CompositeEffect()
-                                {
-                                    Mode = CanvasComposite.Add,
-                                    Sources =
-                                    {
-                                        new CompositionEffectSourceParameter("ImageSource"),
-                                        new SceneLightingEffect()
-                                        {
-                                            AmbientAmount = 0,
-                                            DiffuseAmount = 35f,
-                                            SpecularAmount = 0,
-                                            NormalMapSource = new CompositionEffectSourceParameter("NormalMap"),
-                                        }
-                                    }
-                                },
-                                new CompositionEffectSourceParameter("NormalMap"),
-                            }
-            };
-
-            _effectFactory = _compositor.CreateEffectFactory(graphicsEffect);
+            
             _pointLight.CoordinateSpace = _root;
             _pointLight.Targets.Add(_root);
             _secondPointLight.CoordinateSpace = _root;

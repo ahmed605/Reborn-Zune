@@ -371,5 +371,63 @@ namespace Reborn_Zune
             MainVM.LibraryViewModel.AlbumAddToPlaylist = (sender as Button).DataContext as ILocalListModel;
             e.Handled = true;
         }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string selected = (sender as ComboBox).SelectedValue as string;
+            if(MainVM != null)
+                MainVM.LibraryViewModel.SortAlbums(selected);
+            
+        }
+
+        private void ShuffleAllButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            MainVM.ShuffleAll();
+
+            if (MainVM.FloatingVisible == Visibility.Collapsed)
+            {
+                MainVM.FloatingVisible = Visibility.Visible;
+                var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+                offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
+                offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
+                offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
+                _floatingVisual.StartAnimation("Translation", offSetAnimation);
+            }
+        }
+
+        private void ShuffleAllPlaylistButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            MainVM.ShuffleAllPlaylists();
+            if (MainVM.FloatingVisible == Visibility.Collapsed)
+            {
+                MainVM.FloatingVisible = Visibility.Visible;
+                var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+                offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
+                offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
+                offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
+                _floatingVisual.StartAnimation("Translation", offSetAnimation);
+            }
+        }
+
+
+        private void NewPlaylistButton2_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            bool result = MainVM.LibraryViewModel.CreatePlaylist(PlaylistName2.Text);
+            if (result)
+            {
+                AddPlaylistFlyout2.Hide();
+            }
+            else
+            {
+                UnAvailableHint2.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void ComboBox2_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string selected = (sender as ComboBox).SelectedValue as string;
+            if (MainVM != null)
+                MainVM.LibraryViewModel.SortPlaylists(selected);
+        }
     }
 }

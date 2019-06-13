@@ -256,6 +256,20 @@ namespace Reborn_Zune.ViewModel
 
         }
 
+        public void ShuffleAll()
+        {
+            if (PlayBackListConsistencyDetect(LibraryViewModel.Musics))
+                PlaybackList = ToPlayBackList(LibraryViewModel.Musics);
+            PlayerViewModel.MediaList = new MediaListViewModel(LibraryViewModel.Musics, PlaybackList, dispatcher);
+        }
+
+        public void ShuffleAllPlaylists()
+        {
+            if (PlayBackListConsistencyDetect(new ObservableCollection<LocalMusicModel>(LibraryViewModel.Playlists.Select(m => m.Musics).SelectMany(a => a).ToList())))
+                PlaybackList = ToPlayBackList(new ObservableCollection<LocalMusicModel>(LibraryViewModel.Playlists.Select(m => m.Musics).SelectMany(a => a).ToList()));
+            PlayerViewModel.MediaList = new MediaListViewModel(new ObservableCollection<LocalMusicModel>(LibraryViewModel.Playlists.Select(m => m.Musics).SelectMany(a => a).ToList()), PlaybackList, dispatcher);
+        }
+
         #endregion
 
 

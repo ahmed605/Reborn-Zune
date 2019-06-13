@@ -135,6 +135,8 @@ namespace Reborn_Zune.ViewModel
                     playlist.LibraryViewModel = this;
                 }
 
+                Albums = new ObservableCollection<LocalAlbumModel>(Albums.OrderBy(a => a.Title).ToList());
+
                 RaisePropertyChanged(nameof(hasPlaylistReverse));
                 RaisePropertyChanged(nameof(hasPlaylist));
             }
@@ -218,10 +220,13 @@ namespace Reborn_Zune.ViewModel
         public bool CreatePlaylist(string text)
         {
             bool result = MusicLibrary.CreatePlaylist(text);
-            Library = MusicLibrary.FetchPlaylist();
-            UpdatePlaylists();
-            RaisePropertyChanged(nameof(hasPlaylistReverse));
-            RaisePropertyChanged(nameof(hasPlaylist));
+            if(result == true)
+            {
+                Library = MusicLibrary.FetchPlaylist();
+                UpdatePlaylists();
+                RaisePropertyChanged(nameof(hasPlaylistReverse));
+                RaisePropertyChanged(nameof(hasPlaylist));
+            }
             return result;
         }
 
@@ -229,26 +234,41 @@ namespace Reborn_Zune.ViewModel
         {
             try
             {
-                foreach (var list in Library._playlists)
+                List<LocalPlaylistModel> list = new List<LocalPlaylistModel>();
+                
+                
+
+                foreach (var playlist in Library._playlists)
                 {
-                    var playlist = new LocalPlaylistModel
+                    if(!Playlists.Select(p => p.Playlist.Id).ToList().Contains(playlist.Id))
                     {
-                        Playlist = Library._playlists.Where(p => p.Id == list.Id).FirstOrDefault(),
-                    };
-                    Playlists.Add(playlist);
+                        var playlistModel = new LocalPlaylistModel
+                        {
+                            Playlist = playlist
+                        };
+                        Playlists.Add(playlistModel);
+                        list.Add(playlistModel);
+                    }
                 }
 
                 foreach (var pair in Library._mInP)
                 {
                     var playlist = Playlists.Where(p => p.Playlist.Id == pair.PlaylistId).FirstOrDefault();
                     var music = Musics.Where(m => m.Music.Id == pair.MusicId).FirstOrDefault();
-                    playlist.Musics.Add(music);
+                    if (!playlist.Musics.Contains(music))
+                    {
+                        playlist.Musics.Add(music);
+                    }
                 }
+
+                Playlists = new ObservableCollection<LocalPlaylistModel>(Playlists.OrderBy(p => p.Playlist.Name).ToList());
 
                 foreach (var playlist in Playlists)
                 {
                     playlist.LibraryViewModel = this;
                 }
+
+                
             }
             catch (Exception e)
             {
@@ -298,6 +318,36 @@ namespace Reborn_Zune.ViewModel
             }
             MusicLibrary.AddSongsToPlaylist(playlistName, enumerable.Select(e => e.Music).ToList());
             RaisePropertyChanged(() => Playlists);
+        }
+
+        public void SortAlbums(string selected)
+        {
+            switch (selected)
+            {
+                case "A-Z":
+                    Albums = new ObservableCollection<LocalAlbumModel>(Albums.OrderBy(a => a.Title).ToList());
+                    break;
+                case "Z-A":
+                    Albums = new ObservableCollection<LocalAlbumModel>(Albums.OrderByDescending(a => a.Title).ToList());
+                    break;
+                case "Artist":
+                    Albums = new ObservableCollection<LocalAlbumModel>(Albums.OrderBy(a => a.AlbumArtist).ToList());
+                    break;
+            }
+        }
+
+        public void SortPlaylists(string selected)
+        {
+            switch (selected)
+            {
+                case "A-Z":
+                    Playlists = new ObservableCollection<LocalPlaylistModel>(Playlists.OrderBy(p => p.Playlist.Name).ToList());
+                    break;
+                case "Z-A":
+                    Playlists = new ObservableCollection<LocalPlaylistModel>(Playlists.OrderByDescending(p => p.Playlist.Name).ToList());
+                    break;
+                
+            }
         }
     }
 }
