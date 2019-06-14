@@ -9,6 +9,7 @@
     xmlns:local="using:Reborn_Zune"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Reborn_Zune.Model"
+    xmlns:utils="using:Reborn_Zune.Utilities"
     Background="#F1F1F1"
     mc:Ignorable="d">
 
@@ -96,6 +97,15 @@
                 extensions:VisualExtensions.Opacity="0"
                 Background="Transparent"
                 Style="{StaticResource NoPointerOverButtonStyle}">
+                <Button.Flyout>
+                    <Flyout utils:BindableFlyout.ItemsSource="{x:Bind MainVM.DetailViewModel.Playlists, Mode=OneWay}">
+                        <utils:BindableFlyout.ItemTemplate>
+                            <DataTemplate x:DataType="model:LocalPlaylistModel">
+                                <MenuFlyoutItem Tapped="MenuFlyoutItem_Tapped" Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                            </DataTemplate>
+                        </utils:BindableFlyout.ItemTemplate>
+                    </Flyout>
+                </Button.Flyout>
                 <Button.Content>
                     <Grid
                         extensions:VisualExtensions.CenterPoint="82.5,10,0"
@@ -169,6 +179,7 @@
                 Margin="3,60,0,0"
                 HorizontalAlignment="Left"
                 extensions:VisualExtensions.Opacity="0"
+                ChoosingItemContainer="List_ChoosingItemContainer"
                 ItemsSource="{x:Bind MainVM.DetailViewModel.Musics, Mode=OneWay}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">

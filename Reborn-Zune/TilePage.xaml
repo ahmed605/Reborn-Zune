@@ -88,6 +88,7 @@
                 x:Name="listview"
                 Margin="20,20,0,47"
                 HorizontalAlignment="Right"
+                ChoosingItemContainer="Listview_ChoosingItemContainer"
                 ItemsSource="{x:Bind MainVM.PlayerViewModel.MediaList.MediaList, Mode=OneWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="model:LocalMusicModel">

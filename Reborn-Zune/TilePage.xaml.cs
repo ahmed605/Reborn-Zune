@@ -2,6 +2,7 @@
 using Microsoft.Graphics.Canvas.Effects;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Reborn_Zune.Control;
+using Reborn_Zune.Model;
 using Reborn_Zune.Utilities;
 using Reborn_Zune.ViewModel;
 using System;
@@ -217,6 +218,30 @@ namespace Reborn_Zune
                     });
 
             }, period);
+        }
+
+        
+        private void Listview_ChoosingItemContainer(ListViewBase sender, ChoosingItemContainerEventArgs args)
+        {
+            if (args.ItemContainer != null)
+            {
+                return;
+            }
+
+            ListViewItem container = (ListViewItem)args.ItemContainer ?? new ListViewItem();
+            container.IsDoubleTapEnabled = true;
+            container.DoubleTapped += Container_DoubleTapped;
+
+            args.ItemContainer = container;
+        }
+
+        private void Container_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            int doubleClickedIdx = MainVM.PlayerViewModel.MediaList.MediaList.IndexOf((e.OriginalSource as FrameworkElement).DataContext as LocalMusicModel);
+            if (MainVM.PlayerViewModel.MediaList.CurrentItemIndex != doubleClickedIdx)
+            {
+                MainVM.PlayerViewModel.SetCurrentItem(doubleClickedIdx);
+            }
         }
     }
 }

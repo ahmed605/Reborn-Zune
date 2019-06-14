@@ -228,13 +228,13 @@ namespace Reborn_Zune.ViewModel
             if(clickedItem is LocalAlbumModel)
             {
                 var item = clickedItem as LocalAlbumModel;
-                DetailViewModel = new DetailViewModel(item.Image, item.Title, item.AlbumArtist, item.Year, item.Musics);
+                DetailViewModel = new DetailViewModel(item.Image, item.Title, item.AlbumArtist, item.Year, item.Musics, LibraryViewModel.Playlists);
 
             }
             else
             {
                 var item = clickedItem as LocalPlaylistModel;
-                DetailViewModel = new DetailViewModel(new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg")), item.Playlist.Name, "Various Artist", "",item.Musics);
+                DetailViewModel = new DetailViewModel(new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg")), item.Playlist.Name, "Various Artist", "",item.Musics, LibraryViewModel.Playlists);
             }
         }
 

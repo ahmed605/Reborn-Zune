@@ -19,14 +19,32 @@ namespace Reborn_Zune.ViewModel
         private string _albumYear;
         private ObservableCollection<LocalMusicModel> _musics;
         private bool _animate = false;
+        private ObservableCollection<LocalPlaylistModel> _playlists;
 
-        public DetailViewModel(BitmapImage image, string title, string artist, string year, ObservableCollection<LocalMusicModel> musics)
+        public DetailViewModel(BitmapImage image, string title, string artist, string year, ObservableCollection<LocalMusicModel> musics, ObservableCollection<LocalPlaylistModel> playlists)
         {
             Thumbnail = image;
             Title = title;
             Artist = artist;
             AlbumYear = year;
             Musics = musics;
+            Playlists = playlists;
+        }
+
+        public ObservableCollection<LocalPlaylistModel> Playlists
+        {
+            get
+            {
+                return _playlists;
+            }
+            set
+            {
+                if(_playlists != value)
+                {
+                    _playlists = value;
+                    RaisePropertyChanged(() => Playlists);
+                }
+            }
         }
 
         public BitmapImage Thumbnail

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Reborn_Zune.Model;
 using Reborn_Zune.Utilities;
 using Reborn_Zune.ViewModel;
 using System;
@@ -225,6 +226,35 @@ namespace Reborn_Zune
 
             var parentAnimation = new ScaleAnimation() { To = "1", Duration = TimeSpan.FromMilliseconds(200) };
             parentAnimation.StartAnimation(sender as UIElement);
+        }
+
+        private void List_ChoosingItemContainer(ListViewBase sender, ChoosingItemContainerEventArgs args)
+        {
+            if (args.ItemContainer != null)
+            {
+                return;
+            }
+
+            ListViewItem container = (ListViewItem)args.ItemContainer ?? new ListViewItem();
+            container.IsDoubleTapEnabled = true;
+            container.DoubleTapped += Container_DoubleTapped;
+
+            args.ItemContainer = container;
+        }
+
+        private void Container_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            int doubleClickedIdx = MainVM.PlayerViewModel.MediaList.MediaList.IndexOf((e.OriginalSource as FrameworkElement).DataContext as LocalMusicModel);
+            if (MainVM.PlayerViewModel.MediaList.CurrentItemIndex != doubleClickedIdx)
+            {
+                MainVM.PlayerViewModel.SetCurrentItem(doubleClickedIdx);
+            }
+        }
+
+        private void MenuFlyoutItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var datacontext = (sender as FrameworkElement).DataContext as LocalPlaylistModel;
+            MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, MainVM.DetailViewModel.Musics.ToList());
         }
     }
 }
