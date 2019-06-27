@@ -91,9 +91,12 @@
                         FontSize="55"
                         Text="&#xE73B;" />
                 </PivotItem.Header>
-                <controls:DockPanel HorizontalAlignment="Center">
-                    <Grid Margin="20,25,0,0" controls:DockPanel.Dock="Top">
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <controls:DockPanel HorizontalAlignment="Stretch">
+                    <Grid Margin="0,25,0,0" controls:DockPanel.Dock="Top"
+                          HorizontalAlignment="Stretch">
+                        
+                        <StackPanel HorizontalAlignment="Center" 
+                                    Orientation="Horizontal">
                             <Button
                                 x:Name="ShuffleAllButton"
                                 Background="Transparent"
@@ -117,9 +120,8 @@
                             <StackPanel Margin="50,0,0,0" Orientation="Horizontal">
                                 <TextBlock VerticalAlignment="Center" Text="Sorted By: " />
                                 <ComboBox
-                                    Width="100"
+                                    Width="43"
                                     VerticalAlignment="Center"
-                                    Foreground="Blue"
                                     SelectedValue="A-Z"
                                     SelectionChanged="ComboBox_SelectionChanged"
                                     Style="{StaticResource ComboBoxStyle}">
@@ -136,7 +138,7 @@
                         Padding="0,10,0,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
-                        HorizontalContentAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
                         controls:DockPanel.Dock="Top"
                         ChoosingItemContainer="GridView_ChoosingItemContainer"
                         ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
@@ -147,7 +149,7 @@
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsWrapGrid
-                                    HorizontalAlignment="Stretch"
+                                    HorizontalAlignment="Center"
                                     MaximumRowsOrColumns="4"
                                     Orientation="Horizontal" />
                             </ItemsPanelTemplate>

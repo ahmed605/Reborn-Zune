@@ -397,6 +397,8 @@ namespace MusicLibraryService
             }
         }
     }
+
+
     static class LibraryService
     {
         public static async Task<List<KeyValuePair<StorageLibraryChangeType, object>>> Initialize(bool IsFirstUse)
