@@ -13,14 +13,41 @@
     <Compile Remove="Migrations\20190414183451_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20190415211742_InitialCreate.cs" />
     <Compile Remove="Migrations\20190415211742_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190415213839_InitialCreate.cs" />
+    <Compile Remove="Migrations\20190415213839_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190522005645_Initial.cs" />
+    <Compile Remove="Migrations\20190522005645_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190522015758_Initial.cs" />
+    <Compile Remove="Migrations\20190522015758_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190609022446_SecondDBChanges.cs" />
+    <Compile Remove="Migrations\20190609022446_SecondDBChanges.Designer.cs" />
+    <Compile Remove="Migrations\20190610043458_Initial.cs" />
+    <Compile Remove="Migrations\20190610043458_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190610053301_Initial.cs" />
+    <Compile Remove="Migrations\20190610053301_Initial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Vap-logo-placeholder.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Vap-logo-placeholder.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.4">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Windows.Foundation.UniversalApiContract">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Windows Kits\10\References\10.0.17763.0\Windows.Foundation.UniversalApiContract\7.0.0.0\Windows.Foundation.UniversalApiContract.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
   </ItemGroup>
 
 </Project>

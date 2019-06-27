@@ -1,4 +1,6 @@
-﻿using Microsoft.HockeyApp;
+﻿using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Microsoft.Toolkit.Uwp.Helpers;
 using MusicLibraryService;
 using System;
@@ -26,19 +28,10 @@ namespace Reborn_Zune
         /// </summary>
         public App()
         {
-            HockeyClient.Current.Configure("e89efe217f71403cb92ac0fc2ff658df",
-
-                new TelemetryConfiguration() { EnableDiagnostics = true })
-
-                .SetExceptionDescriptionLoader((Exception ex) =>
-
-                {
-
-                    return "Exception HResult: " + ex.HResult.ToString();
-
-                });
+            
             this.InitializeComponent();
             this.Construct();
+            AppCenter.Start("c5fcab4c-7057-489f-b350-f74dd185fdad", typeof(Analytics), typeof(Crashes));
             this.UnhandledException += App_UnhandledException;
         }
 

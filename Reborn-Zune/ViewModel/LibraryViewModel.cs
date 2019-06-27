@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
@@ -8,6 +10,7 @@ using MusicLibraryEFCoreModel;
 using MusicLibraryService;
 using Reborn_Zune.Model;
 using Reborn_Zune.Utilities;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.ViewModel
@@ -15,24 +18,134 @@ namespace Reborn_Zune.ViewModel
     public class LibraryViewModel : ViewModelBase
     {
         public event EventHandler InitializeFinished;
+        private const string UNKNOWN_ARTIST = "Unknown Artist";
+        private const string UNKNOWN_ALBUM = "Unknown Album";
+        private const string UNKNOWN_YEAR = "Unknown Year";
         public LibraryViewModel()
         {
             Thumbnails = new ObservableCollection<BitmapImage>();
             Musics = new ObservableCollection<LocalMusicModel>();
             Albums = new ObservableCollection<LocalAlbumModel>();
-            Library = MusicLibrary.FetchAll();
-            Finialize();
+            Artists = new ObservableCollection<LocalArtistModel>();
+            Playlists = new ObservableCollection<LocalPlaylistModel>();
+            MusicLibrary.FetchLibrary();
+            MusicLibrary.FetchSucceed += MusicLibrary_FetchSucceed;
         }
 
-        private async void Finialize()
+        private void MusicLibrary_FetchSucceed(object sender, EventArgs e)
         {
-            await GetThumbnails();
-            await GetLocalMusics();
-            await GetLocalAlbums();
-
-            InitializeFinished?.Invoke(this, EventArgs.Empty);
+            Library = sender as Library;
+            UpdateLibraryTree();
         }
 
+        private void UpdateLibraryTree()
+        {
+            try
+            {
+                foreach(var song in Library._musics)
+                {
+                    var music = new LocalMusicModel(song);
+                    Musics.Add(music);
+                    var privilidgeName = "";
+                    if (song.AlbumArtist != UNKNOWN_ARTIST)
+                    {
+                        privilidgeName = song.AlbumArtist;
+                    }
+                    else if (song.Artist != UNKNOWN_ARTIST)
+                    {
+                        privilidgeName = song.Artist;
+                    }
+                    else
+                    {
+                        privilidgeName = UNKNOWN_ARTIST;
+                    }
+
+                    var album = Albums.Where(a => a.Title == song.AlbumTitle && a.AlbumArtist == privilidgeName).FirstOrDefault();
+                    if(album == null)
+                    {
+                        album = new LocalAlbumModel
+                        {
+                            Title = song.AlbumTitle,
+                            AlbumArtist = privilidgeName,
+                            Image = song.Thumbnail.Image,
+                            Year = song.Year
+                        };
+                        album.Musics.Add(music);
+                        Albums.Add(album);
+                    }
+                    else
+                    {
+                        album.Musics.Add(music);
+                    }
+
+                    var artist = Artists.Where(a => a.Name == privilidgeName).FirstOrDefault();
+                    if(artist == null)
+                    {
+                        artist = new LocalArtistModel
+                        {
+                            Name = privilidgeName
+                        };
+                        artist.Albums.Add(album);
+                        artist.Musics.Add(music);
+                        Artists.Add(artist);
+                    }
+                    else
+                    {
+                        if (!artist.Albums.Contains(album))
+                        {
+                            artist.Albums.Add(album);
+                            artist.Musics.Add(music);
+                        }
+                        else
+                        {
+                            artist.Musics.Add(music);
+                        }
+                    }
+                }
+
+                foreach(var list in Library._playlists)
+                {
+                    var playlist = new LocalPlaylistModel
+                    {
+                        Playlist = Library._playlists.Where(p => p.Id == list.Id).FirstOrDefault(),
+                    };
+                    Playlists.Add(playlist);
+                }
+
+                foreach(var pair in Library._mInP)
+                {
+                    var playlist = Playlists.Where(p => p.Playlist.Id == pair.PlaylistId).FirstOrDefault();
+                    var music = Musics.Where(m => m.Music.Id == pair.MusicId).FirstOrDefault();
+                    playlist.Musics.Add(music);
+                }
+
+                foreach(var thumb in Library._thumbnails)
+                {
+                    if(thumb.Image.UriSource != new Uri("ms-appx:///Vap-logo-placeholder.jpg"))
+                        Thumbnails.Add(thumb.Image);
+                }
+
+                foreach(var album in Albums)
+                {
+                    album.LibraryViewModel = this;
+                }
+
+                foreach(var playlist in Playlists)
+                {
+                    playlist.LibraryViewModel = this;
+                }
+
+                Albums = new ObservableCollection<LocalAlbumModel>(Albums.OrderBy(a => a.Title).ToList());
+
+                RaisePropertyChanged(nameof(hasPlaylistReverse));
+                RaisePropertyChanged(nameof(hasPlaylist));
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
+        }
+        
         private Library _library;
 
         public Library Library
@@ -79,49 +192,162 @@ namespace Reborn_Zune.ViewModel
                 Set<ObservableCollection<LocalAlbumModel>>(() => this.Albums, ref _albums, value);
             }
         }
-
-        public async Task GetLocalMusics()
+        private ObservableCollection<LocalArtistModel> _artists;
+        public ObservableCollection<LocalArtistModel> Artists
         {
-            foreach(Music music in Library.musics)
+            get
             {
-                var localmusic = new LocalMusicModel(music);
-                await localmusic.GetThumbnail();
-                await localmusic.GetStorageFile();
-                Musics.Add(localmusic);
+                return _artists;
+            }
+            set
+            {
+                Set<ObservableCollection<LocalArtistModel>>(() => this.Artists, ref _artists, value);
+            }
+        }
+        private ObservableCollection<LocalPlaylistModel> _playlists;
+        public ObservableCollection<LocalPlaylistModel> Playlists
+        {
+            get
+            {
+                return _playlists;
+            }
+            set
+            {
+                Set<ObservableCollection<LocalPlaylistModel>>(() => this.Playlists, ref _playlists, value);
             }
         }
 
-        public async Task GetLocalAlbums()
+        public bool CreatePlaylist(string text)
         {
-            foreach (Album album in Library.albums)
+            bool result = MusicLibrary.CreatePlaylist(text);
+            if(result == true)
             {
-                var localalbum = new LocalAlbumModel(album);
-                await localalbum.GetThumbanail();
-                Albums.Add(localalbum);
-            }
-        }
-
-        public List<LocalArtistModel> GetLocalArtists()
-        {
-            List<LocalArtistModel> result = new List<LocalArtistModel>();
-            foreach(Artist artist in Library.artists)
-            {
-                result.Add(new LocalArtistModel(artist));
+                Library = MusicLibrary.FetchPlaylist();
+                UpdatePlaylists();
+                RaisePropertyChanged(nameof(hasPlaylistReverse));
+                RaisePropertyChanged(nameof(hasPlaylist));
             }
             return result;
         }
 
-        public async Task GetThumbnails()
+        private void UpdatePlaylists()
         {
-            foreach(Thumbnail thumbnail in Library.thumbnails)
+            try
             {
-                var thumb = await Utility.ImageFromBytes(thumbnail.Image);
-                Thumbnails.Add(thumb);
+                List<LocalPlaylistModel> list = new List<LocalPlaylistModel>();
+                
+                
+
+                foreach (var playlist in Library._playlists)
+                {
+                    if(!Playlists.Select(p => p.Playlist.Id).ToList().Contains(playlist.Id))
+                    {
+                        var playlistModel = new LocalPlaylistModel
+                        {
+                            Playlist = playlist
+                        };
+                        Playlists.Add(playlistModel);
+                        list.Add(playlistModel);
+                    }
+                }
+
+                foreach (var pair in Library._mInP)
+                {
+                    var playlist = Playlists.Where(p => p.Playlist.Id == pair.PlaylistId).FirstOrDefault();
+                    var music = Musics.Where(m => m.Music.Id == pair.MusicId).FirstOrDefault();
+                    if (!playlist.Musics.Contains(music))
+                    {
+                        playlist.Musics.Add(music);
+                    }
+                }
+
+                Playlists = new ObservableCollection<LocalPlaylistModel>(Playlists.OrderBy(p => p.Playlist.Name).ToList());
+
+                foreach (var playlist in Playlists)
+                {
+                    playlist.LibraryViewModel = this;
+                }
+
+                
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
             }
         }
 
+        public Visibility hasPlaylist
+        {
+            get
+            {
+                return Playlists.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
 
-        
-        
+        public Visibility hasPlaylistReverse
+        {
+            get
+            {
+                return Playlists.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        private ILocalListModel _albumAddToPlaylist;
+        public ILocalListModel AlbumAddToPlaylist
+        {
+            get
+            {
+                return _albumAddToPlaylist;
+            }
+            set
+            {
+                if(_albumAddToPlaylist != value)
+                {
+                    _albumAddToPlaylist = value;
+                    RaisePropertyChanged(() => AlbumAddToPlaylist);
+                }
+            }
+        }
+
+        public void AddSongsToPlaylist(string playlistName, List<LocalMusicModel> enumerable)
+        {
+            var playlist = Playlists.Where(p => p.Playlist.Name == playlistName).FirstOrDefault();
+            foreach(var music in enumerable)
+            {
+                playlist.Musics.Add(music);
+            }
+            MusicLibrary.AddSongsToPlaylist(playlistName, enumerable.Select(e => e.Music).ToList());
+            RaisePropertyChanged(() => Playlists);
+        }
+
+        public void SortAlbums(string selected)
+        {
+            switch (selected)
+            {
+                case "A-Z":
+                    Albums = new ObservableCollection<LocalAlbumModel>(Albums.OrderBy(a => a.Title).ToList());
+                    break;
+                case "Z-A":
+                    Albums = new ObservableCollection<LocalAlbumModel>(Albums.OrderByDescending(a => a.Title).ToList());
+                    break;
+                case "Artist":
+                    Albums = new ObservableCollection<LocalAlbumModel>(Albums.OrderBy(a => a.AlbumArtist).ToList());
+                    break;
+            }
+        }
+
+        public void SortPlaylists(string selected)
+        {
+            switch (selected)
+            {
+                case "A-Z":
+                    Playlists = new ObservableCollection<LocalPlaylistModel>(Playlists.OrderBy(p => p.Playlist.Name).ToList());
+                    break;
+                case "Z-A":
+                    Playlists = new ObservableCollection<LocalPlaylistModel>(Playlists.OrderByDescending(p => p.Playlist.Name).ToList());
+                    break;
+                
+            }
+        }
     }
 }

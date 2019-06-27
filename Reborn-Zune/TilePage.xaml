@@ -1,0 +1,132 @@
+﻿<Page
+    x:Class="Reborn_Zune.TilePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom_controls="using:Reborn_Zune.Control"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Reborn_Zune"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+    xmlns:model="using:Reborn_Zune.Model"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Grid
+        x:Name="TileRoot"
+        Loaded="TileRoot_Loaded"
+        Visibility="Visible">
+
+        <Grid x:Name="tilesPanel" Background="DarkGray">
+
+            <custom_controls:VariableSizedWrapPanel
+                x:Name="tiles"
+                Width="{x:Bind TileVM.ActualWidth, Mode=OneWay}"
+                Height="{x:Bind TileVM.ActualHeight, Mode=OneWay}"
+                Margin="-50,-50,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                IsComposing="True"
+                ItemHeight="70"
+                ItemWidth="70"
+                ItemsSource="{x:Bind TileVM.Tiles, Mode=OneWay}"
+                Loaded="Tiles_Loaded"
+                Orientation="Vertical" />
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Border.Background>
+                    <media:BackdropSaturationBrush Saturation="0" />
+                </Border.Background>
+            </Border>
+        </Grid>
+        <StackPanel
+            Margin="105,0,0,135"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Orientation="Horizontal">
+            <Border
+                Width="153"
+                Height="153"
+                HorizontalAlignment="Left"
+                BorderBrush="White"
+                BorderThickness="6">
+                <Image
+                    Width="142"
+                    Height="142"
+                    Source="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.PreviewImage, Mode=OneWay}" />
+            </Border>
+
+            <StackPanel Margin="20,10,0,0">
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    FontSize="29"
+                    Foreground="White"
+                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Title, Mode=OneWay}" />
+                <TextBlock
+                    Margin="0,-4,0,0"
+                    HorizontalAlignment="Left"
+                    FontSize="24"
+                    Foreground="White"
+                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Artist, Mode=OneWay}" />
+                <TextBlock
+                    Margin="0,9,0,0"
+                    HorizontalAlignment="Left"
+                    FontSize="24"
+                    Foreground="White"
+                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.AlbumTitle, Mode=OneWay}" />
+            </StackPanel>
+        </StackPanel>
+
+
+        <Grid
+            x:Name="ListGrid"
+            Width="313"
+            Height="627"
+            Margin="0,0,36,80"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Background="Black">
+            <ListView
+                x:Name="listview"
+                Margin="20,20,0,47"
+                HorizontalAlignment="Right"
+                ChoosingItemContainer="Listview_ChoosingItemContainer"
+                ItemsSource="{x:Bind MainVM.PlayerViewModel.MediaList.MediaList, Mode=OneWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="model:LocalMusicModel">
+                        <StackPanel
+                            Width="300"
+                            Margin="0,0,0,15"
+                            HorizontalAlignment="Left">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                FontSize="20"
+                                Foreground="White"
+                                Text="{x:Bind Music.Title, Mode=OneWay}" />
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                FontSize="12"
+                                Foreground="DarkGray"
+                                Text="{x:Bind Music.Artist, Mode=OneWay}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+        <MediaPlayerElement
+            x:Name="TileMediaElement"
+            Height="80"
+            VerticalAlignment="Bottom"
+            AreTransportControlsEnabled="True">
+            <MediaPlayerElement.TransportControls>
+                <custom_controls:CustomMediaTransportControl
+                    x:Name="CustomMTC"
+                    ExitButtonClicked="CustomMTC_ExitButtonClicked"
+                    FullScreenButtonClicked="CustomMTC_FullScreenButtonClicked"
+                    IsNextTrackButtonVisible="True"
+                    IsPreviousTrackButtonVisible="True"
+                    ListViewGridChecked="CustomMTC_ListViewGridChecked"
+                    ListViewGridUnChecked="CustomMTC_ListViewGridUnChecked" />
+            </MediaPlayerElement.TransportControls>
+        </MediaPlayerElement>
+    </Grid>
+</Page>

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Graphics.Display;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,9 +22,14 @@ namespace Reborn_Zune.ViewModel
 
         #region Fields
         private CoreDispatcher dispatcher;
+        private Random rnd = new Random();
         private PlayerViewModel _playerViewModel;
         private ObservableCollection<BitmapImage> _bitmapList;
         private ObservableCollection<UIElement> _tiles;
+        private ObservableCollection<BitmapImage> thumbnails;
+        private double _actualWidth;
+        private double _actualHeight;
+        private int _maxTileNumber;
         #endregion
 
         #region Constructor
@@ -31,6 +37,29 @@ namespace Reborn_Zune.ViewModel
         {
             BitmapList = new ObservableCollection<BitmapImage>();
             Tiles = new ObservableCollection<UIElement>();
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            
+        }
+
+        public TileViewModel(ObservableCollection<BitmapImage> thumbnails)
+        {
+            BitmapList = thumbnails;
+            Tiles = new ObservableCollection<UIElement>();
+            CalculateScreeInfo();
+            CreateTile();
+            
+        }
+
+        private void CalculateScreeInfo()
+        {
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            ActualHeight = displayInformation.ScreenHeightInRawPixels + 70 * 2;
+            ActualWidth = displayInformation.ScreenWidthInRawPixels + 70 * 1;
+            var RawPVP = displayInformation.RawPixelsPerViewPixel;
+            var maxViewPixel = (ActualWidth / RawPVP) * (ActualWidth / RawPVP);
+            var tileViewPixel = 4900 / RawPVP;
+            var percentage = 1 + (RawPVP+4) / 10;
+            MaxTileNumer = (int)((maxViewPixel / tileViewPixel) * (0.22 * percentage));
         }
         #endregion
 
@@ -66,113 +95,79 @@ namespace Reborn_Zune.ViewModel
                 }
             }
         }
-        #endregion
 
-        #region Events
-        public void CurrentListDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        public double ActualWidth
         {
-            int selectedIndex = (sender as ListView).SelectedIndex;
+            get
+            {
+                return _actualWidth;
+            }
+            set
+            {
+                if(_actualWidth != value)
+                {
+                    _actualWidth = value;
+                    RaisePropertyChanged(() => ActualWidth);
+                }
+            }
+        }
+
+        public double ActualHeight
+        {
+            get
+            {
+                return _actualHeight;
+            }
+            set
+            {
+                if(_actualHeight != value)
+                {
+                    _actualHeight = value;
+                    RaisePropertyChanged(() => ActualHeight);
+                }
+            }
+        }
+
+        public int MaxTileNumer
+        {
+            get
+            {
+                return _maxTileNumber;
+            }
+            set
+            {
+                if(_maxTileNumber != value)
+                {
+                    _maxTileNumber = value;
+                    RaisePropertyChanged(() => MaxTileNumer);
+                }
+            }
         }
         #endregion
+
 
         #region Helpers
         private int Spans(int i)
         {
-            switch (i)
+            int val = rnd.Next(0,200);
+            if(val < 5)
             {
-                case 1:
-                    return 4;
-                case 3:
-                    return 3;
-                case 9:
-                    return 3;
-                case 23:
-                    return 3;
-                case 27:
-                    return 3;
-                case 32:
-                    return 3;
-                case 39:
-                    return 3;
-                case 42:
-                    return 3;
-                case 50:
-                    return 4;
-                case 52:
-                    return 3;
-                case 59:
-                    return 3;
-                case 65:
-                    return 3;
-                case 70:
-                    return 3;
-                case 82:
-                    return 3;
-                case 90:
-                    return 3;
-                case 98:
-                    return 3;
-                case 100:
-                    return 3;
-                case 103:
-                    return 4;
-                case 110:
-                    return 3;
-                case 118:
-                    return 3;
-                case 120:
-                    return 3;
-                case 121:
-                    return 3;
-                case 130:
-                    return 3;
-                case 140:
-                    return 3;
-                case 147:
-                    return 4;
-                case 155:
-                    return 3;
-                case 160:
-                    return 3;
-                case 166:
-                    return 3;
-                case 170:
-                    return 3;
-                case 175:
-                    return 3;
-                case 185:
-                    return 4;
-                case 200:
-                    return 4;
-                case 210:
-                    return 3;
-                case 217:
-                    return 3;
-                case 220:
-                    return 4;
-                case 252:
-                    return 3;
-                default:
-                    return 1;
-
+                return 4;
             }
-        }
-
-        public void CreateTiles(ObservableCollection<BitmapImage> getThumbnails)
-        {
-            foreach (var item in getThumbnails)
+            else if(val < 25)
             {
-                BitmapList.Add(item);
+                return 3;
             }
-
-            CreateTile();
+            else
+            {
+                return 1;
+            }
         }
 
         private void CreateTile()
         {
             var a = new ObservableCollection<UIElement>();
-            Random rnd = new Random();
-            for (int i = 0; i < 300; i++)
+            for (int i = 0; i < MaxTileNumer; i++)
             {
                 int factor = Spans(i);
                 int id = rnd.Next(BitmapList.Count);

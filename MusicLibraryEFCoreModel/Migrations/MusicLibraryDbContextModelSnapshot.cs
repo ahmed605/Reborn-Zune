@@ -16,55 +16,6 @@ namespace MusicLibraryEFCoreModel.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
 
-            modelBuilder.Entity("MusicLibraryEFCoreModel.Album", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("Id")
-                        .HasMaxLength(450)
-                        .IsUnicode(true);
-
-                    b.Property<string>("ArtistId")
-                        .IsRequired()
-                        .HasColumnName("ArtistId")
-                        .HasMaxLength(450)
-                        .IsUnicode(true);
-
-                    b.Property<string>("ThumbnailId");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnName("Title")
-                        .IsUnicode(true);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArtistId");
-
-                    b.HasIndex("ThumbnailId")
-                        .IsUnique();
-
-                    b.ToTable("Album");
-                });
-
-            modelBuilder.Entity("MusicLibraryEFCoreModel.Artist", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("Id")
-                        .HasMaxLength(450)
-                        .IsUnicode(true);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnName("Name")
-                        .IsUnicode(true);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Artist");
-                });
-
             modelBuilder.Entity("MusicLibraryEFCoreModel.Music", b =>
                 {
                     b.Property<string>("Id")
@@ -73,20 +24,27 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .HasMaxLength(450)
                         .IsUnicode(true);
 
-                    b.Property<string>("AlbumId")
-                        .HasColumnName("AlbumId")
+                    b.Property<string>("AlbumArtist")
+                        .IsRequired()
+                        .HasColumnName("AlbumArtist")
                         .IsUnicode(true);
 
-                    b.Property<string>("ArtistId")
-                        .HasColumnName("ArtistId")
+                    b.Property<string>("AlbumTitle");
+
+                    b.Property<string>("Artist")
+                        .IsRequired()
+                        .HasColumnName("Artist")
+                        .IsUnicode(true);
+
+                    b.Property<string>("Duration")
+                        .IsRequired()
+                        .HasColumnName("Duration")
                         .IsUnicode(true);
 
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnName("Path")
                         .IsUnicode(true);
-
-                    b.Property<string>("PlaylistId");
 
                     b.Property<string>("ThumbnailId")
                         .HasColumnName("ThumbnailId")
@@ -97,17 +55,16 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .HasColumnName("Title")
                         .IsUnicode(true);
 
+                    b.Property<string>("Year")
+                        .IsRequired()
+                        .HasColumnName("Year")
+                        .IsUnicode(true);
+
                     b.HasKey("Id");
-
-                    b.HasIndex("AlbumId");
-
-                    b.HasIndex("ArtistId");
 
                     b.HasIndex("Id")
                         .IsUnique()
                         .HasName("UQ__Music__AUQKR5RFNOUO6UFR");
-
-                    b.HasIndex("PlaylistId");
 
                     b.HasIndex("ThumbnailId");
 
@@ -148,6 +105,10 @@ namespace MusicLibraryEFCoreModel.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasName("UQ__Playlist__AUQKR5RFNOUO6UFR");
+
                     b.ToTable("Playlst");
                 });
 
@@ -159,7 +120,7 @@ namespace MusicLibraryEFCoreModel.Migrations
                         .HasMaxLength(450)
                         .IsUnicode(true);
 
-                    b.Property<byte[]>("Image")
+                    b.Property<byte[]>("ImageBytes")
                         .IsRequired()
                         .HasColumnName("Image")
                         .HasColumnType("BLOB")
@@ -167,38 +128,15 @@ namespace MusicLibraryEFCoreModel.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasName("UQ__Thumbnail__AUQKR5RFNOUO6UFR");
+
                     b.ToTable("Thumbnail");
-                });
-
-            modelBuilder.Entity("MusicLibraryEFCoreModel.Album", b =>
-                {
-                    b.HasOne("MusicLibraryEFCoreModel.Artist", "Artist")
-                        .WithMany("Albums")
-                        .HasForeignKey("ArtistId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MusicLibraryEFCoreModel.Thumbnail", "Thumbnail")
-                        .WithOne("Album")
-                        .HasForeignKey("MusicLibraryEFCoreModel.Album", "ThumbnailId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MusicLibraryEFCoreModel.Music", b =>
                 {
-                    b.HasOne("MusicLibraryEFCoreModel.Album", "Album")
-                        .WithMany("Musics")
-                        .HasForeignKey("AlbumId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MusicLibraryEFCoreModel.Artist", "Artist")
-                        .WithMany("Musics")
-                        .HasForeignKey("ArtistId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MusicLibraryEFCoreModel.Playlist")
-                        .WithMany("Musics")
-                        .HasForeignKey("PlaylistId");
-
                     b.HasOne("MusicLibraryEFCoreModel.Thumbnail", "Thumbnail")
                         .WithMany("Musics")
                         .HasForeignKey("ThumbnailId")

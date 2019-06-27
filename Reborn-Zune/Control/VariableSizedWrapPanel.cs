@@ -479,9 +479,9 @@ namespace Reborn_Zune.Control
                 // Add the child to the UninitializedFluidItems
                 _uninitializedFluidItems.Add(child);
 
-                
+
                 // Get the visual of the child
-                var visual = ElementCompositionPreview.GetElementVisual(child);
+                var visual = child.GetVisual();
                 visual.Opacity = 0f;
                 int next = rnd.Next(animationGroupList.Length);
                 var group = animationGroupList[next];
@@ -489,6 +489,7 @@ namespace Reborn_Zune.Control
                 visual.CenterPoint = new Vector3((float)(child.DesiredSize.Width / 2), (float)(child.DesiredSize.Height / 2), 0);
                 visual.Offset = new Vector3((float)-child.DesiredSize.Width, (float)-child.DesiredSize.Height, 0);
                 _fluidVisuals[child] = visual;
+                
             }
 
             // Unit size of a cell

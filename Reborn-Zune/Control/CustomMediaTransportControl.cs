@@ -1,15 +1,18 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Microsoft.Toolkit.Uwp.UI.Animations;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+
+// The Templated Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234235
 
 namespace Reborn_Zune.Control
 {
@@ -37,7 +40,7 @@ namespace Reborn_Zune.Control
         CheckBox ShuffleCheckBox;
         Button FullScreenButton;
         Button ExitButton;
-        
+
         public CustomMediaTransportControl()
         {
             DefaultStyleKey = typeof(CustomMediaTransportControl);
@@ -65,34 +68,34 @@ namespace Reborn_Zune.Control
                 ListCheckBox.Unchecked += ListCheckBox_Unchecked;
                 ListCheckBox.IsChecked = true;
             }
-            
-            if(RepeatCheckBox != null)
+
+            if (RepeatCheckBox != null)
             {
                 RepeatCheckBox.Checked += RepeatCheckBox_Checked;
                 RepeatCheckBox.Unchecked += RepeatCheckBox_Unchecked;
             }
 
-            if(ShuffleCheckBox != null)
+            if (ShuffleCheckBox != null)
             {
                 ShuffleCheckBox.Checked += ShuffleCheckBox_Checked;
                 ShuffleCheckBox.Unchecked += ShuffleCheckBox_Unchecked;
             }
 
-            if(FullScreenButton != null)
+            if (FullScreenButton != null)
             {
                 FullScreenButton.Click += FullScreenButton_Clicked;
             }
 
-            if(ExitButton != null)
+            if (ExitButton != null)
             {
                 ExitButton.Click += ExitButton_Clicked;
             }
-            
+
             VolumeSliderGrid.PointerEntered += Grid_PointerEntered;
             VolumeSliderGrid.PointerExited += Grid_PointerExited;
             MediaTransportControlsTimelineGrid.Loaded += DockPanel_Loaded;
             TilePageButton.Click += TilePageButton_Clicked;
-            
+
 
             base.OnApplyTemplate();
         }
@@ -145,20 +148,20 @@ namespace Reborn_Zune.Control
         private async void DockPanel_Loaded(object sender, RoutedEventArgs e)
         {
             await MediaTransportControlsTimelineGrid.Fade(1f, 400)
-                            .Offset(-20f,0f,300)
+                            .Offset(-20f, 0f, 300)
                             .StartAsync();
         }
 
         private void Grid_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-               VolumeSlider.Scale(centerX: 5f,
-                            centerY: 5f,
-                            scaleX: 0.5f,
-                            scaleY: 0.5f,
-                            duration: 300,
-                            delay:3000)
-                        .Fade(0, 300)
-                        .StartAsync();
+            VolumeSlider.Scale(centerX: 5f,
+                         centerY: 5f,
+                         scaleX: 0.5f,
+                         scaleY: 0.5f,
+                         duration: 300,
+                         delay: 3000)
+                     .Fade(0, 300)
+                     .StartAsync();
 
             VolumeValue.Scale(centerX: 0.8f,
                         centerY: 0.8f,
@@ -171,12 +174,12 @@ namespace Reborn_Zune.Control
 
         private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            VolumeValue.Scale(centerX:0.8f, 
-                            centerY:0.8f,
-                            scaleX:0.5f,
+            VolumeValue.Scale(centerX: 0.8f,
+                            centerY: 0.8f,
+                            scaleX: 0.5f,
                             scaleY: 0.5f,
                             duration: 300)
-                        .Fade(0,300)
+                        .Fade(0, 300)
                         .StartAsync();
 
             VolumeSlider.Scale(centerX: 5f,
@@ -208,7 +211,7 @@ namespace Reborn_Zune.Control
             MusicTitle.Text = v;
         }
 
-        public BitmapSource Thumbnail 
+        public BitmapSource Thumbnail
         {
             get { return (BitmapSource)GetValue(MyPropertyProperty); }
             set { SetValue(MyPropertyProperty, value); }
@@ -220,7 +223,7 @@ namespace Reborn_Zune.Control
 
         private static void onThumbnailChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            
+
             ((CustomMediaTransportControl)d).ThumbnailPropertyChanged(e.NewValue as BitmapSource);
         }
 
@@ -228,7 +231,7 @@ namespace Reborn_Zune.Control
         {
             ThumbnailImage.Source = bitmapSource;
         }
-        
+
         public bool Repeat
         {
             get { return (bool)GetValue(RepeatProperty); }
@@ -248,7 +251,7 @@ namespace Reborn_Zune.Control
         {
             RepeatCheckBox.IsChecked = v;
         }
-        
+
         public bool Shuffle
         {
             get { return (bool)GetValue(ShuffleProperty); }

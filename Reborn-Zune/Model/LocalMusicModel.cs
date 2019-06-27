@@ -17,16 +17,6 @@ namespace Reborn_Zune.Model
             Music = music;
         }
 
-        public async Task GetStorageFile()
-        {
-            StorageFile = await StorageFile.GetFileFromPathAsync(Music.Path);
-        }
-
-        public async Task GetThumbnail()
-        {
-            ImageSource = await Utility.ImageFromBytes(Music.Thumbnail.Image);
-        }
-
         public const String MediaItemIdKey = "mediaItemId";
 
         private Music _music;
@@ -43,46 +33,6 @@ namespace Reborn_Zune.Model
             }
         }
 
-        private BitmapImage _imageSource;
-        public BitmapImage ImageSource
-        {
-            get
-            {
-                return _imageSource;
-            }
-            set
-            {
-                Set<BitmapImage>(() => this.ImageSource, ref _imageSource, value);
-            }
-        }
-
-        private StorageFile _storageFile;
-        public StorageFile StorageFile
-        {
-            get
-            {
-                return _storageFile;
-            }
-            set
-            {
-                Set<StorageFile>(() => this.StorageFile, ref _storageFile, value);
-            }
-        }
-
-        private String _musicID;
-
-        public String MusicID
-        {
-            get
-            {
-                return _musicID;
-            }
-            set
-            {
-                Set<String>(() => this.MusicID, ref _musicID, value);
-            }
-        }
-        
         public String GetMediaItemIdKey
         {
             get
@@ -93,7 +43,7 @@ namespace Reborn_Zune.Model
 
         public MediaPlaybackItem ToPlaybackItem()
         {
-            var source = MediaSource.CreateFromStorageFile(StorageFile);
+            var source = MediaSource.CreateFromStorageFile(Music.File);
 
             var playbackItem = new MediaPlaybackItem(source);
 
@@ -101,7 +51,7 @@ namespace Reborn_Zune.Model
 
             playbackItem.ApplyDisplayProperties(displayProperties);
 
-            source.CustomProperties[GetMediaItemIdKey] = MusicID;
+            source.CustomProperties[GetMediaItemIdKey] = Music.Id;
 
             return playbackItem;
         }

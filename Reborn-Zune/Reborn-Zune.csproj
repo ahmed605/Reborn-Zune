@@ -11,8 +11,8 @@
     <AssemblyName>Reborn-Zune</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -105,15 +105,35 @@
     </Compile>
     <Compile Include="BackgroundApp.cs" />
     <Compile Include="BooleanToVisibilityConverter.cs" />
+    <Compile Include="Control\CompactGridControl.xaml.cs">
+      <DependentUpon>CompactGridControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Control\CustomMediaTransportControl.cs" />
+    <Compile Include="Control\CustomPopUpMediaTransportControl.cs" />
+    <Compile Include="Control\ShadowSpotLightControl.xaml.cs">
+      <DependentUpon>ShadowSpotLightControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ILocalListModel.cs" />
+    <Compile Include="Model\LocalPlaylistModel.cs" />
+    <Compile Include="PlaylistDetailPage.xaml.cs">
+      <DependentUpon>PlaylistDetailPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="SplashScreen.xaml.cs">
       <DependentUpon>SplashScreen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TilePage.xaml.cs">
+      <DependentUpon>TilePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TimeSpanFormatConverter.cs" />
+    <Compile Include="Utilities\BindableFlyout.cs" />
+    <Compile Include="Utilities\CompositionExtensions.cs" />
     <Compile Include="Utilities\FluidBitMatrix.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="OldMainPage.xaml.cs">
+      <DependentUpon>OldMainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\LocalAlbumModel.cs" />
     <Compile Include="Model\LocalArtistModel.cs" />
@@ -122,9 +142,11 @@
     <Compile Include="Control\Tile.xaml.cs">
       <DependentUpon>Tile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\SpotLight.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\Utils.cs" />
     <Compile Include="Control\VariableSizedWrapPanel.cs" />
+    <Compile Include="ViewModel\DetailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MediaItemViewModel.cs" />
     <Compile Include="ViewModel\MediaListViewModel.cs" />
@@ -132,6 +154,7 @@
     <Compile Include="ViewModel\PlaybackSessionViewModel.cs" />
     <Compile Include="ViewModel\PlayerViewModel.cs" />
     <Compile Include="ViewModel\TileViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -139,7 +162,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\aaa.jpg" />
+    <Content Include="Assets\icons8-back-arrow-96.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
@@ -154,6 +177,8 @@
     <Content Include="Assets\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen.scale-150.png" />
     <Content Include="Assets\SplashScreen.scale-400.png" />
+    <Content Include="Assets\Spotify_Icon_RGB_Green Black.png" />
+    <Content Include="Assets\Spotify_Icon_RGB_Green.png" />
     <Content Include="Assets\Square150x150Logo.scale-100.png" />
     <Content Include="Assets\Square150x150Logo.scale-125.png" />
     <Content Include="Assets\Square150x150Logo.scale-150.png" />
@@ -199,11 +224,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Control\CompactGridControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\ShadowSpotLightControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OldMainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Control\Tile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PlaylistDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -215,10 +256,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="TilePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HockeySDK.UWP">
-      <Version>4.1.6</Version>
+    <PackageReference Include="Microsoft.AppCenter.Analytics">
+      <Version>2.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter.Crashes">
+      <Version>2.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>

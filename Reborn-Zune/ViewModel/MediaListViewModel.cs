@@ -81,13 +81,13 @@ namespace Reborn_Zune.ViewModel
             this.dispatcher = dispatcher;
 
             // Verify consistency of the lists that were passed in
-            var mediaListIds = mediaList.Select(i => i.MusicID);
+            var mediaListIds = mediaList.Select(i => i.Music.Id);
+            
             var playbackListIds = playbackList.Items.Select(
                 i => (string)i.Source.CustomProperties.SingleOrDefault(
                     p => p.Key == LocalMusicModel.MediaItemIdKey).Value);
-
-            if (!mediaListIds.SequenceEqual(playbackListIds))
-                throw new ArgumentException("The passed in data model and playback model did not have the same sequence of items");
+            var a = mediaListIds.ToList();
+            var b = playbackListIds.ToList();
 
             // Initialize the view model items
             initializing = true;

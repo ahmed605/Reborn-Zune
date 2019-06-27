@@ -1,41 +1,74 @@
 ﻿using GalaSoft.MvvmLight;
 using MusicLibraryEFCoreModel;
 using Reborn_Zune.Utilities;
+using Reborn_Zune.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.Model
 {
-    public class LocalAlbumModel : ObservableObject
+    public class LocalAlbumModel : ObservableObject, ILocalListModel
     {
-        #region Constructors
-        public LocalAlbumModel(Album album)
+        public LocalAlbumModel()
         {
-            Album = album;
+            Musics = new ObservableCollection<LocalMusicModel>();
         }
 
-        public async Task GetThumbanail()
-        {
-            Image = await Utility.ImageFromBytes(Album.Thumbnail.Image);
-            
-        }
-        #endregion
-
-        private Album _album;
-        public Album Album
+        private string _title;
+        public string Title
         {
             get
             {
-                return _album;
+                return _title;
             }
             set
             {
-                Set<Album>(() => this.Album, ref _album, value);
+                if(_title != value)
+                {
+                    _title = value;
+                    RaisePropertyChanged(() => Title);
+                }
+            }
+        }
+
+        private string _year;
+        public string Year
+        {
+            get
+            {
+                return _year;
+            }
+            set
+            {
+                if(_year != value)
+                {
+                    _year = value;
+                    RaisePropertyChanged(() => Year);
+                }
+            }
+        }
+
+        private string _albumArtist;
+        public string AlbumArtist
+        {
+            get
+            {
+                return _albumArtist;
+            }
+            set
+            {
+                if(_albumArtist != value)
+                {
+                    _albumArtist = value;
+                    RaisePropertyChanged(() => AlbumArtist);
+                }
             }
         }
 
@@ -51,5 +84,64 @@ namespace Reborn_Zune.Model
                 Set<BitmapImage>(() => this.Image, ref _image, value);
             }
         }
+
+        private LibraryViewModel _libraryViewModel;
+        public LibraryViewModel LibraryViewModel
+        {
+            get
+            {
+                return _libraryViewModel;
+            }
+            set
+            {
+                Set<LibraryViewModel>(() => this.LibraryViewModel, ref _libraryViewModel, value);
+                RaisePropertyChanged(() => LibraryViewModel);
+            }
+        }
+
+        private ObservableCollection<LocalMusicModel> _musics;
+        public ObservableCollection<LocalMusicModel> Musics
+        {
+            get
+            {
+                return _musics;
+            }
+            set
+            {
+                Set<ObservableCollection<LocalMusicModel>>(() => this.Musics, ref _musics, value);
+            }
+        }
+
+        public bool isEditable
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public Visibility isVisible
+        {
+            get
+            {
+                return Visibility.Visible;
+            }
+        }
+
+        public ImageSource GetImage()
+        {
+            return Image;
+        }
+
+        public string GetTitle()
+        {
+            return Title;
+        }
+
+        public string GetArtist()
+        {
+            return AlbumArtist;
+        }
+
     }
 }

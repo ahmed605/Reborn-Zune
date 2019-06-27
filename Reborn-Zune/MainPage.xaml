@@ -2,378 +2,544 @@
     x:Class="Reborn_Zune.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:control="using:Reborn_Zune.Control"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:custom_controls="using:Reborn_Zune.Control"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:local="using:Reborn_Zune"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     xmlns:model="using:Reborn_Zune.Model"
+    xmlns:utils="using:Reborn_Zune.Utilities"
+    Background="#F1F1F1"
+    NavigationCacheMode="Required"
     mc:Ignorable="d">
 
     <Page.Resources>
         <local:BooleanToVisibilityConverter x:Key="bool2VisConvert" />
     </Page.Resources>
-
-    <Grid x:Name="root">
-        <Grid
-            x:Name="TileRoot"
-            Loaded="TileRoot_Loaded"
-            Opacity="0"
-            Visibility="Visible">
-
-            <Grid x:Name="tilesPanel" Background="DarkGray">
-
-                <custom_controls:VariableSizedWrapPanel
-                    x:Name="tiles"
-                    Width="2580"
-                    Height="1200"
-                    Margin="-20,-20,-1784,-100"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    IsComposing="True"
-                    ItemHeight="70"
-                    ItemWidth="70"
-                    ItemsSource="{x:Bind viewModel.TileViewModel.Tiles, Mode=OneWay}"
-                    Orientation="Vertical" />
-                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <Border.Background>
-                        <media:BackdropSaturationBrush Saturation="0" />
-                    </Border.Background>
-                </Border>
-                <!--<GridView ItemsSource="{x:Bind viewModel.TileViewModel.BitmapList, Mode=OneWay}">
-                    <GridView.ItemTemplate>
-                        <DataTemplate>
-                            <Image Source="{Binding}"/>
-                        </DataTemplate>
-                    </GridView.ItemTemplate>
-                </GridView>-->
-            </Grid>
-
-            <StackPanel
-                Margin="105,0,0,135"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Orientation="Horizontal">
-                <Border
-                    Width="153"
-                    Height="153"
-                    HorizontalAlignment="Left"
-                    BorderBrush="White"
-                    BorderThickness="6">
-                    <Image
-                        Width="142"
-                        Height="142"
-                        Source="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.ImageSource, Mode=OneWay}" />
-                </Border>
-
-                <StackPanel Margin="20,10,0,0">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.37*" />
+            <RowDefinition Height="5*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.18*" />
+            <ColumnDefinition Width="5*" />
+        </Grid.ColumnDefinitions>
+        <!--<Image
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="40"
+            Height="40"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Source="ms-appx:///Assets/Spotify_Icon_RGB_Green Black.png" />-->
+        <Pivot
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Margin="0,0,0,0"
+            HorizontalAlignment="Center"
+            Style="{StaticResource PivotStyle1}">
+            <!--<PivotItem>
+                <PivotItem.Header>
                     <TextBlock
-                        HorizontalAlignment="Left"
-                        FontSize="29"
-                        Foreground="White"
-                        Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Artist.Name, Mode=OneWay}" />
+                        FontFamily="Segoe MDL2 Assets"
+                        FontSize="55"
+                        Text="&#xF139;" />
+                </PivotItem.Header>
+                <Grid>
+                    <controls:Carousel
+                        x:Name="CarouselControl"
+                        InvertPositive="True"
+                        ItemDepth="157"
+                        ItemMargin="-64"
+                        ItemRotationX="0"
+                        ItemRotationY="0"
+                        ItemRotationZ="0"
+                        Orientation="Horizontal">
+                        <controls:Carousel.EasingFunction>
+                            <CubicEase EasingMode="EaseOut" />
+                        </controls:Carousel.EasingFunction>
+                        <controls:Carousel.ItemTemplate>
+                            <DataTemplate>
+                                <controls:DropShadowPanel
+                                    Width="325"
+                                    Height="325"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    BlurRadius="25"
+                                    OffsetX="6"
+                                    OffsetY="6"
+                                    ShadowOpacity="0.25"
+                                    Color="Black">
+                                    <Image
+                                        VerticalAlignment="Bottom"
+                                        Source="ms-appx:///Assets/LargeTile.scale-400.png"
+                                        Stretch="Uniform" />
+                                </controls:DropShadowPanel>
+                            </DataTemplate>
+                        </controls:Carousel.ItemTemplate>
+                    </controls:Carousel>
+                </Grid>
+            </PivotItem>-->
+            <PivotItem>
+                <PivotItem.Header>
                     <TextBlock
-                        Margin="0,-4,0,0"
-                        HorizontalAlignment="Left"
-                        FontSize="24"
-                        Foreground="White"
-                        Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Album.Title, Mode=OneWay}" />
-                    <TextBlock
-                        Margin="0,9,0,0"
-                        HorizontalAlignment="Left"
-                        FontSize="24"
-                        Foreground="White"
-                        Text="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Title, Mode=OneWay}" />
-                </StackPanel>
-            </StackPanel>
-
-
-            <Grid
-                x:Name="ListGrid"
-                Width="313"
-                Height="627"
-                Margin="0,0,36,80"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Background="Black">
-                <ListView
-                    x:Name="listview"
-                    Margin="20,20,0,47"
-                    HorizontalAlignment="Right"
-                    DoubleTapped="{x:Bind viewModel.TileViewModel.CurrentListDoubleTapped}"
-                    ItemsSource="{x:Bind viewModel.PlayerViewModel.MediaList.MediaList, Mode=OneWay}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="model:LocalMusicModel">
-                            <StackPanel
-                                Width="300"
-                                Margin="0,0,0,15"
-                                HorizontalAlignment="Left">
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontSize="20"
-                                    Foreground="White"
-                                    Text="{x:Bind Music.Title, Mode=OneWay}" />
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    FontSize="12"
-                                    Foreground="DarkGray"
-                                    Text="{x:Bind Music.Artist.Name, Mode=OneWay}" />
+                        FontFamily="Segoe MDL2 Assets"
+                        FontSize="55"
+                        Text="&#xE73B;" />
+                </PivotItem.Header>
+                <controls:DockPanel HorizontalAlignment="Stretch">
+                    <Grid Margin="0,25,0,0" controls:DockPanel.Dock="Top"
+                          HorizontalAlignment="Stretch">
+                        
+                        <StackPanel HorizontalAlignment="Center" 
+                                    Orientation="Horizontal">
+                            <Button
+                                x:Name="ShuffleAllButton"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                Tapped="ShuffleAllButton_Tapped">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            Margin="0,2,0,0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            FontSize="16"
+                                            Text="&#xE8B1;" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Text="Shuffle all" />
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            <StackPanel Margin="50,0,0,0" Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="Sorted By: " />
+                                <ComboBox
+                                    Width="43"
+                                    VerticalAlignment="Center"
+                                    SelectedValue="A-Z"
+                                    SelectionChanged="ComboBox_SelectionChanged"
+                                    Style="{StaticResource ComboBoxStyle}">
+                                    <x:String>A-Z</x:String>
+                                    <x:String>Z-A</x:String>
+                                    <x:String>Artist</x:String>
+                                </ComboBox>
                             </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
-            <MediaPlayerElement
-                x:Name="TileMediaElement"
-                Height="80"
-                VerticalAlignment="Bottom"
-                AreTransportControlsEnabled="True">
-                <MediaPlayerElement.TransportControls>
-                    <custom_controls:CustomMediaTransportControl
-                        x:Name="CustomMTC"
-                        ExitButtonClicked="CustomMTC_ExitButtonClicked"
-                        FullScreenButtonClicked="CustomMTC_FullScreenButtonClicked"
-                        IsNextTrackButtonVisible="True"
-                        IsPreviousTrackButtonVisible="True"
-                        ListViewGridChecked="CustomMTC_ListViewGridChecked"
-                        ListViewGridUnChecked="CustomMTC_ListViewGridUnChecked"
-                        Repeat="{x:Bind viewModel.IsRepeated, Mode=OneWay}"
-                        RepeatCheckBoxChecked="{x:Bind viewModel.MTC_RepeatCheckBoxChecked}"
-                        RepeatCheckBoxUnchecked="{x:Bind viewModel.MTC_RepeatCheckBoxUnchecked}"
-                        Shuffle="{x:Bind viewModel.IsShuffled, Mode=OneWay}"
-                        ShuffleCheckBoxChecked="{x:Bind viewModel.MTC_ShuffleCheckBoxChecked}"
-                        ShuffleCheckBoxUnchecked="{x:Bind viewModel.MTC_ShuffleCheckBoxUnchecked}"
-                        Style="{StaticResource TilePageMTCStyle}" />
-                </MediaPlayerElement.TransportControls>
-            </MediaPlayerElement>
-        </Grid>
+                        </StackPanel>
+                    </Grid>
+                    <GridView
+                        x:Name="albums"
+                        Margin="0,15,0,70"
+                        Padding="0,10,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        HorizontalContentAlignment="Center"
+                        controls:DockPanel.Dock="Top"
+                        ChoosingItemContainer="GridView_ChoosingItemContainer"
+                        ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
+                        ItemsSource="{x:Bind MainVM.LibraryViewModel.Albums, Mode=OneWay}"
+                        Loaded="Albums_Loaded"
+                        SelectionMode="Single">
+
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid
+                                    HorizontalAlignment="Center"
+                                    MaximumRowsOrColumns="4"
+                                    Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:DataType="model:LocalAlbumModel">
+                                <controls:DockPanel>
+                                    <StackPanel
+                                        x:Name="TitleAndName"
+                                        Width="175"
+                                        HorizontalAlignment="Left"
+                                        controls:DockPanel.Dock="Bottom"
+                                        Orientation="Vertical">
+                                        <TextBlock
+                                            Margin="0,5,0,0"
+                                            FontFamily="Source Han Sans CN"
+                                            FontSize="18"
+                                            FontWeight="Normal"
+                                            Foreground="Black"
+                                            Text="{x:Bind Title, Mode=OneWay}" />
+                                        <StackPanel Margin="0,-3,0,0" Orientation="Horizontal">
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontFamily="Source Han Sans CN"
+                                                FontSize="15"
+                                                FontWeight="Normal"
+                                                Foreground="Gray"
+                                                Text="{x:Bind AlbumArtist, Mode=OneWay}" />
+                                            <TextBlock
+                                                Margin="3,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontFamily="Source Han Sans CN"
+                                                FontSize="15"
+                                                FontWeight="Normal"
+                                                Foreground="Gray"
+                                                Text="{x:Bind Year, Mode=OneWay}" />
+                                        </StackPanel>
+
+                                    </StackPanel>
+
+                                    <Grid
+                                        Width="175"
+                                        Height="175"
+                                        controls:DockPanel.Dock="Top">
+                                        <controls:DropShadowPanel
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            BlurRadius="20"
+                                            ShadowOpacity="0.4"
+                                            Visibility="Collapsed">
+                                            <Border />
+                                        </controls:DropShadowPanel>
+                                        <controls:ImageEx
+                                            x:Name="Thumbnail"
+                                            PlaceholderSource="ms-appx:///Assets/Vap-logo-placeholder.jpg"
+                                            Source="{x:Bind Image, Mode=OneWay}"
+                                            Stretch="Fill" />
+
+                                        <control:ShadowSpotLightControl
+                                            Width="175"
+                                            Height="175"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            Visibility="Collapsed" />
+                                        <Border
+                                            x:Name="border"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            BorderBrush="Black"
+                                            BorderThickness="1"
+                                            Visibility="Collapsed" />
+                                        <StackPanel
+                                            x:Name="Buttons"
+                                            Margin="0,0,0,5"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Bottom"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            Orientation="Horizontal"
+                                            Visibility="Collapsed">
+                                            <Button
+                                                Width="25"
+                                                Height="25"
+                                                Style="{StaticResource MainPageCircleButtonStyle}"
+                                                Tapped="PlayButton_Tapped">
+                                                <Button.Content>
+                                                    <TextBlock
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        FontWeight="Bold"
+                                                        Text="&#xE768;" />
+                                                </Button.Content>
+                                            </Button>
+                                            <Button
+                                                x:Name="AlbumAddTo"
+                                                Width="25"
+                                                Height="25"
+                                                Margin="10,0,0,0"
+                                                Style="{StaticResource MainPageCircleButtonStyle}"
+                                                Tapped="AddToButton_Tapped">
+                                                <Button.Flyout>
+                                                    <Flyout utils:BindableFlyout.ItemsSource="{x:Bind LibraryViewModel.Playlists, Mode=OneWay}">
+                                                        <utils:BindableFlyout.ItemTemplate>
+                                                            <DataTemplate x:DataType="model:LocalPlaylistModel">
+                                                                <MenuFlyoutItem
+                                                                    x:Name="AddToPlaylistFlyout"
+                                                                    Tapped="AddToPlaylistFlyout_Tapped"
+                                                                    Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                                            </DataTemplate>
+                                                        </utils:BindableFlyout.ItemTemplate>
+                                                    </Flyout>
+                                                </Button.Flyout>
+                                                <Button.Content>
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" />
+                                                </Button.Content>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+                                </controls:DockPanel>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </controls:DockPanel>
+            </PivotItem>
+            <PivotItem>
+                <PivotItem.Header>
+                    <TextBlock
+                        FontFamily="Segoe MDL2 Assets"
+                        FontSize="55"
+                        Text="&#xF136;" />
+                </PivotItem.Header>
+                <controls:DockPanel>
+                    <StackPanel
+                        Margin="0,60,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        controls:DockPanel.Dock="Top"
+                        Orientation="Vertical"
+                        Visibility="{x:Bind MainVM.LibraryViewModel.hasPlaylist, Mode=OneWay}">
+                        <TextBlock
+                            FontSize="40"
+                            HorizontalTextAlignment="Left"
+                            Text="YOU HAVE NO PLAYLIST IN&#x0a;YOUR COLLECTION" />
+                        <Button
+                            x:Name="CreatePlaylistButton"
+                            Margin="0,15,0,0"
+                            Background="Transparent"
+                            Content="new playlist">
+                            <Button.Flyout>
+                                <Flyout x:Name="AddPlaylistFlyout">
+                                    <StackPanel>
+                                        <TextBlock Text="new playlist" />
+                                        <TextBox x:Name="PlaylistName" Margin="0,10,0,0" />
+                                        <TextBlock
+                                            x:Name="UnAvailableHint"
+                                            Margin="0,10,0,0"
+                                            Text="Already have playlist with this name"
+                                            Visibility="Collapsed" />
+                                        <Button
+                                            x:Name="newPlaylistButton"
+                                            Margin="0,10,0,0"
+                                            Click="NewPlaylistButton_Click"
+                                            Content="Create" />
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+
+                        </Button>
+                    </StackPanel>
+                    <Grid
+                        Margin="20,25,0,0"
+                        controls:DockPanel.Dock="Top"
+                        Visibility="{x:Bind MainVM.LibraryViewModel.hasPlaylistReverse, Mode=OneWay}">
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <Button
+                                x:Name="ShuffleAllPlaylistButton"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                Tapped="ShuffleAllPlaylistButton_Tapped">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            Margin="0,2,0,0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            FontSize="16"
+                                            Text="&#xE8B1;" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Text="Shuffle all" />
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            <StackPanel Margin="50,0,0,0" Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="Sorted By: " />
+                                <ComboBox
+                                    x:Name="ComboBox2"
+                                    Width="80"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Foreground="Blue"
+                                    SelectedValue="A-Z"
+                                    SelectionChanged="ComboBox2_SelectionChanged"
+                                    Style="{StaticResource ComboBoxStyle}">
+                                    <x:String>A-Z</x:String>
+                                    <x:String>Z-A</x:String>
+                                </ComboBox>
+                            </StackPanel>
+                            <Button
+                                x:Name="NewPlaylistButton"
+                                Margin="10,0,0,0"
+                                Background="Transparent"
+                                BorderBrush="Transparent">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            Margin="0,2,0,0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            FontSize="16"
+                                            Text="&#xE710;" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Text="New Playlist" />
+                                    </StackPanel>
+                                </Button.Content>
+                                <Button.Flyout>
+                                    <Flyout x:Name="AddPlaylistFlyout2">
+                                        <StackPanel>
+                                            <TextBlock Text="new playlist" />
+                                            <TextBox x:Name="PlaylistName2" Margin="0,10,0,0" />
+                                            <TextBlock
+                                                x:Name="UnAvailableHint2"
+                                                Margin="0,10,0,0"
+                                                Text="Already have playlist with this name"
+                                                Visibility="Collapsed" />
+                                            <Button
+                                                x:Name="newPlaylistButton2"
+                                                Margin="0,10,0,0"
+                                                Content="Create"
+                                                Tapped="NewPlaylistButton2_Tapped" />
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                    <GridView
+                        x:Name="playlists"
+                        MaxWidth="1000"
+                        Margin="0,15,0,70"
+                        Padding="0,10,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        controls:DockPanel.Dock="Top"
+                        ChoosingItemContainer="GridView_ChoosingItemContainer"
+                        ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
+                        ItemsSource="{x:Bind MainVM.LibraryViewModel.Playlists, Mode=OneWay}"
+                        Loaded="Playlists_Loaded"
+                        Visibility="{x:Bind MainVM.LibraryViewModel.hasPlaylistReverse, Mode=OneWay}">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid MaximumRowsOrColumns="4" Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                        <GridView.ItemTemplate>
+                            <DataTemplate x:DataType="model:LocalPlaylistModel">
+                                <controls:DockPanel>
+                                    <TextBlock
+                                        Margin="0,8,0,0"
+                                        controls:DockPanel.Dock="Bottom"
+                                        FontFamily="Source Han Sans CN"
+                                        FontSize="18"
+                                        FontWeight="Normal"
+                                        Foreground="Black"
+                                        Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                    <Grid
+                                        Width="175"
+                                        Height="175"
+                                        controls:DockPanel.Dock="Top"
+                                        extensions:VisualExtensions.CenterPoint="87.5,87.5,0">
+                                        <controls:DropShadowPanel
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            BlurRadius="20"
+                                            ShadowOpacity="0.4"
+                                            Visibility="Collapsed">
+                                            <Border />
+                                        </controls:DropShadowPanel>
+                                        <controls:ImageEx
+                                            x:Name="Thumbnail"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            Source="ms-appx:///Assets/Vap-logo-placeholder.jpg"
+                                            Stretch="UniformToFill" />
+
+                                        <control:ShadowSpotLightControl
+                                            Width="175"
+                                            Height="175"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            Visibility="Collapsed" />
+                                        <Border
+                                            x:Name="border"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            BorderBrush="Black"
+                                            BorderThickness="1"
+                                            Visibility="Collapsed" />
+                                        <StackPanel
+                                            x:Name="Buttons"
+                                            Margin="0,0,0,5"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Bottom"
+                                            extensions:VisualExtensions.Opacity="0"
+                                            Orientation="Horizontal"
+                                            Visibility="Collapsed">
+                                            <Button
+                                                Width="25"
+                                                Height="25"
+                                                Style="{StaticResource MainPageCircleButtonStyle}"
+                                                Tapped="PlayButton_Tapped">
+                                                <Button.Content>
+                                                    <TextBlock
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        FontWeight="Bold"
+                                                        Text="&#xE768;" />
+                                                </Button.Content>
+                                            </Button>
+                                            <Button
+                                                x:Name="PlaylistAddTo"
+                                                Width="25"
+                                                Height="25"
+                                                Margin="10,0,0,0"
+                                                Style="{StaticResource MainPageCircleButtonStyle}"
+                                                Tapped="PlaylistAddTo_Tapped">
+                                                <Button.Flyout>
+                                                    <Flyout utils:BindableFlyout.ItemsSource="{x:Bind LibraryViewModel.Playlists, Mode=OneWay}">
+                                                        <utils:BindableFlyout.ItemTemplate>
+                                                            <DataTemplate x:DataType="model:LocalPlaylistModel">
+                                                                <MenuFlyoutItem
+                                                                    x:Name="AddToPlaylistFlyout"
+                                                                    Tapped="AddToPlaylistFlyout_Tapped"
+                                                                    Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                                            </DataTemplate>
+                                                        </utils:BindableFlyout.ItemTemplate>
+                                                    </Flyout>
+                                                </Button.Flyout>
+                                                <Button.Content>
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" />
+                                                </Button.Content>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+
+                                </controls:DockPanel>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </controls:DockPanel>
+            </PivotItem>
+        </Pivot>
 
         <Grid
-            x:Name="MainRoot"
-            Background="White"
-            Opacity="1">
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="90" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="100" />
-            </Grid.RowDefinitions>
-
-
-            <StackPanel
-                Width="15"
-                Height="53"
-                Margin="0,32,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Background="Green" />
-
-            <TextBlock
-                Margin="35,45,0,0"
-                FontSize="22"
-                FontWeight="Light"
-                Foreground="Black"
-                Text="collection" />
-
-
-            <Pivot Grid.Row="1" Style="{StaticResource PivotStyle1}">
-                <Pivot.HeaderTemplate>
-                    <DataTemplate>
-                        <Grid Margin="-8,0,0,0">
-                            <TextBlock
-                                FontSize="15"
-                                FontWeight="Medium"
-                                Text="{Binding}" />
-                        </Grid>
-                    </DataTemplate>
-                </Pivot.HeaderTemplate>
-                <PivotItem Header="ARTISTS">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition MinWidth="210" MaxWidth="480" />
-                            <ColumnDefinition MinWidth="265" MaxWidth="910" />
-                            <ColumnDefinition MinWidth="240" />
-                        </Grid.ColumnDefinitions>
-
-                        <Border
-                            Grid.Column="0"
-                            Width="1"
-                            Height="800"
-                            Margin="0,25,0,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Background="DarkGray" />
-                        <controls:DockPanel Grid.Column="0">
-                            <TextBlock
-                                Margin="55,5,0,0"
-                                controls:DockPanel.Dock="Top"
-                                FontSize="11"
-                                FontWeight="Bold"
-                                Foreground="Black"
-                                Text="16 ARTISTS" />
-                            <ListView
-                                x:Name="ArtistList"
-                                Margin="55,12,0,0"
-                                controls:DockPanel.Dock="Top"
-                                ItemsSource="{x:Bind viewModel.FirstPanelList, Mode=OneWay}">
-
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <Setter Property="Margin" Value="-10,0,0,0" />
-                                        <Setter Property="MinHeight" Value="26" />
-                                    </Style>
-                                </ListView.ItemContainerStyle>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="model:LocalArtistModel">
-                                        <Grid>
-                                            <TextBlock
-                                                FontFamily="Microsoft YaHei UI"
-                                                FontSize="13"
-                                                Text="{x:Bind Artist.Name}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </controls:DockPanel>
-                        <Border
-                            Grid.Column="1"
-                            Width="1"
-                            Height="800"
-                            Margin="0,25,0,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Background="DarkGray" />
-                        <controls:DockPanel Grid.Column="1">
-                            <TextBlock
-                                Margin="20,5,0,0"
-                                controls:DockPanel.Dock="Top"
-                                FontSize="11"
-                                FontWeight="Bold"
-                                Foreground="Black"
-                                Text="25 ALBUMS BY DATE ADDED" />
-                            <GridView
-                                x:Name="AlbumList"
-                                Margin="0,12,0,0"
-                                Padding="0,0,25,0"
-                                controls:DockPanel.Dock="Top"
-                                ItemsSource="{x:Bind viewModel.SecondPanelList, Mode=OneWay}">
-                                <GridView.ItemContainerStyle>
-                                    <Style TargetType="GridViewItem">
-                                        <Setter Property="Margin" Value="27,0,0,25" />
-                                        <Setter Property="MinHeight" Value="26" />
-                                    </Style>
-                                </GridView.ItemContainerStyle>
-                                <GridView.ItemTemplate>
-                                    <DataTemplate x:DataType="model:LocalAlbumModel">
-                                        <StackPanel Width="95">
-                                            <Grid>
-                                                <Image
-                                                    Width="95"
-                                                    Height="95"
-                                                    Source="/Assets/Vap-logo-placeholder.jpg" />
-                                                <Image
-                                                    Width="95"
-                                                    Height="95"
-                                                    Source="{x:Bind Image, Mode=OneWay}"
-                                                    Stretch="Fill"/>
-                                            </Grid>
-                                            <TextBlock
-                                                Margin="0,3,0,0"
-                                                FontSize="12"
-                                                FontWeight="Medium"
-                                                Text="{x:Bind Album.Title}" />
-                                            <TextBlock
-                                                Margin="0,0,0,0"
-                                                FontSize="12"
-                                                FontWeight="Medium"
-                                                Foreground="DarkGray"
-                                                Text="{x:Bind Album.Artist.Name}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </GridView.ItemTemplate>
-                            </GridView>
-                        </controls:DockPanel>
-                        <Border
-                            Grid.Column="3"
-                            Width="1"
-                            Height="800"
-                            Margin="0,25,43,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Background="DarkGray" />
-                        <controls:DockPanel Grid.Column="2" Margin="0,0,43,0">
-                            <TextBlock
-                                Margin="30,5,0,0"
-                                controls:DockPanel.Dock="Top"
-                                FontSize="11"
-                                FontWeight="Bold"
-                                Foreground="Black"
-                                Text="141 SONGS BY RATING" />
-                            <TextBlock
-                                Margin="30,10,0,0"
-                                controls:DockPanel.Dock="Top"
-                                FontSize="20"
-                                Text="{x:Bind viewModel.ThirdPanelTitle, Mode=OneWay}"
-                                Visibility="{x:Bind viewModel.IsThirdPanelAltShown, Converter={StaticResource bool2VisConvert}, Mode=OneWay}" />
-                            <ListView
-                                x:Name="SongList"
-                                Margin="30,10,0,0"
-                                controls:DockPanel.Dock="Top"
-                                ItemsSource="{x:Bind viewModel.ThirdPanelList, Mode=OneWay}">
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <Setter Property="Margin" Value="-10,0,0,0" />
-                                        <Setter Property="MinHeight" Value="26" />
-                                    </Style>
-                                </ListView.ItemContainerStyle>
-
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="model:LocalMusicModel">
-                                        <Grid>
-                                            <TextBlock
-                                                FontFamily="Microsoft YaHei UI"
-                                                FontSize="13"
-                                                Text="{x:Bind Music.Title}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </controls:DockPanel>
-                    </Grid>
-                </PivotItem>
-                <PivotItem Header="PLAYLISTS">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="50"
-                        FontWeight="Bold"
-                        Text="Need Implementation" />
-                </PivotItem>
-            </Pivot>
-
-            <MediaPlayerElement
-                x:Name="MainMediaElement"
-                Grid.Row="2"
-                AreTransportControlsEnabled="True">
-                <MediaPlayerElement.TransportControls>
-                    <custom_controls:CustomMediaTransportControl
-                        x:Name="MainPageMTC"
-                        Title="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Title, Mode=OneWay}"
-                        IsNextTrackButtonVisible="True"
-                        IsPreviousTrackButtonVisible="True"
-                        Repeat="{x:Bind viewModel.IsRepeated, Mode=OneWay}"
-                        RepeatCheckBoxChecked="{x:Bind viewModel.MTC_RepeatCheckBoxChecked}"
-                        RepeatCheckBoxUnchecked="{x:Bind viewModel.MTC_RepeatCheckBoxUnchecked}"
-                        Shuffle="{x:Bind viewModel.IsShuffled, Mode=OneWay}"
-                        ShuffleCheckBoxChecked="{x:Bind viewModel.MTC_ShuffleCheckBoxChecked}"
-                        ShuffleCheckBoxUnchecked="{x:Bind viewModel.MTC_ShuffleCheckBoxUnchecked}"
-                        Thumbnail="{x:Bind viewModel.PlayerViewModel.MediaList.CurrentItem.MediaItem.ImageSource, Mode=OneWay}"
-                        TilePageClicked="MainPageMTC_TilePageClicked" />
-                </MediaPlayerElement.TransportControls>
-            </MediaPlayerElement>
+            x:Name="PlayerFloating"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            Width="100"
+            Height="100"
+            Margin="0,0,50,50"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            extensions:VisualExtensions.CenterPoint="50,50,0"
+            Tapped="PlayerFloating_Tapped"
+            Visibility="{x:Bind MainVM.FloatingVisible, Mode=OneWay}">
+            <controls:DropShadowPanel
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                BlurRadius="60"
+                OffsetY="5"
+                ShadowOpacity="0.3">
+                <Border />
+            </controls:DropShadowPanel>
+            <Image x:Name="CurrentPlayingThumbnailPlaceHolder" Source="ms-appx:///Assets/Vap-logo-placeholder.jpg" />
+            <Image x:Name="CurrentPlayingThumbnail" Source="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.PreviewImage, Mode=OneWay}" />
         </Grid>
     </Grid>
-
-
 </Page>

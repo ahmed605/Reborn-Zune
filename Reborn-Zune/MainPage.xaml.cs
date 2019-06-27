@@ -1,29 +1,35 @@
-﻿using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Effects;
-using Microsoft.Toolkit.Uwp.Helpers;
+﻿using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI.Animations;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Reborn_Zune.Control;
 using Reborn_Zune.Model;
+using Reborn_Zune.Utilities;
 using Reborn_Zune.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Numerics;
-using Windows.Graphics.Display;
-using Windows.Graphics.Effects;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Composition;
-using Windows.UI.Composition.Effects;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-#pragma warning disable 0169
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Reborn_Zune
 {
@@ -32,32 +38,37 @@ namespace Reborn_Zune
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private const float lightDepth = 200f;
-        private const int animationDelay = 600;
-        private const int animationDuration = 70;
-        private CompositionEffectFactory _effectFactory;
-        private Random _random = new Random();
+
+        private MainViewModel MainVM { get; set; }
         private Compositor _compositor;
-        private PointLight _pointLight;
-        private PointLight _secondPointLight;
-        private AmbientLight _ambientLight;
-        private Visual _root;
-
-
-        private MainViewModel viewModel;
-
+        private Visual _floatingVisual;
+        private object  _storedItem;
         public MainPage()
         {
             this.InitializeComponent();
-
-            viewModel = new MainViewModel(Dispatcher);
-            MainMediaElement.SetMediaPlayer(viewModel._player);
-            TileMediaElement.SetMediaPlayer(viewModel._player);
-            TitleBarSetting();
-
-           
             
+            _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
+            TitleBarSetting();
+            MainVM = new MainViewModel(Dispatcher);
+            _floatingVisual = PlayerFloating.GetVisual();
         }
+        
+
+        private void ShowFloating()
+        {
+            PlayerFloating.Visibility = Visibility.Visible;
+            PlayerFloating.IsHitTestVisible = true;
+            var startY = (float)Window.Current.Bounds.Height + _floatingVisual.Size.Y / 2;
+            var endY = 0f;
+
+
+            var offsetAnim = _compositor.CreateVector3KeyFrameAnimation();
+            offsetAnim.Duration = TimeSpan.FromMilliseconds(200);
+            offsetAnim.InsertKeyFrame(0f, new Vector3(0f, startY, 0f));
+            offsetAnim.InsertKeyFrame(1f, new Vector3(0f, endY, 0f));
+            _floatingVisual.StartAnimation("Translation", offsetAnim);
+        }
+
         private static void TitleBarSetting()
         {
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
@@ -73,169 +84,350 @@ namespace Reborn_Zune
             titleBar.ButtonPressedForegroundColor = Colors.Black;
         }
 
-        private void MainPageMTC_TilePageClicked(object sender, EventArgs e)
+        private void GridView_ChoosingItemContainer(ListViewBase sender, ChoosingItemContainerEventArgs args)
         {
-            viewModel.CreatTiles();
-            MainRoot.Fade(0, 500).StartAsync();
-            MainRoot.Visibility = Visibility.Collapsed;
-            TileRoot.Visibility = Visibility.Visible;
-            TileRoot.Fade(1, 500).StartAsync();
+            if (args.ItemContainer != null)
+            {
+                return;
+            }
+
+            GridViewItem container = (GridViewItem)args.ItemContainer ?? new GridViewItem();
+            container.PointerEntered -= ItemContainer_PointerEntered;
+            container.PointerExited -= ItemContainer_PointerExited;
+
+            container.PointerEntered += ItemContainer_PointerEntered;
+            container.PointerExited += ItemContainer_PointerExited;
+            container.Tapped += Container_Tapped;
+            
+            args.ItemContainer = container;
+        }
+
+        private async void Container_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var rootElement = sender as FrameworkElement;
+            var shadow = rootElement.FindDescendant<DropShadowPanel>();
+            if (shadow != null)
+            {
+
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(shadow);
+            }
+
+            var spotlight = rootElement.FindDescendant<ShadowSpotLightControl>();
+            if (spotlight != null)
+            {
+
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(spotlight);
+            }
+
+            var border = rootElement.FindDescendantByName("border");
+            if (border != null)
+            {
+
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(border);
+            }
+
+            var buttons = rootElement.FindDescendantByName("Buttons");
+            if (buttons != null)
+            {
+
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(buttons);
+            }
+            await Task.Delay(200);
+            shadow.Visibility = Visibility.Collapsed;
+            spotlight.Visibility = Visibility.Collapsed;
+            border.Visibility = Visibility.Collapsed;
+            buttons.Visibility = Visibility.Collapsed;
+
+
+            _storedItem = (sender as GridViewItem).Content;
+            //clickGridViewItem = rootElement.FindDescendant<ImageEx>();
+            MainVM.SetClickList((e.OriginalSource as FrameworkElement).DataContext as ILocalListModel);
+            var gridView = rootElement.FindAscendant<GridView>();
+            if(gridView.Name == "albums")
+            {
+                var ca1 = albums.PrepareConnectedAnimation("ca1", _storedItem, "Thumbnail");
+            }
+            else
+            {
+                var ca1 = playlists.PrepareConnectedAnimation("ca1", _storedItem, "Thumbnail");
+            }
+
+            Frame.Navigate(typeof(PlaylistDetailPage), MainVM, new SuppressNavigationTransitionInfo());
+        }
+
+        private async void ItemContainer_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var rootElement = sender as FrameworkElement;
+            var shadow = rootElement.FindDescendant<DropShadowPanel>();
+            if (shadow != null)
+            {
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(shadow);
+            }
+
+            var spotlight = rootElement.FindDescendant<ShadowSpotLightControl>();
+            if (spotlight != null)
+            {
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(spotlight);
+            }
+
+            var border = rootElement.FindDescendantByName("border");
+            if (border != null)
+            {
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(border);
+            }
+
+            var buttons = rootElement.FindDescendantByName("Buttons");
+            if (buttons != null)
+            {
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(200) };
+                animation.StartAnimation(buttons);
+            }
+            await Task.Delay(200);
+            shadow.Visibility = Visibility.Collapsed;
+            spotlight.Visibility = Visibility.Collapsed;
+            border.Visibility = Visibility.Collapsed;
+            buttons.Visibility = Visibility.Collapsed;
+        }
+
+        private void ItemContainer_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            var rootElement = sender as FrameworkElement;
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse || e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
+            {
+                var shadow = rootElement.FindDescendant<DropShadowPanel>();
+                if (shadow != null)
+                {
+                    shadow.Visibility = Visibility.Visible;
+                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(200) };
+                    animation.StartAnimation(shadow);
+                }
+
+                var spotlight = rootElement.FindDescendant<ShadowSpotLightControl>();
+                if (spotlight != null)
+                {
+                    spotlight.Visibility = Visibility.Visible;
+                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(200) };
+                    animation.StartAnimation(spotlight);
+                }
+
+                var border = rootElement.FindDescendantByName("border");
+                if (border != null)
+                {
+                    border.Visibility = Visibility.Visible;
+                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(200) };
+                    animation.StartAnimation(border);
+                }
+
+                var buttons = rootElement.FindDescendantByName("Buttons");
+                if (buttons != null)
+                {
+                    buttons.Visibility = Visibility.Visible;
+                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(200), Delay = TimeSpan.FromMilliseconds(300) };
+                    animation.StartAnimation(buttons);
+                }
+            }
+        }
+        
+        
+
+
+        private void PlayerFloating_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse || e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
+            {
+                var panel = (sender as FrameworkElement).FindDescendant<DropShadowPanel>();
+                if (panel != null)
+                {
+                    panel.Visibility = Visibility.Visible;
+                    var animation = new OpacityAnimation() { To = 1, Duration = TimeSpan.FromMilliseconds(400) };
+                    animation.StartAnimation(panel);
+
+                    var parentAnimation = new ScaleAnimation() { To = "1.1", Duration = TimeSpan.FromMilliseconds(400) };
+                    parentAnimation.StartAnimation(panel.Parent as UIElement);
+                }
+            }
+        }
+
+        private void PlayerFloating_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            var panel = (sender as FrameworkElement).FindDescendant<DropShadowPanel>();
+            if (panel != null)
+            {
+                var animation = new OpacityAnimation() { To = 0, Duration = TimeSpan.FromMilliseconds(900) };
+                animation.StartAnimation(panel);
+
+                var parentAnimation = new ScaleAnimation() { To = "1", Duration = TimeSpan.FromMilliseconds(900) };
+                parentAnimation.StartAnimation(panel.Parent as UIElement);
+            }
             GC.Collect();
+        }
+
+        private void PlayerFloating_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(TilePage), MainVM, new DrillInNavigationTransitionInfo());
+        }
+
+
+        private void NewPlaylistButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+            bool result = MainVM.LibraryViewModel.CreatePlaylist(PlaylistName.Text);
+            if (result)
+            {
+                AddPlaylistFlyout.Hide();
+            }
+            else
+            {
+                UnAvailableHint.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void PlayButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var album = (sender as Button).DataContext as ILocalListModel;
+            MainVM.SetMediaList(album);
+            
+            if(MainVM.FloatingVisible == Visibility.Collapsed)
+            {
+                MainVM.FloatingVisible = Visibility.Visible;
+                var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+                offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
+                offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
+                offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
+                _floatingVisual.StartAnimation("Translation", offSetAnimation);
+            }
+            
+            e.Handled = true;
         }
 
         
 
-        private void TileRoot_Loaded(object sender, RoutedEventArgs e)
+        private async void Albums_Loaded(object sender, RoutedEventArgs e)
         {
-            TileRoot.Visibility = Visibility.Collapsed;
-            var displayInformation = DisplayInformation.GetForCurrentView();
-            var screenSize = new Size((int)displayInformation.ScreenWidthInRawPixels,
-                                      (int)displayInformation.ScreenHeightInRawPixels);
-            Vector2 sizeLightBounds = new Vector2((float)screenSize.Width, (float)screenSize.Height);
-            _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
-            _root = ElementCompositionPreview.GetElementVisual(tilesPanel);
-            _pointLight = _compositor.CreatePointLight();
-            _secondPointLight = _compositor.CreatePointLight();
-            _pointLight.Offset = new Vector3(-2500f, -2500f, 300f);
-            _secondPointLight.Offset = new Vector3(-2500f, -2500f, 300f);
-            _pointLight.Intensity = 1.5f;
-            _secondPointLight.Intensity = 1.5f;
-            _ambientLight = _compositor.CreateAmbientLight();
-            _ambientLight.Intensity = 0.25f;
-            _ambientLight.Color = "#d3d3d3".ToColor();
-            IGraphicsEffect graphicsEffect = new CompositeEffect()
+            if(_storedItem != null)
             {
-                Mode = CanvasComposite.DestinationIn,
-                Sources =
-                            {
-                                new CompositeEffect()
-                                {
-                                    Mode = CanvasComposite.Add,
-                                    Sources =
-                                    {
-                                        new CompositionEffectSourceParameter("ImageSource"),
-                                        new SceneLightingEffect()
-                                        {
-                                            AmbientAmount = 0,
-                                            DiffuseAmount = 30f,
-                                            SpecularAmount = 0,
-                                            NormalMapSource = new CompositionEffectSourceParameter("NormalMap"),
-                                        }
-                                    }
-                                },
-                                new CompositionEffectSourceParameter("NormalMap"),
-                            }
-            };
-
-            _effectFactory = _compositor.CreateEffectFactory(graphicsEffect);
-            _pointLight.CoordinateSpace = _root;
-            _pointLight.Targets.Add(_root);
-            _secondPointLight.CoordinateSpace = _root;
-            _secondPointLight.Targets.Add(_root);
-            _ambientLight.Targets.Add(_root);
-
-            //panel.ItemsSource = _items;
-
-            #region First light animation
-            Vector3KeyFrameAnimation lightPositionAnimation;
-            lightPositionAnimation = _compositor.CreateVector3KeyFrameAnimation();
-            lightPositionAnimation.InsertKeyFrame(.0f, new Vector3(200f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
-            lightPositionAnimation.InsertKeyFrame(.16f, new Vector3(825f, 70f, lightDepth), _compositor.CreateLinearEasingFunction());
-            lightPositionAnimation.InsertKeyFrame(.32f, new Vector3(2100f, 40f, lightDepth), _compositor.CreateLinearEasingFunction());
-            lightPositionAnimation.InsertKeyFrame(.48f, new Vector3(825f, 70f, lightDepth), _compositor.CreateLinearEasingFunction());
-            lightPositionAnimation.InsertKeyFrame(.64f, new Vector3(200f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
-            lightPositionAnimation.InsertKeyFrame(.8f, new Vector3(200f, 100f, lightDepth), _compositor.CreateLinearEasingFunction());
-            lightPositionAnimation.InsertKeyFrame(1f, new Vector3(200f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
-            lightPositionAnimation.DelayTime = TimeSpan.FromMilliseconds(animationDelay);
-            lightPositionAnimation.Duration = TimeSpan.FromSeconds(animationDuration);
-            lightPositionAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
-
-            ColorKeyFrameAnimation lightColorAnimation;
-            lightColorAnimation = _compositor.CreateColorKeyFrameAnimation();
-            lightColorAnimation.InsertKeyFrame(0f, "#865c2a".ToColor());
-            lightColorAnimation.InsertKeyFrame(.2f, "#955a21".ToColor());
-            lightColorAnimation.InsertKeyFrame(.4f, "#6c891b".ToColor());
-            lightColorAnimation.InsertKeyFrame(.6f, "#62962c".ToColor());
-            lightColorAnimation.InsertKeyFrame(.8f, "#6c401b".ToColor());
-            lightColorAnimation.InsertKeyFrame(1f, "#865c2a".ToColor());
-            lightColorAnimation.DelayTime = TimeSpan.FromMilliseconds(animationDelay);
-            lightColorAnimation.Duration = TimeSpan.FromSeconds(animationDuration);
-            lightColorAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
-
-            _pointLight.StartAnimation("Offset", lightPositionAnimation);
-            _pointLight.StartAnimation("Color", lightColorAnimation);
-            #endregion
-
-            #region Second light animation
-            Vector3KeyFrameAnimation secondLightPositionAnimation;
-            secondLightPositionAnimation = _compositor.CreateVector3KeyFrameAnimation();
-            secondLightPositionAnimation.InsertKeyFrame(.0f, new Vector3(2300f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
-            secondLightPositionAnimation.InsertKeyFrame(.16f, new Vector3(1800f, 900f, lightDepth), _compositor.CreateLinearEasingFunction());
-            secondLightPositionAnimation.InsertKeyFrame(.32f, new Vector3(400f, 1200f, lightDepth), _compositor.CreateLinearEasingFunction());
-            secondLightPositionAnimation.InsertKeyFrame(.48f, new Vector3(1800f, 900f, lightDepth), _compositor.CreateLinearEasingFunction());
-            secondLightPositionAnimation.InsertKeyFrame(.64f, new Vector3(2300f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
-            secondLightPositionAnimation.InsertKeyFrame(.8f, new Vector3(2300f, 100f, lightDepth), _compositor.CreateLinearEasingFunction());
-            secondLightPositionAnimation.InsertKeyFrame(1f, new Vector3(2300f, 700f, lightDepth), _compositor.CreateLinearEasingFunction());
-            secondLightPositionAnimation.Duration = TimeSpan.FromSeconds(animationDuration);
-            secondLightPositionAnimation.DelayTime = TimeSpan.FromMilliseconds(animationDelay);
-            secondLightPositionAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
-
-            ColorKeyFrameAnimation secondLightColorAnimation;
-            secondLightColorAnimation = _compositor.CreateColorKeyFrameAnimation();
-            secondLightColorAnimation.InsertKeyFrame(0f, "#81268b".ToColor());
-            secondLightColorAnimation.InsertKeyFrame(.2f, "#68446c".ToColor());
-            secondLightColorAnimation.InsertKeyFrame(.4f, "#368843".ToColor());
-            secondLightColorAnimation.InsertKeyFrame(.6f, "#315b8a".ToColor());
-            secondLightColorAnimation.InsertKeyFrame(.8f, "#7d2185".ToColor());
-            secondLightColorAnimation.InsertKeyFrame(1f, "#81268b".ToColor());
-            secondLightColorAnimation.Duration = TimeSpan.FromSeconds(animationDuration);
-            secondLightColorAnimation.DelayTime = TimeSpan.FromMilliseconds(animationDelay);
-            secondLightColorAnimation.IterationBehavior = AnimationIterationBehavior.Forever;
-
-            _secondPointLight.StartAnimation("Offset", secondLightPositionAnimation);
-            _secondPointLight.StartAnimation("Color", secondLightColorAnimation);
-            #endregion
+                albums.ScrollIntoView(_storedItem, ScrollIntoViewAlignment.Default);
+                ConnectedAnimation animation =
+            ConnectedAnimationService.GetForCurrentView().GetAnimation("ca2");
+                
+                if (animation != null)
+                {
+                    await albums.TryStartConnectedAnimationAsync(
+                        animation, _storedItem, "Thumbnail");
+                }
+            }
         }
 
-        private void CustomMTC_FullScreenButtonClicked(object sender, EventArgs e)
+        private async void Playlists_Loaded(object sender, RoutedEventArgs e)
         {
-            var view = ApplicationView.GetForCurrentView();
-            if (view.IsFullScreenMode)
+            if(_storedItem != null)
             {
-                view.ExitFullScreenMode();
+                playlists.ScrollIntoView(_storedItem, ScrollIntoViewAlignment.Default);
+                ConnectedAnimation animation =
+            ConnectedAnimationService.GetForCurrentView().GetAnimation("ca2");
+
+                if (animation != null)
+                {
+                    await playlists.TryStartConnectedAnimationAsync(
+                        animation, _storedItem, "Thumbnail");
+                }
+            }
+        }
+
+        private void AddToPlaylistFlyout_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var datacontext = (sender as FrameworkElement).DataContext as LocalPlaylistModel;
+            var album = MainVM.LibraryViewModel.AlbumAddToPlaylist;
+
+            if(album is LocalAlbumModel)
+            {
+                MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
             }
             else
             {
-                if (view.TryEnterFullScreenMode())
+                if(album.GetTitle() != datacontext.GetTitle())
                 {
-
+                    MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
                 }
-                else
-                {
+            }
+            
+        }
 
-                }
+        private void AddToButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            MainVM.LibraryViewModel.AlbumAddToPlaylist = (sender as Button).DataContext as ILocalListModel;
+            e.Handled = true;
+        }
+
+        private void PlaylistAddTo_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            MainVM.LibraryViewModel.AlbumAddToPlaylist = (sender as Button).DataContext as ILocalListModel;
+            e.Handled = true;
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string selected = (sender as ComboBox).SelectedValue as string;
+            if(MainVM != null)
+                MainVM.LibraryViewModel.SortAlbums(selected);
+            
+        }
+
+        private void ShuffleAllButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            MainVM.ShuffleAll();
+
+            if (MainVM.FloatingVisible == Visibility.Collapsed)
+            {
+                MainVM.FloatingVisible = Visibility.Visible;
+                var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+                offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
+                offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
+                offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
+                _floatingVisual.StartAnimation("Translation", offSetAnimation);
             }
         }
 
-        private void CustomMTC_ExitButtonClicked(object sender, EventArgs e)
+        private void ShuffleAllPlaylistButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            viewModel.ClearTiles();
-            TileRoot.Fade(0, 500).StartAsync();
-            TileRoot.Visibility = Visibility.Collapsed;
-            MainRoot.Visibility = Visibility.Visible;
-            MainRoot.Fade(1, 500).StartAsync();
-            GC.Collect();
+            MainVM.ShuffleAllPlaylists();
+            if (MainVM.FloatingVisible == Visibility.Collapsed)
+            {
+                MainVM.FloatingVisible = Visibility.Visible;
+                var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+                offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
+                offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
+                offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
+                _floatingVisual.StartAnimation("Translation", offSetAnimation);
+            }
         }
 
-        private async void CustomMTC_ListViewGridChecked(object sender, EventArgs e)
+
+        private void NewPlaylistButton2_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            
-            await ListGrid.Fade(1, 700).StartAsync();
+            bool result = MainVM.LibraryViewModel.CreatePlaylist(PlaylistName2.Text);
+            if (result)
+            {
+                AddPlaylistFlyout2.Hide();
+            }
+            else
+            {
+                UnAvailableHint2.Visibility = Visibility.Visible;
+            }
         }
 
-        private async void CustomMTC_ListViewGridUnChecked(object sender, EventArgs e)
+        private void ComboBox2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await ListGrid.Fade(0, 700).StartAsync();
+            string selected = (sender as ComboBox).SelectedValue as string;
+            if (MainVM != null)
+                MainVM.LibraryViewModel.SortPlaylists(selected);
         }
     }
 }
