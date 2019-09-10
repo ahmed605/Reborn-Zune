@@ -120,11 +120,13 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MusicLibrary.cs" />
-    <Compile Include="MusicLibraryDataModel\MLMusicInPlaylistModel.cs" />
-    <Compile Include="MusicLibraryDataModel\MLMusicModel.cs" />
-    <Compile Include="MusicLibraryDataModel\MLPlayListModel.cs" />
-    <Compile Include="MusicLibraryDataModel\MLThumbnailModel.cs" />
+    <Compile Include="DataBase\DataBaseEngine.cs" />
+    <Compile Include="DataModel\Library.cs" />
+    <Compile Include="LibraryDisk\LibraryEngine.cs" />
+    <Compile Include="DataModel\MLMusicInPlaylistModel.cs" />
+    <Compile Include="DataModel\MLMusicModel.cs" />
+    <Compile Include="DataModel\MLPlayListModel.cs" />
+    <Compile Include="DataModel\MLThumbnailModel.cs" />
     <Compile Include="MusicLibraryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\MusicLibrary.rd.xml" />
@@ -148,7 +150,12 @@
       <Project>{c6f94f50-9718-4539-8422-0a0ef78f51e3}</Project>
       <Name>Reborn-Zune-MusicLibraryEFCoreModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Reborn-Zune-Common\Reborn-Zune-Common.csproj">
+      <Project>{2256C043-07D6-48B1-A408-DB3309A59318}</Project>
+      <Name>Reborn-Zune-Common</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

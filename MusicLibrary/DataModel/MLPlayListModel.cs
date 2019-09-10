@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Reborn_Zune_MusicLibraryService.MusicLibraryDataModel
+namespace Reborn_Zune_MusicLibraryService.DataModel
 {
     public class MLPlayListModel
     {

@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Reborn_Zune_Common
+namespace Reborn_Zune_Common.Services
 {
-    public class Class1
+    public interface IService
     {
+        void Run();
     }
 }

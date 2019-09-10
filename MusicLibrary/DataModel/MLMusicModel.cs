@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace Reborn_Zune_MusicLibraryService.MusicLibraryDataModel
+namespace Reborn_Zune_MusicLibraryService.DataModel
 {
     public class MLMusicModel
     {

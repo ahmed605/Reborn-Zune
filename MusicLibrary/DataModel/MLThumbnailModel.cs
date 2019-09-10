@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace Reborn_Zune_MusicLibraryService.MusicLibraryDataModel
+namespace Reborn_Zune_MusicLibraryService.DataModel
 {
     public class MLThumbnailModel
     {

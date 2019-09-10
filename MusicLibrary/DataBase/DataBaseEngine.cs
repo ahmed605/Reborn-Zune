@@ -1,113 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reborn_Zune_MusicLibraryEFCoreModel;
-using Reborn_Zune_MusicLibraryService.MusicLibraryDataModel;
+using Reborn_Zune_MusicLibraryService.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using TagLib;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
-using Windows.Storage.Search;
 using Windows.Storage.Streams;
 
-namespace Reborn_Zune_MusicLibraryService
+namespace Reborn_Zune_MusicLibraryService.DataBase
 {
-    public static class MusicLibrary
-    {
-        public static Library Library { get; set; }
-        public static event EventHandler InitializeFinished;
-        public static event EventHandler FetchSucceed;
-        
-        public static async void Initialize(bool IsFirstUse)
-        {
-            try
-            {
-                DataBaseService.Initialize();
-                var result = await LibraryService.Initialize(IsFirstUse);
-                foreach (var i in result)
-                {
-                    if (i.Value.GetType().Name == "StorageFile") //Add/Update DataBase
-                    {
-                        Debug.WriteLine("StorageFile");
-                        if (i.Key == StorageLibraryChangeType.ContentsChanged)
-                        {
-                            Debug.WriteLine("ContentChanged");
-                            await DataBaseService.Update(i.Value as StorageFile);
-                        }
-                        else if (i.Key == StorageLibraryChangeType.MovedIntoLibrary)
-                        {
-                            Debug.WriteLine("MovedIntoLibrary");
-                            await DataBaseService.Add((StorageFile)i.Value);
-                        }
-
-                    }
-                    else if (i.Value.GetType().Name == "String") //Moved Out
-                    {
-                        Debug.WriteLine("Move out");
-                        DataBaseService.Delete(i.Value.ToString());
-                    }
-                    else if (i.Value.GetType().Name == "KeyValuePair`2") //Moved or Renamed
-                    {
-                        Debug.WriteLine("Moved or Renamed");
-                        DataBaseService.Update((KeyValuePair<string, string>)i.Value);
-                    }
-                }
-                InitializeFinished?.Invoke(null, EventArgs.Empty);
-
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine(e.ToString());
-            }
-        }
-
-        public static async Task FetchLibrary()
-        {
-            try
-            {
-                var library = DataBaseService.FetchAll();
-                library.RenderThumbnail();
-                await library.GetFiles();
-                Library = library;
-                FetchSucceed?.Invoke(Library, EventArgs.Empty);
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine(e.ToString());
-                
-            }
-            
-        }
-
-        public static void AddSongsToPlaylist(string v, List<Music> musics)
-        {
-            DataBaseService.AddSongsToPlaylist(v, musics);
-        }
-
-        public static bool CreatePlaylist(string playlistName)
-        {
-            if (!DataBaseService.PlaylistNameAvailable(playlistName))
-            {
-                return false;
-            }
-            else
-            {
-                DataBaseService.CreatePlaylist(playlistName);
-                return true;
-            }
-        }
-
-        public static Library FetchPlaylist()
-        {
-            var library = DataBaseService.FetchAll();
-            return library;
-        }
-    }
-
-    static class DataBaseService
+    static class DataBaseEngine
     {
         private const string UNKNOWN_ARTIST = "Unknown Artist";
         private const string UNKNOWN_ALBUM = "Unknown Album";
@@ -169,7 +77,7 @@ namespace Reborn_Zune_MusicLibraryService
                         Year = albumYear,
                         ThumbnailId = thumb.Id,
                         Duration = duration,
-                        
+
                         Id = Guid.NewGuid().ToString()
                     };
                     _context.Musics.Add(Music);
@@ -186,12 +94,12 @@ namespace Reborn_Zune_MusicLibraryService
 
         private static async Task<byte[]> ConvertThumbnailToBytesAsync(StorageItemThumbnail thumbnail)
         {
-            if(thumbnail == null)
+            if (thumbnail == null)
             {
                 return new byte[0];
             }
             byte[] result = new byte[thumbnail.Size];
-            using(var reader = new DataReader(thumbnail))
+            using (var reader = new DataReader(thumbnail))
             {
                 await reader.LoadAsync((uint)thumbnail.Size);
                 reader.ReadBytes(result);
@@ -265,8 +173,8 @@ namespace Reborn_Zune_MusicLibraryService
                         thumbnail.ImageBytes = bytearray;
                         _context.Thumbnails.Update(thumbnail);
                     }
-                    
-                
+
+
                     _context.SaveChanges();
                 }
                 Debug.WriteLine("Update Succeed");
@@ -368,7 +276,7 @@ namespace Reborn_Zune_MusicLibraryService
                     _context.MusicInPlaylists.Add(mInP);
                     _context.SaveChanges();
                 }
-                
+
             }
         }
 
@@ -392,148 +300,6 @@ namespace Reborn_Zune_MusicLibraryService
             {
                 return (_context.Playlists.Where(p => p.Name == playlistName).FirstOrDefault() == null);
             }
-        }
-    }
-
-
-    static class LibraryService
-    {
-        public static async Task<List<KeyValuePair<StorageLibraryChangeType, object>>> Initialize(bool IsFirstUse)
-        {
-            if (IsFirstUse)
-            {
-                return await LoadLibrary();
-            }
-            else
-            {
-                return await LoadChanges();
-            }
-        }
-
-        private static async Task<List<KeyValuePair<StorageLibraryChangeType, object>>> LoadLibrary()
-        {
-            List<KeyValuePair<StorageLibraryChangeType, object>> changes = new List<KeyValuePair<StorageLibraryChangeType, object>>();
-            try
-            {
-                QueryOptions queryOption = new QueryOptions
-                (CommonFileQuery.OrderByTitle, new string[] { ".mp3", ".m4a", ".mp4" });
-
-                queryOption.FolderDepth = FolderDepth.Deep;
-
-                Queue<IStorageFolder> folders = new Queue<IStorageFolder>();
-
-                IReadOnlyList<StorageFile> files = await KnownFolders.MusicLibrary.CreateFileQueryWithOptions
-                  (queryOption).GetFilesAsync();
-
-                foreach (StorageFile file in files)
-                {
-                    changes.Add(
-                        new KeyValuePair<StorageLibraryChangeType, object>(StorageLibraryChangeType.MovedIntoLibrary, file)
-                    );
-                }
-
-
-                StorageLibrary musicsLib = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-                StorageLibraryChangeTracker musicTracker = musicsLib.ChangeTracker;
-                musicTracker.Enable();
-
-                Debug.WriteLine("Get songs succeed");
-                return changes;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.ToString());
-                return changes;
-            }
-
-        }
-
-        private static async Task<List<KeyValuePair<StorageLibraryChangeType, object>>> LoadChanges()
-        {
-            List<KeyValuePair<StorageLibraryChangeType, object>> changes = new List<KeyValuePair<StorageLibraryChangeType, object>>();
-            try
-            {
-                StorageLibrary musicLibray = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-                musicLibray.ChangeTracker.Enable();
-                StorageLibraryChangeReader musicChangeReader = musicLibray.ChangeTracker.GetChangeReader();
-                IReadOnlyList<StorageLibraryChange> changeSet = await musicChangeReader.ReadBatchAsync();
-
-
-                //Below this line is for the blog post. Above the line is for the magazine
-                foreach (StorageLibraryChange change in changeSet)
-                {
-                    if (change.ChangeType == StorageLibraryChangeType.ChangeTrackingLost)
-                    {
-                        //We are in trouble. Nothing else is going to be valid.
-                        Debug.WriteLine("Tracking lost");
-                        musicLibray.ChangeTracker.Reset();
-                        return changes;
-                    }
-                    if (change.IsOfType(StorageItemTypes.Folder))
-                    {
-                        Debug.WriteLine("Folder changes detected");
-                    }
-                    else if (change.IsOfType(StorageItemTypes.File))
-                    {
-                        Debug.WriteLine("File changes detected");
-                        switch (change.ChangeType)
-                        {
-                            case StorageLibraryChangeType.ContentsChanged:
-                                StorageFile file = await change.GetStorageItemAsync() as StorageFile;
-                                changes.Add(new KeyValuePair<StorageLibraryChangeType, object>(change.ChangeType, file));
-                                break;
-                            case StorageLibraryChangeType.MovedOrRenamed:
-                                changes.Add(new KeyValuePair<StorageLibraryChangeType, object>(change.ChangeType,
-                                    new KeyValuePair<string, string>(change.Path, change.PreviousPath)));
-                                break;
-                            case StorageLibraryChangeType.MovedOutOfLibrary:
-                                changes.Add(new KeyValuePair<StorageLibraryChangeType, object>(change.ChangeType, change.Path));
-                                break;
-                            case StorageLibraryChangeType.MovedIntoLibrary:
-                                StorageFile File = await change.GetStorageItemAsync() as StorageFile;
-                                changes.Add(new KeyValuePair<StorageLibraryChangeType, object>(change.ChangeType, File));
-                                break;
-                        }
-                    }
-                }
-                await musicChangeReader.AcceptChangesAsync();
-                Debug.WriteLine("Get changes succeed");
-                return changes;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.ToString());
-                return changes;
-            }
-
-        }
-    }
-    public class Library
-    {
-        public List<MLMusicModel> Musics { get; set; }
-        public List<MLPlayListModel> Playlists { get; set; }
-        public List<MLThumbnailModel> Thumbnails { get; set; }
-        public List<MLMusicInPlaylistModel> MInP { get; set; }
-
-        public void RenderThumbnail()
-        {
-           foreach(var item in Thumbnails)
-            {
-                item.GetBitmapImage();
-            }
-        }
-
-        public async Task GetFiles()
-        {
-            foreach(var song in Musics)
-            {
-                await GetFileAsync(song);
-            }
-        }
-
-        private async Task GetFileAsync(MLMusicModel song)
-        {
-            song.File = await StorageFile.GetFileFromPathAsync(song.Music.Path);
         }
     }
 }
