@@ -42,32 +42,32 @@ namespace Reborn_Zune.ViewModel
         {
             try
             {
-                foreach(var song in Library._musics)
+                foreach(var song in Library.Musics)
                 {
                     var music = new LocalMusicModel(song);
                     Musics.Add(music);
                     var privilidgeName = "";
-                    if (song.AlbumArtist != UNKNOWN_ARTIST)
+                    if (song.Music.AlbumArtist != UNKNOWN_ARTIST)
                     {
-                        privilidgeName = song.AlbumArtist;
+                        privilidgeName = song.Music.AlbumArtist;
                     }
-                    else if (song.Artist != UNKNOWN_ARTIST)
+                    else if (song.Music.Artist != UNKNOWN_ARTIST)
                     {
-                        privilidgeName = song.Artist;
+                        privilidgeName = song.Music.Artist;
                     }
                     else
                     {
                         privilidgeName = UNKNOWN_ARTIST;
                     }
 
-                    var album = Albums.Where(a => a.Title == song.AlbumTitle && a.AlbumArtist == privilidgeName).FirstOrDefault();
+                    var album = Albums.Where(a => a.Title == song.Music.AlbumTitle && a.AlbumArtist == privilidgeName).FirstOrDefault();
                     if(album == null)
                     {
                         album = new LocalAlbumModel
                         {
-                            Title = song.AlbumTitle,
+                            Title = song.Music.AlbumTitle,
                             AlbumArtist = privilidgeName,
-                            Image = song.Thumbnail.Image,
+                            Image = song.Music.Thumbnail.,
                             Year = song.Year
                         };
                         album.Musics.Add(music);
@@ -103,23 +103,23 @@ namespace Reborn_Zune.ViewModel
                     }
                 }
 
-                foreach(var list in Library._playlists)
+                foreach(var list in Library.Playlists)
                 {
                     var playlist = new LocalPlaylistModel
                     {
-                        Playlist = Library._playlists.Where(p => p.Id == list.Id).FirstOrDefault(),
+                        Playlist = Library.Playlists.Where(p => p.Id == list.Id).FirstOrDefault(),
                     };
                     Playlists.Add(playlist);
                 }
 
-                foreach(var pair in Library._mInP)
+                foreach(var pair in Library.MInP)
                 {
                     var playlist = Playlists.Where(p => p.Playlist.Id == pair.PlaylistId).FirstOrDefault();
                     var music = Musics.Where(m => m.Music.Id == pair.MusicId).FirstOrDefault();
                     playlist.Musics.Add(music);
                 }
 
-                foreach(var thumb in Library._thumbnails)
+                foreach(var thumb in Library.Thumbnails)
                 {
                     if(thumb.Image.UriSource != new Uri("ms-appx:///Vap-logo-placeholder.jpg"))
                         Thumbnails.Add(thumb.Image);
@@ -238,7 +238,7 @@ namespace Reborn_Zune.ViewModel
                 
                 
 
-                foreach (var playlist in Library._playlists)
+                foreach (var playlist in Library.Playlists)
                 {
                     if(!Playlists.Select(p => p.Playlist.Id).ToList().Contains(playlist.Id))
                     {
@@ -251,7 +251,7 @@ namespace Reborn_Zune.ViewModel
                     }
                 }
 
-                foreach (var pair in Library._mInP)
+                foreach (var pair in Library.MInP)
                 {
                     var playlist = Playlists.Where(p => p.Playlist.Id == pair.PlaylistId).FirstOrDefault();
                     var music = Musics.Where(m => m.Music.Id == pair.MusicId).FirstOrDefault();

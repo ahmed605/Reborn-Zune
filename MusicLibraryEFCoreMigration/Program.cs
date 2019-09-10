@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MusicLibraryEFCoreMigration
+namespace Reborn_Zune_MusicLibraryEFCoreMigration
 {
     class Program
     {

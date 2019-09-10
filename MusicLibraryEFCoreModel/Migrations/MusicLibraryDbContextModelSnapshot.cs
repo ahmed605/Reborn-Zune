@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicLibraryEFCoreModel;
 
-namespace MusicLibraryEFCoreModel.Migrations
+namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
 {
     [DbContext(typeof(MusicLibraryDbContext))]
     partial class MusicLibraryDbContextModelSnapshot : ModelSnapshot

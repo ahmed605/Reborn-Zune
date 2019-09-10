@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicLibraryEFCoreMigration", "MusicLibraryEFCoreMigration\MusicLibraryEFCoreMigration.csproj", "{67EFD33F-4B16-4024-A7DD-80E3BA29DB57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reborn-Zune-MusicLibraryEFCoreMigration", "MusicLibraryEFCoreMigration\Reborn-Zune-MusicLibraryEFCoreMigration.csproj", "{67EFD33F-4B16-4024-A7DD-80E3BA29DB57}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicLibraryEFCoreModel", "MusicLibraryEFCoreModel\MusicLibraryEFCoreModel.csproj", "{C6F94F50-9718-4539-8422-0A0EF78F51E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reborn-Zune-MusicLibraryEFCoreModel", "MusicLibraryEFCoreModel\Reborn-Zune-MusicLibraryEFCoreModel.csproj", "{C6F94F50-9718-4539-8422-0A0EF78F51E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicLibraryService", "MusicLibrary\MusicLibraryService.csproj", "{8A9866A9-8E48-4160-B147-BFD40FE46EE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reborn-Zune-MusicLibraryService", "MusicLibrary\Reborn-Zune-MusicLibraryService.csproj", "{8A9866A9-8E48-4160-B147-BFD40FE46EE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reborn-Zune", "Reborn-Zune\Reborn-Zune.csproj", "{434F2FF0-C15D-4D1E-AE59-0C6E2A1B3886}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicLibraryServiceTest", "MusicLibraryServiceTest\MusicLibraryServiceTest.csproj", "{049552E2-CE44-4EC9-B8CE-8104B0D51AF1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reborn-Zune-MusicLibraryServiceTest", "MusicLibraryServiceTest\Reborn-Zune-MusicLibraryServiceTest.csproj", "{049552E2-CE44-4EC9-B8CE-8104B0D51AF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reborn-Zune-Common", "Reborn-Zune-Common\Reborn-Zune-Common.csproj", "{2256C043-07D6-48B1-A408-DB3309A59318}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,6 +137,26 @@ Global
 		{049552E2-CE44-4EC9-B8CE-8104B0D51AF1}.Release|x86.ActiveCfg = Release|x86
 		{049552E2-CE44-4EC9-B8CE-8104B0D51AF1}.Release|x86.Build.0 = Release|x86
 		{049552E2-CE44-4EC9-B8CE-8104B0D51AF1}.Release|x86.Deploy.0 = Release|x86
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Debug|ARM.ActiveCfg = Debug|ARM
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Debug|ARM.Build.0 = Debug|ARM
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Debug|ARM64.Build.0 = Debug|ARM64
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Debug|x64.ActiveCfg = Debug|x64
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Debug|x64.Build.0 = Debug|x64
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Debug|x86.ActiveCfg = Debug|x86
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Debug|x86.Build.0 = Debug|x86
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Release|ARM.ActiveCfg = Release|ARM
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Release|ARM.Build.0 = Release|ARM
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Release|ARM64.ActiveCfg = Release|ARM64
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Release|ARM64.Build.0 = Release|ARM64
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Release|x64.ActiveCfg = Release|x64
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Release|x64.Build.0 = Release|x64
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Release|x86.ActiveCfg = Release|x86
+		{2256C043-07D6-48B1-A408-DB3309A59318}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

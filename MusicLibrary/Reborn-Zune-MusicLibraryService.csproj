@@ -7,8 +7,8 @@
     <ProjectGuid>{8A9866A9-8E48-4160-B147-BFD40FE46EE0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MusicLibraryService</RootNamespace>
-    <AssemblyName>MusicLibraryService</AssemblyName>
+    <RootNamespace>Reborn_Zune_MusicLibraryService</RootNamespace>
+    <AssemblyName>Reborn-Zune-MusicLibraryService</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
@@ -121,6 +121,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="MusicLibrary.cs" />
+    <Compile Include="MusicLibraryDataModel\MLMusicInPlaylistModel.cs" />
+    <Compile Include="MusicLibraryDataModel\MLMusicModel.cs" />
+    <Compile Include="MusicLibraryDataModel\MLPlayListModel.cs" />
+    <Compile Include="MusicLibraryDataModel\MLThumbnailModel.cs" />
+    <Compile Include="MusicLibraryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\MusicLibrary.rd.xml" />
   </ItemGroup>
@@ -139,9 +144,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MusicLibraryEFCoreModel\MusicLibraryEFCoreModel.csproj">
+    <ProjectReference Include="..\MusicLibraryEFCoreModel\Reborn-Zune-MusicLibraryEFCoreModel.csproj">
       <Project>{c6f94f50-9718-4539-8422-0a0ef78f51e3}</Project>
-      <Name>MusicLibraryEFCoreModel</Name>
+      <Name>Reborn-Zune-MusicLibraryEFCoreModel</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

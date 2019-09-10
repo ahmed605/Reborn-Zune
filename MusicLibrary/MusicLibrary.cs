@@ -1,22 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Toolkit.Uwp.Helpers;
-using MusicLibraryEFCoreModel;
+using Reborn_Zune_MusicLibraryEFCoreModel;
+using Reborn_Zune_MusicLibraryService.MusicLibraryDataModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TagLib;
-using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
 using Windows.Storage.Streams;
-using Windows.UI.Xaml.Media.Imaging;
 
-namespace MusicLibraryService
+namespace Reborn_Zune_MusicLibraryService
 {
     public static class MusicLibrary
     {
@@ -307,10 +304,10 @@ namespace MusicLibraryService
             {
                 using (var _context = new MusicLibraryDbContext())
                 {
-                    library._musics = _context.Musics.Select(m => m).ToList();
-                    library._mInP = _context.MusicInPlaylists.Select(m => m).ToList();
-                    library._playlists = _context.Playlists.Select(p => p).ToList();
-                    library._thumbnails = _context.Thumbnails.Select(t => t).ToList();
+                    library.Musics = _context.Musics.Select(m => new MLMusicModel(m)).ToList();
+                    library.MInP = _context.MusicInPlaylists.Select(m => new MLMusicInPlaylistModel(m)).ToList();
+                    library.Playlists = _context.Playlists.Select(p => new MLPlayListModel(p)).ToList();
+                    library.Thumbnails = _context.Thumbnails.Select(t => new MLThumbnailModel(t)).ToList();
                 }
                 return library;
             }
@@ -513,14 +510,14 @@ namespace MusicLibraryService
     }
     public class Library
     {
-        public List<Music> _musics { get; set; }
-        public List<Playlist> _playlists { get; set; }
-        public List<Thumbnail> _thumbnails { get; set; }
-        public List<MusicInPlaylist> _mInP { get; set; }
+        public List<MLMusicModel> Musics { get; set; }
+        public List<MLPlayListModel> Playlists { get; set; }
+        public List<MLThumbnailModel> Thumbnails { get; set; }
+        public List<MLMusicInPlaylistModel> MInP { get; set; }
 
         public void RenderThumbnail()
         {
-           foreach(var item in _thumbnails)
+           foreach(var item in Thumbnails)
             {
                 item.GetBitmapImage();
             }
@@ -528,15 +525,15 @@ namespace MusicLibraryService
 
         public async Task GetFiles()
         {
-            foreach(var song in _musics)
+            foreach(var song in Musics)
             {
                 await GetFileAsync(song);
             }
         }
 
-        private async Task GetFileAsync(Music song)
+        private async Task GetFileAsync(MLMusicModel song)
         {
-            song.File = await StorageFile.GetFileFromPathAsync(song.Path);
+            song.File = await StorageFile.GetFileFromPathAsync(song.Music.Path);
         }
     }
 }

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>Reborn_Zune_MusicLibraryEFCoreMigration</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MusicLibraryEFCoreModel\MusicLibraryEFCoreModel.csproj" />
+    <ProjectReference Include="..\MusicLibraryEFCoreModel\Reborn-Zune-MusicLibraryEFCoreModel.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using Windows.UI.Xaml.Media.Imaging;
+﻿using System.Collections.Generic;
 
-namespace MusicLibraryEFCoreModel
+namespace Reborn_Zune_MusicLibraryEFCoreModel
 {
     public class Music
     {
@@ -26,8 +19,6 @@ namespace MusicLibraryEFCoreModel
         public string Year { get; set; }
         public string ThumbnailId { get; set; }
         public Thumbnail Thumbnail { get; set; }
-        [NotMapped]
-        public StorageFile File { get; set; }
         
         public ICollection<MusicInPlaylist> MusicInPlaylists { get; set; }
 
@@ -59,36 +50,18 @@ namespace MusicLibraryEFCoreModel
 
         public string Id { get; set; }
         public byte[] ImageBytes { get; set; }
-
-        [NotMapped]
-        public BitmapImage Image { get; set; }
         public ICollection<Music> Musics { get; set; }
 
-        public void GetBitmapImage()
-        {
-            if(ImageBytes.Length == 0)
-            {
-                Image = new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg"));
-            }
-            else
-            {
-                InMemoryRandomAccessStream randomAccessStream = new InMemoryRandomAccessStream();
-                DataWriter writer = new DataWriter(randomAccessStream.GetOutputStreamAt(0));
-                writer.WriteBytes(ImageBytes);
-                writer.StoreAsync();
-                Image = new BitmapImage();
-                Image.SetSource(randomAccessStream);
-            } 
-        }
+        
     }
 
-    public class Album
-    {
+    //public class Album
+    //{
 
-    }
+    //}
 
-    public class Artist
-    {
+    //public class Artist
+    //{
 
-    }
+    //}
 }

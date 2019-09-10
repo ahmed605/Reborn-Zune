@@ -291,13 +291,13 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MusicLibraryEFCoreModel\MusicLibraryEFCoreModel.csproj">
+    <ProjectReference Include="..\MusicLibraryEFCoreModel\Reborn-Zune-MusicLibraryEFCoreModel.csproj">
       <Project>{C6F94F50-9718-4539-8422-0A0EF78F51E3}</Project>
-      <Name>MusicLibraryEFCoreModel</Name>
+      <Name>Reborn-Zune-MusicLibraryEFCoreModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MusicLibrary\MusicLibraryService.csproj">
+    <ProjectReference Include="..\MusicLibrary\Reborn-Zune-MusicLibraryService.csproj">
       <Project>{8a9866a9-8e48-4160-b147-bfd40fe46ee0}</Project>
-      <Name>MusicLibraryService</Name>
+      <Name>Reborn-Zune-MusicLibraryService</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
