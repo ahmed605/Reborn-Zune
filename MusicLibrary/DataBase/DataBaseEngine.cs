@@ -37,6 +37,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
 
         }
 
+        #region Database Operation
         public static async Task Add(StorageFile File)
         {
             try
@@ -89,21 +90,6 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
             catch (Exception e)
             {
                 Debug.WriteLine(e.ToString());
-            }
-        }
-
-        private static async Task<byte[]> ConvertThumbnailToBytesAsync(StorageItemThumbnail thumbnail)
-        {
-            if (thumbnail == null)
-            {
-                return new byte[0];
-            }
-            byte[] result = new byte[thumbnail.Size];
-            using (var reader = new DataReader(thumbnail))
-            {
-                await reader.LoadAsync((uint)thumbnail.Size);
-                reader.ReadBytes(result);
-                return result;
             }
         }
 
@@ -225,7 +211,33 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
                 return library;
             }
         }
+        #endregion
 
+        #region Helper
+        public static bool PlaylistNameAvailable(string playlistName)
+        {
+            using (var _context = new MusicLibraryDbContext())
+            {
+                return (_context.Playlists.Where(p => p.Name == playlistName).FirstOrDefault() == null);
+            }
+        }
+        private static async Task<byte[]> ConvertThumbnailToBytesAsync(StorageItemThumbnail thumbnail)
+        {
+            if (thumbnail == null)
+            {
+                return new byte[0];
+            }
+            byte[] result = new byte[thumbnail.Size];
+            using (var reader = new DataReader(thumbnail))
+            {
+                await reader.LoadAsync((uint)thumbnail.Size);
+                reader.ReadBytes(result);
+                return result;
+            }
+        }
+        #endregion
+
+        #region Playlist Operation
         public static void CreatePlaylist(string playlistName)
         {
             Playlist playlist = new Playlist
@@ -294,12 +306,8 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
             }
         }
 
-        public static bool PlaylistNameAvailable(string playlistName)
-        {
-            using (var _context = new MusicLibraryDbContext())
-            {
-                return (_context.Playlists.Where(p => p.Name == playlistName).FirstOrDefault() == null);
-            }
-        }
+        
+        #endregion
+
     }
 }

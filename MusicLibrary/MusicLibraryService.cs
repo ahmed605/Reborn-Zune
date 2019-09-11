@@ -27,22 +27,34 @@ namespace Reborn_Zune_MusicLibraryService
             this.IsFirstUse = IsFirstUse;
         }
 
-        public async void Run()
+        public void Run()
         {
             InitializeDBMS();
             LoadLibraryDisk();
-            await FetchDBMS();
+            FetchDBMS();
         }
 
-        public async Task FetchDBMS()
+        #region DBMS
+        public void InitializeDBMS()
         {
             try
             {
-                var library = DataBaseEngine.FetchAll();
-                library.RenderThumbnail();
-                await library.GetFiles();
-                Library = library;
-                FetchSucceed?.Invoke(Library, EventArgs.Empty);
+                DataBaseEngine.Initialize();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+
+        }
+
+        public void FetchDBMS()
+        {
+            try
+            {
+                Library = DataBaseEngine.FetchAll();
+                //library.RenderThumbnail(); //TODO: Move to DataBaseEngine, should be done when the engine fetch the library
+                //await library.GetFiles(); //TODO: Move to DataBaseEngine
             }
             catch (Exception e)
             {
@@ -50,7 +62,9 @@ namespace Reborn_Zune_MusicLibraryService
             }
 
         }
+        #endregion
 
+        #region LibraryDisk
         public async void LoadLibraryDisk()
         {
             try
@@ -60,52 +74,41 @@ namespace Reborn_Zune_MusicLibraryService
                 {
                     if (i.Value.GetType().Name == "StorageFile") //Add/Update DataBase
                     {
-                        Debug.WriteLine("StorageFile");
+                        //Debug.WriteLine("StorageFile");
                         if (i.Key == StorageLibraryChangeType.ContentsChanged)
                         {
-                            Debug.WriteLine("ContentChanged");
+                            //Debug.WriteLine("ContentChanged");
                             await DataBaseEngine.Update(i.Value as StorageFile);
                         }
                         else if (i.Key == StorageLibraryChangeType.MovedIntoLibrary)
                         {
-                            Debug.WriteLine("MovedIntoLibrary");
+                            //Debug.WriteLine("MovedIntoLibrary");
                             await DataBaseEngine.Add((StorageFile)i.Value);
                         }
 
                     }
                     else if (i.Value.GetType().Name == "String") //Moved Out
                     {
-                        Debug.WriteLine("Move out");
+                        //Debug.WriteLine("Move out");
                         DataBaseEngine.Delete(i.Value.ToString());
                     }
                     else if (i.Value.GetType().Name == "KeyValuePair`2") //Moved or Renamed
                     {
-                        Debug.WriteLine("Moved or Renamed");
+                        //Debug.WriteLine("Moved or Renamed");
                         DataBaseEngine.Update((KeyValuePair<string, string>)i.Value);
                     }
                 }
                 //InitializeFinished?.Invoke(null, EventArgs.Empty);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
 
         }
+        #endregion
 
-        public void InitializeDBMS()
-        {
-            try
-            {
-                DataBaseEngine.Initialize();
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-            
-        }
-
+        #region ServiceOperation
         public static void AddSongsToPlaylist(string v, List<Music> musics)
         {
             DataBaseEngine.AddSongsToPlaylist(v, musics);
@@ -129,5 +132,7 @@ namespace Reborn_Zune_MusicLibraryService
             var library = DataBaseEngine.FetchAll();
             return library;
         }
+        #endregion
+
     }
 }
