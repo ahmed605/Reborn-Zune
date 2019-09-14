@@ -1,5 +1,6 @@
 ﻿using Reborn_Zune_MusicLibraryEFCoreModel;
 using System;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace Reborn_Zune_MusicLibraryService.DataModel
@@ -9,7 +10,7 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
         public MLMusicModel(Music music)
         {
             UnwrapDataFields(music);
-            GetFileAsync(music); 
+            GetFile(music);
         }
 
         public string Id { get; set; }
@@ -38,7 +39,12 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
             this.ThumbnailId = music.ThumbnailId;
         }
 
-        private async void GetFileAsync(Music music)
+        private async void GetFile(Music music)
+        {
+            await GetFileAsync(music);
+        }
+
+        private async Task GetFileAsync(Music music)
         {
             File = await StorageFile.GetFileFromPathAsync(Path);
         }

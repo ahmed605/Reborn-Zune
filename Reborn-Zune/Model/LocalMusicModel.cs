@@ -31,11 +31,11 @@ namespace Reborn_Zune.Model
         {
             get
             {
-                return _thumbnail;
+                return _image;
             }
             set
             {
-                Set<BitmapImage>(() => this.Thumbnail, ref _thumbnail, value);
+                Set<BitmapImage>(() => this.Image, ref _image, value);
             }
         }
 

@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Reborn_Zune.Control;
 using Reborn_Zune.Model;
+using Reborn_Zune.Model.Interface;
 using Reborn_Zune.Utilities;
 using Reborn_Zune.ViewModel;
 using System;

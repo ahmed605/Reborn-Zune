@@ -39,7 +39,6 @@ namespace Reborn_Zune.ViewModel
         {
             this.dispatcher = dispatcher;
             LibraryViewModel = new LibraryViewModel();
-            LibraryViewModel.InitializeFinished += LibraryViewModel_InitializeFinished;
             PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
         }
 

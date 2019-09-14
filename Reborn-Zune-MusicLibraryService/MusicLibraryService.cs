@@ -53,7 +53,6 @@ namespace Reborn_Zune_MusicLibraryService
             try
             {
                 Library = await DataBaseEngine.FetchAll();
-               
             }
             catch (Exception e)
             {

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MusicLibraryEFCoreModel\Reborn-Zune-MusicLibraryEFCoreModel.csproj" />
+    <ProjectReference Include="..\Reborn-Zune-MusicLibraryEFCoreModel\Reborn-Zune-MusicLibraryEFCoreModel.csproj" />
   </ItemGroup>
 
 </Project>

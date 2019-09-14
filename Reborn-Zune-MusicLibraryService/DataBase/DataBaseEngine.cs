@@ -202,13 +202,13 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
                     library.Playlists = _context.Playlists.Select(p => new MLPlayListModel(p)).ToList();
                     library.Thumbnails = _context.Thumbnails.Select(t => new MLThumbnailModel(t)).ToList();
                 }
-                return library;
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.ToString());
-                return library;
             }
+            return library;
+
         }
 
         public static void Reset()

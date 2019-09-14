@@ -133,6 +133,9 @@
     <EmbeddedResource Include="Properties\MusicLibrary.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore">
+      <Version>2.2.6</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.9</Version>
     </PackageReference>
@@ -147,16 +150,15 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MusicLibraryEFCoreModel\Reborn-Zune-MusicLibraryEFCoreModel.csproj">
-      <Project>{c6f94f50-9718-4539-8422-0a0ef78f51e3}</Project>
-      <Name>Reborn-Zune-MusicLibraryEFCoreModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Reborn-Zune-Common\Reborn-Zune-Common.csproj">
       <Project>{2256C043-07D6-48B1-A408-DB3309A59318}</Project>
       <Name>Reborn-Zune-Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Reborn-Zune-MusicLibraryEFCoreModel\Reborn-Zune-MusicLibraryEFCoreModel.csproj">
+      <Project>{8F3180AD-2351-435A-BCF3-9C62CEE2E8B5}</Project>
+      <Name>Reborn-Zune-MusicLibraryEFCoreModel</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
