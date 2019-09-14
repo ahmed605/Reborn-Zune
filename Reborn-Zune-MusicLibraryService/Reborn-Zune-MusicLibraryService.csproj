@@ -121,6 +121,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DataBase\DataBaseEngine.cs" />
+    <Compile Include="DataModel\IMLDataModel.cs" />
     <Compile Include="DataModel\Library.cs" />
     <Compile Include="LibraryDisk\LibraryEngine.cs" />
     <Compile Include="DataModel\MLMusicInPlaylistModel.cs" />

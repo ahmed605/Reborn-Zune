@@ -1,5 +1,5 @@
-﻿using Reborn_Zune_Common.Services;
-using Reborn_Zune_MusicLibraryEFCoreModel;
+﻿using Microsoft.Toolkit.Uwp.Helpers;
+using Reborn_Zune_Common.Services;
 using Reborn_Zune_MusicLibraryService.DataBase;
 using Reborn_Zune_MusicLibraryService.DataModel;
 using Reborn_Zune_MusicLibraryService.LibraryDisk;
@@ -7,29 +7,25 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace Reborn_Zune_MusicLibraryService
 {
     public class MusicLibraryService : IService
     {
-        private bool IsFirstUse;
+        private bool IsFirstUse => SystemInformation.IsFirstRun;
+
+        public event EventHandler Completed;
+
+
         public Library Library { get; set; }
-
-        public MusicLibraryService() { }
-
-        public MusicLibraryService(bool IsFirstUse)
-        {
-            this.IsFirstUse = IsFirstUse;
-        }
 
         public void Run()
         {
             InitializeDBMS();
             LoadLibraryDisk();
             CreateLibraryInstance();
+            Completed?.Invoke(this, EventArgs.Empty);
         }
 
         public void Clean()
@@ -42,6 +38,7 @@ namespace Reborn_Zune_MusicLibraryService
         {
             try
             {
+                Debug.WriteLine("DBMS Initialize");
                 DataBaseEngine.Initialize();
             }
             catch (Exception e)
@@ -51,11 +48,12 @@ namespace Reborn_Zune_MusicLibraryService
 
         }
 
-        private void CreateLibraryInstance()
+        private async void CreateLibraryInstance()
         {
             try
             {
-                Library = DataBaseEngine.FetchAll();
+                Library = await DataBaseEngine.FetchAll();
+               
             }
             catch (Exception e)
             {
@@ -70,6 +68,7 @@ namespace Reborn_Zune_MusicLibraryService
         {
             try
             {
+                Debug.WriteLine("Library Initialize");
                 var result = await LibraryEngine.Initialize(IsFirstUse);
                 foreach (var i in result)
                 {

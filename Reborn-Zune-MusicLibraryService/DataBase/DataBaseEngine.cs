@@ -190,7 +190,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
             }
         }
 
-        public static Library FetchAll()
+        public static async Task<Library> FetchAll()
         {
             Library library = new Library();
             try
@@ -298,7 +298,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
                 {
                     var mInP = new MusicInPlaylist
                     {
-                        MusicId = item.Music.Id,
+                        MusicId = item.Id,
                         PlaylistId = playlist.Id
                     };
                     _context.MusicInPlaylists.Add(mInP);
@@ -315,7 +315,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
                 var playlist = _context.Playlists.Where(p => p.Name == playlistName).First();
                 foreach (var item in musics)
                 {
-                    var mInP = _context.MusicInPlaylists.Where(m => m.PlaylistId == playlist.Id && m.MusicId == item.Music.Id).First();
+                    var mInP = _context.MusicInPlaylists.Where(m => m.PlaylistId == playlist.Id && m.MusicId == item.Id).First();
                     _context.MusicInPlaylists.Remove(mInP);
                 }
                 _context.SaveChanges();

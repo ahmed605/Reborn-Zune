@@ -2,7 +2,7 @@
 
 namespace Reborn_Zune_MusicLibraryEFCoreModel
 {
-    public class Music
+    public class Music : IEFCoreModel
     {
         public Music()
         {
@@ -23,7 +23,7 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel
         public ICollection<MusicInPlaylist> MusicInPlaylists { get; set; }
 
     }
-    public class Playlist
+    public class Playlist : IEFCoreModel
     {
         public Playlist()
         {
@@ -35,14 +35,14 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel
         public ICollection<MusicInPlaylist> MusicInPlaylists { get; set; }
 
     }
-    public class MusicInPlaylist
+    public class MusicInPlaylist : IEFCoreModel
     {
         public string MusicId { get; set; }
         public string PlaylistId { get; set; }
         public Music Music { get; set; }
         public Playlist Playlist { get; set; }
     }
-    public class Thumbnail
+    public class Thumbnail : IEFCoreModel
     {
         public Thumbnail()
         {
@@ -54,14 +54,4 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel
 
         
     }
-
-    //public class Album
-    //{
-
-    //}
-
-    //public class Artist
-    //{
-
-    //}
 }

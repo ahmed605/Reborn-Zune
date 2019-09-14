@@ -33,7 +33,7 @@ namespace Reborn_Zune_MusicLibraryServiceTest
             service.Run();
             service.CreatePlaylist("a");
             service.CreatePlaylist("a");
-            Assert.IsTrue(service.Library.Playlists.Count(p => p.Playlist.Name == "a") == 1);
+            Assert.IsTrue(service.Library.Playlists.Count(p => p.Name == "a") == 1);
             service.Clean();
         }
 
@@ -43,10 +43,10 @@ namespace Reborn_Zune_MusicLibraryServiceTest
             MusicLibraryService service = new MusicLibraryService();
             service.Run();
             service.CreatePlaylist("a");
-            Assert.IsTrue(service.Library.Playlists.Count(p => p.Playlist.Name == "a") == 1);
+            Assert.IsTrue(service.Library.Playlists.Count(p => p.Name == "a") == 1);
             service.EditPlaylistName("a", "b");
-            Assert.IsTrue(service.Library.Playlists.Count(p => p.Playlist.Name == "a") == 0);
-            Assert.IsTrue(service.Library.Playlists.Count(p => p.Playlist.Name == "b") == 1);
+            Assert.IsTrue(service.Library.Playlists.Count(p => p.Name == "a") == 0);
+            Assert.IsTrue(service.Library.Playlists.Count(p => p.Name == "b") == 1);
             service.Clean();
         }
 
@@ -56,7 +56,7 @@ namespace Reborn_Zune_MusicLibraryServiceTest
             MusicLibraryService service = new MusicLibraryService();
             service.Run();
             service.CreatePlaylist("a");
-            Assert.IsTrue(service.Library.Playlists.Count(p => p.Playlist.Name == "a") == 1);
+            Assert.IsTrue(service.Library.Playlists.Count(p => p.Name == "a") == 1);
             var songs = service.Library.Musics;
             service.AddSongsToPlaylist("a", songs);
             Assert.IsTrue(service.Library.MInP.Count == songs.Count);
@@ -69,7 +69,7 @@ namespace Reborn_Zune_MusicLibraryServiceTest
             MusicLibraryService service = new MusicLibraryService();
             service.Run();
             service.CreatePlaylist("a");
-            Assert.IsTrue(service.Library.Playlists.Count(p => p.Playlist.Name == "a") == 1);
+            Assert.IsTrue(service.Library.Playlists.Count(p => p.Name == "a") == 1);
             var songs = service.Library.Musics;
             service.AddSongsToPlaylist("a", songs);
             Assert.IsTrue(service.Library.MInP.Count == songs.Count);
