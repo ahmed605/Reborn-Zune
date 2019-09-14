@@ -1,6 +1,8 @@
 ﻿using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Reborn_Zune_Common.Services;
+using Reborn_Zune_MusicLibraryService;
 using System;
 using System.Diagnostics;
 using Windows.ApplicationModel.Activation;
@@ -30,6 +32,7 @@ namespace Reborn_Zune
             this.InitializeComponent();
             this.Construct();
             AppCenter.Start("c5fcab4c-7057-489f-b350-f74dd185fdad", typeof(Analytics), typeof(Crashes));
+            
             this.UnhandledException += App_UnhandledException;
         }
 
@@ -72,7 +75,7 @@ namespace Reborn_Zune
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(SplashScreen), e.Arguments);
+                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
                 // Ensure the current window is active
 

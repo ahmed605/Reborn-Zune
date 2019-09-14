@@ -116,7 +116,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\ILocalListModel.cs" />
+    <Compile Include="Model\Interface\ILocalListModel.cs" />
     <Compile Include="Model\LocalPlaylistModel.cs" />
     <Compile Include="PlaylistDetailPage.xaml.cs">
       <DependentUpon>PlaylistDetailPage.xaml</DependentUpon>
@@ -279,6 +279,9 @@
     </PackageReference>
     <PackageReference Include="MvvmLight">
       <Version>5.4.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.Reactive">
+      <Version>4.1.6</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.23.0</Version>

@@ -59,19 +59,19 @@
                     HorizontalAlignment="Left"
                     FontSize="29"
                     Foreground="White"
-                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Title, Mode=OneWay}" />
+                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Music.Title, Mode=OneWay}" />
                 <TextBlock
                     Margin="0,-4,0,0"
                     HorizontalAlignment="Left"
                     FontSize="24"
                     Foreground="White"
-                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Artist, Mode=OneWay}" />
+                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Music.Artist, Mode=OneWay}" />
                 <TextBlock
                     Margin="0,9,0,0"
                     HorizontalAlignment="Left"
                     FontSize="24"
                     Foreground="White"
-                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.AlbumTitle, Mode=OneWay}" />
+                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Music.AlbumTitle, Mode=OneWay}" />
             </StackPanel>
         </StackPanel>
 
@@ -100,12 +100,12 @@
                                 HorizontalAlignment="Left"
                                 FontSize="20"
                                 Foreground="White"
-                                Text="{x:Bind Music.Title, Mode=OneWay}" />
+                                Text="{x:Bind Music.Music.Title, Mode=OneWay}" />
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 FontSize="12"
                                 Foreground="DarkGray"
-                                Text="{x:Bind Music.Artist, Mode=OneWay}" />
+                                Text="{x:Bind Music.Music.Artist, Mode=OneWay}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>

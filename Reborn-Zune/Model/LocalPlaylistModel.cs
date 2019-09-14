@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Reborn_Zune.Model.Interface;
 using Reborn_Zune.ViewModel;
 using Reborn_Zune_MusicLibraryService.DataModel;
 using System;
@@ -67,7 +68,7 @@ namespace Reborn_Zune.Model
 
         public string GetTitle()
         {
-            return Playlist.Playlist.Name;
+            return Playlist.Name;
         }
 
         public string GetArtist()

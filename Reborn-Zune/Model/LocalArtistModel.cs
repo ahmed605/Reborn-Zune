@@ -1,9 +1,12 @@
 ﻿using GalaSoft.MvvmLight;
+using Reborn_Zune.Model.Interface;
 using System.Collections.ObjectModel;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 
 namespace Reborn_Zune.Model
 {
-    public class LocalArtistModel : ObservableObject
+    public class LocalArtistModel : ObservableObject, ILocalListModel
     {
         #region Constructor
         public LocalArtistModel()
@@ -54,6 +57,25 @@ namespace Reborn_Zune.Model
             {
                 Set<ObservableCollection<LocalAlbumModel>>(() => this.Albums, ref _albums, value);
             }
+        }
+
+        public bool isEditable => throw new System.NotImplementedException();
+
+        public Visibility isVisible => throw new System.NotImplementedException();
+
+        public ImageSource GetImage()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetTitle()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetArtist()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

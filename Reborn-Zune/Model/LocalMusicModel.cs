@@ -3,16 +3,12 @@ using Reborn_Zune_MusicLibraryService.DataModel;
 using System;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune.Model
 {
     public class LocalMusicModel : ObservableObject
     {
-        public LocalMusicModel(MLMusicModel music)
-        {
-            Music = music;
-        }
-
         public const String MediaItemIdKey = "mediaItemId";
 
         private MLMusicModel _music;
@@ -26,6 +22,20 @@ namespace Reborn_Zune.Model
             set
             {
                 Set<MLMusicModel>(() => this.Music, ref _music, value);
+            }
+        }
+
+        private BitmapImage _image;
+
+        public BitmapImage Image
+        {
+            get
+            {
+                return _thumbnail;
+            }
+            set
+            {
+                Set<BitmapImage>(() => this.Thumbnail, ref _thumbnail, value);
             }
         }
 
@@ -47,10 +57,9 @@ namespace Reborn_Zune.Model
 
             playbackItem.ApplyDisplayProperties(displayProperties);
 
-            source.CustomProperties[GetMediaItemIdKey] = Music.Music.Id;
+            source.CustomProperties[GetMediaItemIdKey] = Music.Id;
 
             return playbackItem;
         }
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using Reborn_Zune.Model;
+using Reborn_Zune.Model.Interface;
 using Reborn_Zune.Services;
 using System;
 using System.Collections.ObjectModel;
@@ -235,7 +236,7 @@ namespace Reborn_Zune.ViewModel
             else
             {
                 var item = clickedItem as LocalPlaylistModel;
-                DetailViewModel = new DetailViewModel(new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg")), item.Playlist.Playlist.Name, "Various Artist", "",item.Musics, LibraryViewModel.Playlists);
+                DetailViewModel = new DetailViewModel(new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg")), item.Playlist.Name, "Various Artist", "",item.Musics, LibraryViewModel.Playlists);
             }
         }
 
@@ -245,7 +246,7 @@ namespace Reborn_Zune.ViewModel
                 return true;
 
             // Verify consistency of the lists that were passed in
-            var mediaListIds = currentList.Select(i => i.Music.Music.Id);
+            var mediaListIds = currentList.Select(i => i.Music.Id);
             var playbackListIds = PlaybackList.Items.Select(
                 i => (string)i.Source.CustomProperties.SingleOrDefault(
                     p => p.Key == LocalMusicModel.MediaItemIdKey).Value);

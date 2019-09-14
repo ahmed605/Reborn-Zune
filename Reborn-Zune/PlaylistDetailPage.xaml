@@ -101,7 +101,7 @@
                     <Flyout utils:BindableFlyout.ItemsSource="{x:Bind MainVM.DetailViewModel.Playlists, Mode=OneWay}">
                         <utils:BindableFlyout.ItemTemplate>
                             <DataTemplate x:DataType="model:LocalPlaylistModel">
-                                <MenuFlyoutItem Tapped="MenuFlyoutItem_Tapped" Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                <MenuFlyoutItem Tapped="MenuFlyoutItem_Tapped" Text="{x:Bind Playlist.Playlist.Name, Mode=OneWay}" />
                             </DataTemplate>
                         </utils:BindableFlyout.ItemTemplate>
                     </Flyout>
@@ -198,13 +198,13 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 FontSize="20"
-                                Text="{x:Bind Music.Title}" />
+                                Text="{x:Bind Music.Music.Title}" />
                             <TextBlock
                                 Margin="0,0,10,0"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
                                 FontSize="14"
-                                Text="{x:Bind Music.Duration}" />
+                                Text="{x:Bind Music.Music.Duration}" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

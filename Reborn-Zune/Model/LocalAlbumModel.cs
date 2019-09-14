@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Reborn_Zune.Model.Interface;
 using Reborn_Zune.ViewModel;
 using System.Collections.ObjectModel;
 using Windows.UI.Xaml;
@@ -135,6 +136,5 @@ namespace Reborn_Zune.Model
         {
             return AlbumArtist;
         }
-
     }
 }

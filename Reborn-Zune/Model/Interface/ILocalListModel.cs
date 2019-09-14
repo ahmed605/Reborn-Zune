@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
-namespace Reborn_Zune.Model
+namespace Reborn_Zune.Model.Interface
 {
     public interface ILocalListModel
     {

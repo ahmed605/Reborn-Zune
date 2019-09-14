@@ -256,7 +256,7 @@
                                                                 <MenuFlyoutItem
                                                                     x:Name="AddToPlaylistFlyout"
                                                                     Tapped="AddToPlaylistFlyout_Tapped"
-                                                                    Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                                                    Text="{x:Bind Playlist.Playlist.Name, Mode=OneWay}" />
                                                             </DataTemplate>
                                                         </utils:BindableFlyout.ItemTemplate>
                                                     </Flyout>
@@ -427,7 +427,7 @@
                                         FontSize="18"
                                         FontWeight="Normal"
                                         Foreground="Black"
-                                        Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                        Text="{x:Bind Playlist.Playlist.Name, Mode=OneWay}" />
                                     <Grid
                                         Width="175"
                                         Height="175"
@@ -496,7 +496,7 @@
                                                                 <MenuFlyoutItem
                                                                     x:Name="AddToPlaylistFlyout"
                                                                     Tapped="AddToPlaylistFlyout_Tapped"
-                                                                    Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                                                    Text="{x:Bind Playlist.Playlist.Name, Mode=OneWay}" />
                                                             </DataTemplate>
                                                         </utils:BindableFlyout.ItemTemplate>
                                                     </Flyout>
