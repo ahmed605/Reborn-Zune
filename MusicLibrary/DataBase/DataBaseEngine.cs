@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using TagLib;
 using Windows.Storage;
@@ -37,7 +36,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
 
         }
 
-        #region Database Operation
+        #region Normal Database Operation
         public static async Task Add(StorageFile File)
         {
             try
@@ -211,6 +210,21 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
                 return library;
             }
         }
+
+        public static void Reset()
+        {
+            try
+            {
+                using (var _context = new MusicLibraryDbContext())
+                {
+                    _context.Database.EnsureDeleted();
+                }
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
         #endregion
 
         #region Helper
@@ -238,7 +252,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
         #endregion
 
         #region Playlist Operation
-        public static void CreatePlaylist(string playlistName)
+        public static Playlist CreatePlaylist(string playlistName)
         {
             Playlist playlist = new Playlist
             {
@@ -250,9 +264,11 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
                 _context.Playlists.Add(playlist);
                 _context.SaveChanges();
             }
+
+            return playlist;
         }
 
-        public static void EditPlaylist(string oldPlaylistName, string newPlaylistName)
+        public static void EditPlaylistName(string oldPlaylistName, string newPlaylistName)
         {
             using (var _context = new MusicLibraryDbContext())
             {
@@ -273,7 +289,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
             }
         }
 
-        public static void AddSongsToPlaylist(string playlistName, List<Music> musics)
+        public static void AddSongsToPlaylist(string playlistName, List<MLMusicModel> musics)
         {
             using (var _context = new MusicLibraryDbContext())
             {
@@ -282,7 +298,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
                 {
                     var mInP = new MusicInPlaylist
                     {
-                        MusicId = item.Id,
+                        MusicId = item.Music.Id,
                         PlaylistId = playlist.Id
                     };
                     _context.MusicInPlaylists.Add(mInP);
@@ -292,21 +308,35 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
             }
         }
 
-        public static void RemoveSongsFromPlaylist(string playlistName, List<Music> musics)
+        public static void RemoveSongsFromPlaylist(string playlistName, List<MLMusicModel> musics)
         {
             using (var _context = new MusicLibraryDbContext())
             {
                 var playlist = _context.Playlists.Where(p => p.Name == playlistName).First();
                 foreach (var item in musics)
                 {
-                    var mInP = _context.MusicInPlaylists.Where(m => m.PlaylistId == playlist.Id && m.MusicId == item.Id).First();
+                    var mInP = _context.MusicInPlaylists.Where(m => m.PlaylistId == playlist.Id && m.MusicId == item.Music.Id).First();
                     _context.MusicInPlaylists.Remove(mInP);
                 }
                 _context.SaveChanges();
             }
         }
 
-        
+        public static IList<MusicInPlaylist> FetchSongPlaylistRelationship()
+        {
+            using (var _context = new MusicLibraryDbContext())
+            {
+                return _context.MusicInPlaylists.Select(m => m).ToList();
+            }
+        }
+
+        public static IList<Playlist> FetchPlaylist()
+        {
+            using (var _context = new MusicLibraryDbContext())
+            {
+                return _context.Playlists.Select(m => m).ToList();
+            }
+        }
         #endregion
 
     }

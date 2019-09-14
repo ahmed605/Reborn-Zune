@@ -16,9 +16,7 @@ namespace Reborn_Zune_MusicLibraryService
     public class MusicLibraryService : IService
     {
         private bool IsFirstUse;
-        public static event EventHandler InitializeFinished;
-        public static event EventHandler FetchSucceed;
-        public static Library Library { get; set; }
+        public Library Library { get; set; }
 
         public MusicLibraryService() { }
 
@@ -31,11 +29,16 @@ namespace Reborn_Zune_MusicLibraryService
         {
             InitializeDBMS();
             LoadLibraryDisk();
-            FetchDBMS();
+            CreateLibraryInstance();
         }
 
-        #region DBMS
-        public void InitializeDBMS()
+        public void Clean()
+        {
+            DataBaseEngine.Reset();
+        }
+
+        #region DBMS (Sealed)
+        private void InitializeDBMS()
         {
             try
             {
@@ -48,13 +51,11 @@ namespace Reborn_Zune_MusicLibraryService
 
         }
 
-        public void FetchDBMS()
+        private void CreateLibraryInstance()
         {
             try
             {
                 Library = DataBaseEngine.FetchAll();
-                //library.RenderThumbnail(); //TODO: Move to DataBaseEngine, should be done when the engine fetch the library
-                //await library.GetFiles(); //TODO: Move to DataBaseEngine
             }
             catch (Exception e)
             {
@@ -64,8 +65,8 @@ namespace Reborn_Zune_MusicLibraryService
         }
         #endregion
 
-        #region LibraryDisk
-        public async void LoadLibraryDisk()
+        #region LibraryDisk (Sealed)
+        private async void LoadLibraryDisk()
         {
             try
             {
@@ -109,12 +110,13 @@ namespace Reborn_Zune_MusicLibraryService
         #endregion
 
         #region ServiceOperation
-        public static void AddSongsToPlaylist(string v, List<Music> musics)
+        public void AddSongsToPlaylist(string v, List<MLMusicModel> musics)
         {
             DataBaseEngine.AddSongsToPlaylist(v, musics);
+            RefreshLibrary();
         }
 
-        public static bool CreatePlaylist(string playlistName)
+        public bool CreatePlaylist(string playlistName)
         {
             if (!DataBaseEngine.PlaylistNameAvailable(playlistName))
             {
@@ -123,15 +125,35 @@ namespace Reborn_Zune_MusicLibraryService
             else
             {
                 DataBaseEngine.CreatePlaylist(playlistName);
+                RefreshLibrary();
                 return true;
             }
         }
 
-        public static Library FetchPlaylist()
+        public void EditPlaylistName(string oldName, string newName)
         {
-            var library = DataBaseEngine.FetchAll();
-            return library;
+            DataBaseEngine.EditPlaylistName(oldName, newName);
+            RefreshLibrary();
         }
+
+        public void DeletePlaylist(string name)
+        {
+            DataBaseEngine.DeletePlaylist(name);
+            RefreshLibrary();
+        }
+
+        public void RemoveSongsFromPlaylist(string playlistName, List<MLMusicModel> musics)
+        {
+            DataBaseEngine.RemoveSongsFromPlaylist(playlistName, musics);
+            RefreshLibrary();
+        }
+
+        private void RefreshLibrary()
+        {
+            Library.MInP = DataBaseEngine.FetchSongPlaylistRelationship().Select(m => new MLMusicInPlaylistModel(m)).ToList();
+            Library.Playlists = DataBaseEngine.FetchPlaylist().Select(p => new MLPlayListModel(p)).ToList();
+        }
+
         #endregion
 
     }

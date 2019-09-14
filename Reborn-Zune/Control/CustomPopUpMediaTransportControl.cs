@@ -106,26 +106,26 @@ namespace Reborn_Zune.Control
 
         private void MetaDataChanged(MediaItemViewModel model)
         {
-            if(model != null)
-            {
-                if (MusicThumbnail != null)
-                {
-                    MusicThumbnail.Source = model.MediaItem.Music.Thumbnail.Image;
-                }
-                if (TopMusicTextBlock != null)
-                {
-                    TopMusicTextBlock.Text = "Now Playing: " + model.MediaItem.Music.Title;
-                }
-                if (TopArtistTextBlock != null)
-                {
-                    //TopArtistTextBlock.Text = "Artist: " + model.MediaItem.Music.Artist.Name;
-                    TopArtistTextBlock.Text = "Artist: ";
-                }
-                if (MusicTitle != null)
-                {
-                    MusicTitle.Text = model.MediaItem.Music.Title;
-                }
-            }
+            //if(model != null)
+            //{
+            //    if (MusicThumbnail != null)
+            //    {
+            //        MusicThumbnail.Source = model.MediaItem.Music.Thumbnail.Image;
+            //    }
+            //    if (TopMusicTextBlock != null)
+            //    {
+            //        TopMusicTextBlock.Text = "Now Playing: " + model.MediaItem.Music.Title;
+            //    }
+            //    if (TopArtistTextBlock != null)
+            //    {
+            //        //TopArtistTextBlock.Text = "Artist: " + model.MediaItem.Music.Artist.Name;
+            //        TopArtistTextBlock.Text = "Artist: ";
+            //    }
+            //    if (MusicTitle != null)
+            //    {
+            //        MusicTitle.Text = model.MediaItem.Music.Title;
+            //    }
+            //}
             
         }
     }

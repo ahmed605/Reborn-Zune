@@ -1,8 +1,6 @@
 ﻿using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using Microsoft.Toolkit.Uwp.Helpers;
-using MusicLibraryService;
 using System;
 using System.Diagnostics;
 using Windows.ApplicationModel.Activation;

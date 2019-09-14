@@ -253,8 +253,9 @@ namespace Reborn_Zune
 
         private void MenuFlyoutItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var datacontext = (sender as FrameworkElement).DataContext as LocalPlaylistModel;
-            MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, MainVM.DetailViewModel.Musics.ToList());
+            //TODO:
+            //var datacontext = (sender as FrameworkElement).DataContext as LocalPlaylistModel;
+            //MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, MainVM.DetailViewModel.Musics.ToList());
         }
     }
 }

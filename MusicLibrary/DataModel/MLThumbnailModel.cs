@@ -1,10 +1,5 @@
-﻿using MusicLibraryEFCoreModel;
-using Reborn_Zune_MusicLibraryEFCoreModel;
+﻿using Reborn_Zune_MusicLibraryEFCoreModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -15,9 +10,9 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
         public MLThumbnailModel(Thumbnail thumbnail)
         {
             Thumbnail = thumbnail;
+            GetBitmapImage();
         }
         public Thumbnail Thumbnail { get; set; }
-
         public BitmapImage Image { get; set; }
 
         public void GetBitmapImage()

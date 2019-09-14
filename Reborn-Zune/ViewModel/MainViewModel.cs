@@ -44,7 +44,8 @@ namespace Reborn_Zune.ViewModel
 
         private void LibraryViewModel_InitializeFinished(object sender, EventArgs e)
         {
-            PlaylistNameList = new ObservableCollection<string>(LibraryViewModel.Playlists.Select(p => p.Playlist.Name).ToList());
+            //TODO:
+            //PlaylistNameList = new ObservableCollection<string>(LibraryViewModel.Playlists.Select(p => p.Playlist.Name).ToList());
         }
 
         public void SetMediaList()
@@ -234,7 +235,7 @@ namespace Reborn_Zune.ViewModel
             else
             {
                 var item = clickedItem as LocalPlaylistModel;
-                DetailViewModel = new DetailViewModel(new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg")), item.Playlist.Name, "Various Artist", "",item.Musics, LibraryViewModel.Playlists);
+                DetailViewModel = new DetailViewModel(new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg")), item.Playlist.Playlist.Name, "Various Artist", "",item.Musics, LibraryViewModel.Playlists);
             }
         }
 
@@ -244,7 +245,7 @@ namespace Reborn_Zune.ViewModel
                 return true;
 
             // Verify consistency of the lists that were passed in
-            var mediaListIds = currentList.Select(i => i.Music.Id);
+            var mediaListIds = currentList.Select(i => i.Music.Music.Id);
             var playbackListIds = PlaybackList.Items.Select(
                 i => (string)i.Source.CustomProperties.SingleOrDefault(
                     p => p.Key == LocalMusicModel.MediaItemIdKey).Value);

@@ -299,6 +299,10 @@
       <Project>{8a9866a9-8e48-4160-b147-bfd40fe46ee0}</Project>
       <Name>Reborn-Zune-MusicLibraryService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Reborn-Zune-Common\Reborn-Zune-Common.csproj">
+      <Project>{2256C043-07D6-48B1-A408-DB3309A59318}</Project>
+      <Name>Reborn-Zune-Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
