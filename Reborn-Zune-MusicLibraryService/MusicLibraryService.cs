@@ -5,8 +5,10 @@ using Reborn_Zune_MusicLibraryService.DataModel;
 using Reborn_Zune_MusicLibraryService.LibraryDisk;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace Reborn_Zune_MusicLibraryService
@@ -17,14 +19,18 @@ namespace Reborn_Zune_MusicLibraryService
 
         public event EventHandler Completed;
 
+        public MusicLibraryService()
+        {
+            Run();
+        }
 
         public Library Library { get; set; }
 
-        public void Run()
+        public async void Run()
         {
             InitializeDBMS();
-            LoadLibraryDisk();
-            CreateLibraryInstance();
+            await LoadLibraryDiskAsync();
+            await CreateLibraryInstanceAsync();
             Completed?.Invoke(this, EventArgs.Empty);
         }
 
@@ -48,11 +54,11 @@ namespace Reborn_Zune_MusicLibraryService
 
         }
 
-        private async void CreateLibraryInstance()
+        private async Task CreateLibraryInstanceAsync()
         {
             try
             {
-                Library = await DataBaseEngine.FetchAll();
+                Library = await DataBaseEngine.FetchAllAsync();
             }
             catch (Exception e)
             {
@@ -63,7 +69,7 @@ namespace Reborn_Zune_MusicLibraryService
         #endregion
 
         #region LibraryDisk (Sealed)
-        private async void LoadLibraryDisk()
+        private async Task LoadLibraryDiskAsync()
         {
             try
             {
@@ -148,8 +154,8 @@ namespace Reborn_Zune_MusicLibraryService
 
         private void RefreshLibrary()
         {
-            Library.MInP = DataBaseEngine.FetchSongPlaylistRelationship().Select(m => new MLMusicInPlaylistModel(m)).ToList();
-            Library.Playlists = DataBaseEngine.FetchPlaylist().Select(p => new MLPlayListModel(p)).ToList();
+            Library.MInP = new ObservableCollection<MLMusicInPlaylistModel>(DataBaseEngine.FetchSongPlaylistRelationship().Select(m => new MLMusicInPlaylistModel(m)).ToList());
+            Library.Playlists = new ObservableCollection<MLPlayListModel>(DataBaseEngine.FetchPlaylist().Select(p => new MLPlayListModel(p)).ToList());
         }
 
         #endregion

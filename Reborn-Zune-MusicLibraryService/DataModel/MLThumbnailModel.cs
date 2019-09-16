@@ -1,11 +1,12 @@
-﻿using Reborn_Zune_MusicLibraryEFCoreModel;
+﻿using GalaSoft.MvvmLight;
+using Reborn_Zune_MusicLibraryEFCoreModel;
 using System;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune_MusicLibraryService.DataModel
 {
-    public class MLThumbnailModel : IMLDataModel
+    public class MLThumbnailModel : ObservableObject, IMLDataModel
     {
         public MLThumbnailModel(Thumbnail thumbnail)
         {

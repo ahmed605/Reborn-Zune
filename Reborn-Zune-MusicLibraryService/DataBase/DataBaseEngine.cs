@@ -3,6 +3,7 @@ using Reborn_Zune_MusicLibraryEFCoreModel;
 using Reborn_Zune_MusicLibraryService.DataModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -190,18 +191,30 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
             }
         }
 
-        public static async Task<Library> FetchAll()
+        public static async Task<Library> FetchAllAsync()
         {
             Library library = new Library();
             try
             {
                 using (var _context = new MusicLibraryDbContext())
                 {
-                    library.Musics = _context.Musics.Select(m => new MLMusicModel(m)).ToList();
-                    library.MInP = _context.MusicInPlaylists.Select(m => new MLMusicInPlaylistModel(m)).ToList();
-                    library.Playlists = _context.Playlists.Select(p => new MLPlayListModel(p)).ToList();
-                    library.Thumbnails = _context.Thumbnails.Select(t => new MLThumbnailModel(t)).ToList();
+                    library.Musics = new ObservableCollection<MLMusicModel>(_context.Musics.Select(m => new MLMusicModel(m)).ToList());
+                    library.MInP = new ObservableCollection<MLMusicInPlaylistModel>(_context.MusicInPlaylists.Select(m => new MLMusicInPlaylistModel(m)).ToList());
+                    library.Playlists = new ObservableCollection<MLPlayListModel>(_context.Playlists.Select(p => new MLPlayListModel(p)).ToList()); 
+                    library.Thumbnails = new ObservableCollection<MLThumbnailModel>(_context.Thumbnails.Select(t => new MLThumbnailModel(t)).ToList()); 
                 }
+
+                foreach(var item in library.Musics)
+                {
+                    await item.GetFileAsync();
+                }
+
+                foreach(var item in library.Thumbnails)
+                {
+                    item.GetBitmapImage();
+                }
+
+                return library;
             }
             catch (Exception e)
             {

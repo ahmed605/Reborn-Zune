@@ -32,7 +32,9 @@ namespace Reborn_Zune
             this.InitializeComponent();
             this.Construct();
             AppCenter.Start("c5fcab4c-7057-489f-b350-f74dd185fdad", typeof(Analytics), typeof(Crashes));
-            
+
+            ServiceLocator.SetInstance(new MusicLibraryService());
+
             this.UnhandledException += App_UnhandledException;
         }
 

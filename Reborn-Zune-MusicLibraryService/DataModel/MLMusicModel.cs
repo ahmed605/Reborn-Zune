@@ -1,16 +1,16 @@
-﻿using Reborn_Zune_MusicLibraryEFCoreModel;
+﻿using GalaSoft.MvvmLight;
+using Reborn_Zune_MusicLibraryEFCoreModel;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace Reborn_Zune_MusicLibraryService.DataModel
 {
-    public class MLMusicModel : IMLDataModel
+    public class MLMusicModel : ObservableObject, IMLDataModel
     {
         public MLMusicModel(Music music)
         {
             UnwrapDataFields(music);
-            GetFile(music);
         }
 
         public string Id { get; set; }
@@ -23,7 +23,23 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
         public string Year { get; set; }
         public string ThumbnailId { get; set; }
 
-        public StorageFile File { get; set; }
+
+        private StorageFile _file;
+        public StorageFile File
+        {
+            get
+            {
+                return _file;
+            }
+            set
+            {
+                if(_file != value)
+                {
+                    _file = value;
+                    RaisePropertyChanged(nameof(File));
+                }
+            }
+        }
 
         public void UnwrapDataFields(IEFCoreModel model)
         {
@@ -39,12 +55,8 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
             this.ThumbnailId = music.ThumbnailId;
         }
 
-        private async void GetFile(Music music)
-        {
-            await GetFileAsync(music);
-        }
 
-        private async Task GetFileAsync(Music music)
+        public async Task GetFileAsync()
         {
             File = await StorageFile.GetFileFromPathAsync(Path);
         }

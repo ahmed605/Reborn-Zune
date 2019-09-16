@@ -28,13 +28,10 @@ namespace Reborn_Zune.ViewModel
             Artists = new ObservableCollection<LocalArtistModel>();
             Playlists = new ObservableCollection<LocalPlaylistModel>();
 
-            var libraryService = new MusicLibraryService();
-            libraryService.Completed += LibraryService_Completed;
-            ServiceLocator.SetInstance(libraryService);
-            libraryService.Run();
+            Service.Completed += Service_Completed;
         }
 
-        private void LibraryService_Completed(object sender, EventArgs e)
+        private void Service_Completed(object sender, EventArgs e)
         {
             BuildLibraryTree();
         }

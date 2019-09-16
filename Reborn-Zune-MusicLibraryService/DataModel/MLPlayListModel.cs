@@ -1,8 +1,9 @@
-﻿using Reborn_Zune_MusicLibraryEFCoreModel;
+﻿using GalaSoft.MvvmLight;
+using Reborn_Zune_MusicLibraryEFCoreModel;
 
 namespace Reborn_Zune_MusicLibraryService.DataModel
 {
-    public class MLPlayListModel : IMLDataModel
+    public class MLPlayListModel : ObservableObject, IMLDataModel
     {
         public MLPlayListModel(Playlist playlist)
         {
