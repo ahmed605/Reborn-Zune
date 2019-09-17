@@ -329,14 +329,13 @@ namespace Reborn_Zune.ViewModel
 
         public void AddSongsToPlaylist(string playlistName, List<LocalMusicModel> enumerable)
         {
-            //TODO
-            //var playlist = Playlists.Where(p => p.Playlist.Name == playlistName).FirstOrDefault();
-            //foreach(var music in enumerable)
-            //{
-            //    playlist.Musics.Add(music);
-            //}
-            //MusicLibrary.AddSongsToPlaylist(playlistName, enumerable.Select(e => e.Music).ToList());
-            //RaisePropertyChanged(() => Playlists);
+            var playlist = Playlists.Where(p => p.Playlist.Name == playlistName).FirstOrDefault();
+            foreach (var music in enumerable)
+            {
+                playlist.Musics.Add(music);
+            }
+            Service.AddSongsToPlaylist(playlistName, enumerable.Select(e => e.Music).ToList());
+            RaisePropertyChanged(() => Playlists);
         }
 
         public void SortAlbums(string selected)

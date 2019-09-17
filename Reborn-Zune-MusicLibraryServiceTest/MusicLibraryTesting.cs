@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reborn_Zune_MusicLibraryService;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Reborn_Zune_MusicLibraryServiceTest
 {
@@ -8,29 +9,29 @@ namespace Reborn_Zune_MusicLibraryServiceTest
     public class MusicLibraryTesting
     {
         [TestMethod]
-        public void TestLibraryInstanceCreatedAndLoadedAndDeletedSuccessfully()
+        public async Task TestCreateLibraryInstanceAsync()
         {
             MusicLibraryService service = new MusicLibraryService();
-            service.Run();
+            await Task.Delay(1000);
             Assert.IsNotNull(service.Library);
             service.Clean();
         }
 
         [TestMethod]
-        public void TestMusicImageFileLoaded()
+        public async Task TestMusicImageFileLoadedAsync()
         {
             MusicLibraryService service = new MusicLibraryService();
-            service.Run();
-            service.Library.Thumbnails.ForEach(t => Assert.IsNotNull(t.Image));
-            service.Library.Musics.ForEach(t => Assert.IsNotNull(t.File));
+            await Task.Delay(1000);
+            service.Library.Thumbnails.ToList().ForEach(t => Assert.IsNotNull(t.Image));
+            service.Library.Musics.ToList().ForEach(t => Assert.IsNotNull(t.File));
             service.Clean();
         }
 
         [TestMethod]
-        public void TestCreatePlaylist()
+        public async Task TestCreatePlaylist()
         {
             MusicLibraryService service = new MusicLibraryService();
-            service.Run();
+            await Task.Delay(1000);
             service.CreatePlaylist("a");
             service.CreatePlaylist("a");
             Assert.IsTrue(service.Library.Playlists.Count(p => p.Name == "a") == 1);
@@ -38,10 +39,10 @@ namespace Reborn_Zune_MusicLibraryServiceTest
         }
 
         [TestMethod]
-        public void TestEditPlaylistName()
+        public async Task TestEditPlaylistName()
         {
             MusicLibraryService service = new MusicLibraryService();
-            service.Run();
+            await Task.Delay(1000);
             service.CreatePlaylist("a");
             Assert.IsTrue(service.Library.Playlists.Count(p => p.Name == "a") == 1);
             service.EditPlaylistName("a", "b");
@@ -51,45 +52,44 @@ namespace Reborn_Zune_MusicLibraryServiceTest
         }
 
         [TestMethod]
-        public void TestAddSongsIntoPlaylist()
+        public async Task TestAddSongsIntoPlaylist()
         {
             MusicLibraryService service = new MusicLibraryService();
-            service.Run();
+            await Task.Delay(1000);
             service.CreatePlaylist("a");
             Assert.IsTrue(service.Library.Playlists.Count(p => p.Name == "a") == 1);
             var songs = service.Library.Musics;
-            service.AddSongsToPlaylist("a", songs);
+            service.AddSongsToPlaylist("a", songs.ToList());
             Assert.IsTrue(service.Library.MInP.Count == songs.Count);
             service.Clean();
         }
 
         [TestMethod]
-        public void TestRemoveSongsIntoPlaylist()
+        public async Task TestRemoveSongsIntoPlaylist()
         {
             MusicLibraryService service = new MusicLibraryService();
-            service.Run();
+            await Task.Delay(1000);
             service.CreatePlaylist("a");
             Assert.IsTrue(service.Library.Playlists.Count(p => p.Name == "a") == 1);
             var songs = service.Library.Musics;
-            service.AddSongsToPlaylist("a", songs);
+            service.AddSongsToPlaylist("a", songs.ToList());
             Assert.IsTrue(service.Library.MInP.Count == songs.Count);
-            service.RemoveSongsFromPlaylist("a", songs);
+            service.RemoveSongsFromPlaylist("a", songs.ToList());
             Assert.IsTrue(service.Library.MInP.Count == 0);
             service.Clean();
         }
 
         [TestMethod]
-        public void TestSameSongOnMuliplePlaylist()
+        public async Task TestSameSongOnMuliplePlaylist()
         {
             MusicLibraryService service = new MusicLibraryService();
-            service.Run();
-
+            await Task.Delay(1000);
             service.CreatePlaylist("a");
             service.CreatePlaylist("b");
             Assert.IsTrue(service.Library.Playlists.Count == 2);
             var songs = service.Library.Musics;
-            service.AddSongsToPlaylist("a", songs);
-            service.AddSongsToPlaylist("b", songs);
+            service.AddSongsToPlaylist("a", songs.ToList());
+            service.AddSongsToPlaylist("b", songs.ToList());
 
             Assert.IsTrue(service.Library.MInP.Count == songs.Count * 2);
 

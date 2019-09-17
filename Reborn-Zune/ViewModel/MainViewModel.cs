@@ -44,8 +44,7 @@ namespace Reborn_Zune.ViewModel
 
         private void LibraryViewModel_InitializeFinished(object sender, EventArgs e)
         {
-            //TODO:
-            //PlaylistNameList = new ObservableCollection<string>(LibraryViewModel.Playlists.Select(p => p.Playlist.Name).ToList());
+            PlaylistNameList = new ObservableCollection<string>(LibraryViewModel.Playlists.Select(p => p.Playlist.Name).ToList());
         }
 
         public void SetMediaList()

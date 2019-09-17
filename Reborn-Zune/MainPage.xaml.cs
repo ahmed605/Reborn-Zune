@@ -344,22 +344,20 @@ namespace Reborn_Zune
 
         private void AddToPlaylistFlyout_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            //TODO:
-            //var datacontext = (sender as FrameworkElement).DataContext as LocalPlaylistModel;
-            //var album = MainVM.LibraryViewModel.AlbumAddToPlaylist;
+            var datacontext = (sender as FrameworkElement).DataContext as LocalPlaylistModel;
+            var album = MainVM.LibraryViewModel.AlbumAddToPlaylist;
 
-            //if(album is LocalAlbumModel)
-            //{
-            //    MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
-            //}
-            //else
-            //{
-            //    if(album.GetTitle() != datacontext.GetTitle())
-            //    {
-            //        MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
-            //    }
-            //}
-            
+            if (album is LocalAlbumModel)
+            {
+                MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
+            }
+            else
+            {
+                if (album.GetTitle() != datacontext.GetTitle())
+                {
+                    MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
+                }
+            }
         }
 
         private void AddToButton_Tapped(object sender, TappedRoutedEventArgs e)
