@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using Reborn_Zune.Model;
+using Reborn_Zune.Model.Interface;
 using Reborn_Zune.Services;
 using System;
 using System.Collections.ObjectModel;
@@ -38,7 +39,6 @@ namespace Reborn_Zune.ViewModel
         {
             this.dispatcher = dispatcher;
             LibraryViewModel = new LibraryViewModel();
-            LibraryViewModel.InitializeFinished += LibraryViewModel_InitializeFinished;
             PlayerViewModel = new PlayerViewModel(_player, this.dispatcher);
         }
 

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MusicLibraryEFCoreModel
+namespace Reborn_Zune_MusicLibraryEFCoreModel
 {
     public class MusicLibraryDbContext : DbContext
     {

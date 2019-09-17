@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MusicLibraryEFCoreModel;
+using Reborn_Zune_MusicLibraryEFCoreModel;
 
-namespace MusicLibraryEFCoreModel.Migrations
+namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
 {
     [DbContext(typeof(MusicLibraryDbContext))]
     [Migration("20190611031600_Initial")]

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8A9866A9-8E48-4160-B147-BFD40FE46EE0}</ProjectGuid>
+    <ProjectGuid>{2256C043-07D6-48B1-A408-DB3309A59318}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MusicLibraryService</RootNamespace>
-    <AssemblyName>MusicLibraryService</AssemblyName>
+    <RootNamespace>Reborn_Zune_Common</RootNamespace>
+    <AssemblyName>Reborn-Zune-Common</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
@@ -120,29 +120,15 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MusicLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\MusicLibrary.rd.xml" />
+    <Compile Include="Services\IService.cs" />
+    <Compile Include="Services\ServiceLocator.cs" />
+    <EmbeddedResource Include="Properties\Reborn_Zune_Common.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.9</Version>
+      <Version>6.2.8</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp">
-      <Version>5.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="MvvmLight">
-      <Version>5.4.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="TagLib.Portable">
-      <Version>1.2.0-pre</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MusicLibraryEFCoreModel\MusicLibraryEFCoreModel.csproj">
-      <Project>{c6f94f50-9718-4539-8422-0a0ef78f51e3}</Project>
-      <Name>MusicLibraryEFCoreModel</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

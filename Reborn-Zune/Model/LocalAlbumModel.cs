@@ -1,13 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
-using MusicLibraryEFCoreModel;
-using Reborn_Zune.Utilities;
+using Reborn_Zune.Model.Interface;
 using Reborn_Zune.ViewModel;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -142,6 +136,5 @@ namespace Reborn_Zune.Model
         {
             return AlbumArtist;
         }
-
     }
 }

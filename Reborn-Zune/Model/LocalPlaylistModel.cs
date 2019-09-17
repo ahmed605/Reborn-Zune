@@ -1,12 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
-using MusicLibraryEFCoreModel;
+using Reborn_Zune.Model.Interface;
 using Reborn_Zune.ViewModel;
+using Reborn_Zune_MusicLibraryService.DataModel;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -21,8 +18,8 @@ namespace Reborn_Zune.Model
         }
 
 
-        private Playlist _playlist;
-        public Playlist Playlist
+        private MLPlayListModel _playlist;
+        public MLPlayListModel Playlist
         {
             get
             {
@@ -30,7 +27,7 @@ namespace Reborn_Zune.Model
             }
             set
             {
-                Set<Playlist>(() => this.Playlist, ref _playlist, value);
+                Set<MLPlayListModel>(() => this.Playlist, ref _playlist, value);
             }
         }
 

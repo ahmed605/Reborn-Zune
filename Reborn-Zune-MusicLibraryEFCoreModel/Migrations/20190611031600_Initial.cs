@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MusicLibraryEFCoreModel.Migrations
+namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
 {
     public partial class Initial : Migration
     {

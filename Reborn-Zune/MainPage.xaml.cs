@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Reborn_Zune.Control;
 using Reborn_Zune.Model;
+using Reborn_Zune.Model.Interface;
 using Reborn_Zune.Utilities;
 using Reborn_Zune.ViewModel;
 using System;
@@ -346,18 +347,17 @@ namespace Reborn_Zune
             var datacontext = (sender as FrameworkElement).DataContext as LocalPlaylistModel;
             var album = MainVM.LibraryViewModel.AlbumAddToPlaylist;
 
-            if(album is LocalAlbumModel)
+            if (album is LocalAlbumModel)
             {
                 MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
             }
             else
             {
-                if(album.GetTitle() != datacontext.GetTitle())
+                if (album.GetTitle() != datacontext.GetTitle())
                 {
                     MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
                 }
             }
-            
         }
 
         private void AddToButton_Tapped(object sender, TappedRoutedEventArgs e)

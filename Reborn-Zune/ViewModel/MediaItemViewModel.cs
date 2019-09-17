@@ -74,8 +74,8 @@ namespace Reborn_Zune.ViewModel
             //
             // The reason we cache here is to avoid audio gaps 
             // between tracks on transitions when changing artwork.
-            
-            PreviewImage = mediaItem.Music.Thumbnail.Image;
+
+            PreviewImage = mediaItem.Image;
         }
         
     }
