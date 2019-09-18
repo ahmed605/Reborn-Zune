@@ -28,3 +28,12 @@ steps:
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
     msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+
+- task: AppCenterDistribute@3
+  inputs:
+    serverEndpoint: 'App Center'
+    appSlug: 'yinjunda-cool-i9uc/Reborn_Zune'
+    appFile: '$(build.artifactStagingDirectory)\AppxPackages\\'
+    releaseNotesOption: 'input'
+    releaseNotesInput: 'Test'
+    destinationType: 'groups'
