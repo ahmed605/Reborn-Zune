@@ -37,3 +37,4 @@ steps:
     releaseNotesOption: 'input'
     releaseNotesInput: 'Test'
     destinationType: 'groups'
+    destinationStoreId: 'c5fcab4c-7057-489f-b350-f74dd185fdad'
