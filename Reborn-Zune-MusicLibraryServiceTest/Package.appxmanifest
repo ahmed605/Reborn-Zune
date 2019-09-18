@@ -5,14 +5,14 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   IgnorableNamespaces="uap mp">
 
-  <Identity Name="52a2839f-79e3-49a0-9903-704d16b8d91a"
+  <Identity Name="aee1bd05-b98c-47a1-a5d9-ad4710fc1b81"
             Publisher="CN=yinju"
             Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="52a2839f-79e3-49a0-9903-704d16b8d91a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="aee1bd05-b98c-47a1-a5d9-ad4710fc1b81" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>MusicLibraryServiceTest</DisplayName>
+    <DisplayName>Reborn-Zune-MusicLibraryServiceTest</DisplayName>
     <PublisherDisplayName>yinju</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -27,12 +27,12 @@
   <Applications>
     <Application Id="vstest.executionengine.universal.App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="MusicLibraryServiceTest.App">
+        EntryPoint="Reborn_Zune_MusicLibraryServiceTest.App">
       <uap:VisualElements
-        DisplayName="MusicLibraryServiceTest"
+        DisplayName="Reborn-Zune-MusicLibraryServiceTest"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="MusicLibraryServiceTest"
+        Description="Reborn-Zune-MusicLibraryServiceTest"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
@@ -42,6 +42,5 @@
   <Capabilities>
     <Capability Name="internetClientServer" />
     <Capability Name="privateNetworkClientServer" />
-    <uap:Capability Name="musicLibrary"/>
   </Capabilities>
 </Package>

@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace MusicLibraryServiceTest
+namespace Reborn_Zune_MusicLibraryServiceTest
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.

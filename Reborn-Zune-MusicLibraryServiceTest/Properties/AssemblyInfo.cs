@@ -2,11 +2,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("MusicLibraryServiceTest")]
+[assembly: AssemblyTitle("Reborn-Zune-MusicLibraryServiceTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MusicLibraryServiceTest")]
+[assembly: AssemblyProduct("Reborn-Zune-MusicLibraryServiceTest")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
