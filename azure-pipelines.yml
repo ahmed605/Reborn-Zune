@@ -26,7 +26,7 @@ steps:
   name: signingCert
   displayName: 'Download CA certificate'
   inputs:
-    secureFile: '**/Reborn-Zune/Reborn-Zune_StoreKey.pfx'
+    secureFile: 'Reborn-Zune_StoreKey.pfx'
 
 - task: VSBuild@1
   inputs:
