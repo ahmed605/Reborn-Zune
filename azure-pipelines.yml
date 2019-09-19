@@ -63,11 +63,19 @@ steps:
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
 
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      
+      ls $(appxPackageDir)
+
+
 - task: AppCenterDistribute@3
   inputs:
     serverEndpoint: 'AppCenter'
     appSlug: 'yinjunda-cool-i9uc/Reborn-Zune'
-    appFile: 'drop\AppxPackages\*\.msixbundle'
+    appFile: '$(appxPackageDir)\*\.msixbundle'
     releaseNotesOption: 'input'
     releaseNotesInput: 'Initial'
     destinationType: 'groups'
