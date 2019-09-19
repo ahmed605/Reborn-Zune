@@ -67,7 +67,7 @@ steps:
   inputs:
     serverEndpoint: 'AppCenter'
     appSlug: 'yinjunda-cool-i9uc/Reborn-Zune'
-    appFile: '$(build.artifactstagingdirectory)\drop\AppxPackages\*\*.msixbundle'
+    appFile: 'Reborn-Zune\AppxPackages\*\.msixbundle'
     releaseNotesOption: 'input'
     releaseNotesInput: 'Initial'
     destinationType: 'groups'
