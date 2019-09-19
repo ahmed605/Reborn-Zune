@@ -20,6 +20,7 @@
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <PackageCertificateThumbprint>92695D0CA0E36E1AFCAEFC1B70C8AC0645365EF4</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
