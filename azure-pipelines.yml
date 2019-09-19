@@ -63,11 +63,17 @@ steps:
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
 
+- task: DownloadPipelineArtifact@2
+  inputs:
+    artifact: drop
+    patterns: '**/*.js'
+    path: $(Build.SourcesDirectory)/bin
+
 - task: Bash@3
   inputs:
     targetType: 'inline'
     script: |
-      ls .\Reborn-Zune\AppPackages\*\*.msixbundle
+      ls .
       ls drop\
 
 
