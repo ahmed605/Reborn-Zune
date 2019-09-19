@@ -74,15 +74,14 @@ steps:
     targetType: 'inline'
     script: |
       ls ./bin/AppxPackages
-      ls ././bin/AppxPackages/*/*.msixbundle
-      ls drop/
+      ls ./bin/AppxPackages/*/*.msixbundle
 
 
 - task: AppCenterDistribute@3
   inputs:
     serverEndpoint: 'AppCenter'
     appSlug: 'yinjunda-cool-i9uc/Reborn-Zune'
-    appFile: '$(appxPackageDir)\*\.msixbundle'
+    appFile: './bin/AppxPackages/*/*.msixbundle'
     releaseNotesOption: 'input'
     releaseNotesInput: 'Initial'
     destinationType: 'groups'
