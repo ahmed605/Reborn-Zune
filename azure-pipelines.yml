@@ -26,7 +26,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $pfxpath = 'Reborn-Zune_StoreKey.pfx'
+      $pfxpath = 'Reborn-Zune\Reborn-Zune_StoreKey.pfx'
       $password = 'dadaCS48825!'
       
       Add-Type -AssemblyName System.Security
