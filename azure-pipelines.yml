@@ -73,8 +73,10 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      ls ./bin
-      ls drop/
+      ls .\
+      ls .\bin
+      ls .\bin\
+      ls drop\
 
 
 - task: AppCenterDistribute@3
