@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Reborn_Zune_MusicLibraryEFCoreModel</RootNamespace>
-    <Configurations>Debug;Release;CICD</Configurations>
+    <Configurations>Debug;Release;CICD;CICD_Debug</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

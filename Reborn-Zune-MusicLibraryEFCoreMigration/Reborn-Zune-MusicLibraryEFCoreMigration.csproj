@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Reborn_Zune_MusicLibraryEFCoreMigration</RootNamespace>
-    <Configurations>Debug;Release;CICD</Configurations>
+    <Configurations>Debug;Release;CICD;CICD_Debug</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
