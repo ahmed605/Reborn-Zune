@@ -73,9 +73,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      ls ./
-      ls ./bin
-      ls ./bin/
+      ls ./bin/AppxPackages
       ls drop/
 
 
