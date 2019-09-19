@@ -74,6 +74,7 @@ steps:
     targetType: 'inline'
     script: |
       ls ./bin/AppxPackages
+      ls ././bin/AppxPackages/*/*.msixbundle
       ls drop/
 
 
