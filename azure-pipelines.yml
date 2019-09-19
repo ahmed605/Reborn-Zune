@@ -12,7 +12,7 @@ pool:
 variables:
   solution: '**/*.sln'
   buildPlatform: 'x86|x64|ARM'
-  buildConfiguration: 'CICD_Debug'
+  buildConfiguration: 'Debug'
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
 steps:
@@ -22,11 +22,20 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-- task: DownloadSecureFile@1
-  name: signingCert
-  displayName: 'Download CA certificate'
+- task: PowerShell@2
   inputs:
-    secureFile: 'Reborn-Zune_StoreKey.pfx'
+    targetType: 'inline'
+    script: |
+      $pfxpath = 'Reborn-Zune\Reborn-Zune_StoreKey.pfx'
+      $password = 'dadaCS48825!'
+      
+      Add-Type -AssemblyName System.Security
+      $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
+      $cert.Import($pfxpath, $password, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]"PersistKeySet")
+      $store = new-object system.security.cryptography.X509Certificates.X509Store -argumentlist "MY", CurrentUser
+      $store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]"ReadWrite")
+      $store.Add($cert)
+      $store.Close()
 
 - task: VSBuild@1
   inputs:
@@ -53,6 +62,30 @@ steps:
   displayName: 'Publish Artifact: drop'
   inputs:
     PathtoPublish: '$(build.artifactstagingdirectory)'
+
+- task: DownloadPipelineArtifact@2
+  inputs:
+    artifact: drop
+    patterns: '**/*.msixbundle'
+    path: $(Build.SourcesDirectory)/bin
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      ls ./bin/AppxPackages
+      ls ./bin/AppxPackages/*/*.msixbundle
+
+
+- task: AppCenterDistribute@3
+  inputs:
+    serverEndpoint: 'AppCenter'
+    appSlug: 'yinjunda-cool-i9uc/Reborn-Zune'
+    appFile: './bin/AppxPackages/*/*.msixbundle'
+    releaseNotesOption: 'input'
+    releaseNotesInput: 'Initial'
+    destinationType: 'groups'
+    distributionGroupId: '4e919a81-ff4e-490a-8669-310fb9037efc'
 
 
 
