@@ -36,7 +36,6 @@ steps:
     msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" 
                   /p:AppxPackageDir="$(appxPackageDir)"
                   /p:AppxPackageSigningEnabled=true
-                  /p: 
                   /p:AppxBundle=Always 
                   /p:UapAppxPackageBuildMode=StoreUpload
                   /p:PackageCertificateThumbprint="0FB468EE92880A98E7F2BE947E06EB6F762F8B87" 
