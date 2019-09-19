@@ -67,7 +67,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      ls .
+      ls .\Reborn-Zune\AppPackages\*\*.msixbundle
       ls drop\
 
 
