@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap mp uap3">
-  <Identity Name="63299MetrsignStudio.Vapwave88" Publisher="CN=691BCA65-0225-4D09-BA12-DFA680F370B8" Version="1.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="3530f278-3dbd-482e-9b5a-c7435a496467" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="63299MetrsignStudio.V8P" Publisher="CN=691BCA65-0225-4D09-BA12-DFA680F370B8" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="4a51ff65-a93d-44b1-95a8-ecc35ebd3118" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>Vapwave88</DisplayName>
+    <DisplayName>V8P</DisplayName>
     <PublisherDisplayName>MetrsignStudio</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
