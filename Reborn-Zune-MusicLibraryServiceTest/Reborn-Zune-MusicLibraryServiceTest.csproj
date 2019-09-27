@@ -18,7 +18,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnitTestPlatformVersion Condition="'$(UnitTestPlatformVersion)' == ''">$(VisualStudioVersion)</UnitTestPlatformVersion>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>92695D0CA0E36E1AFCAEFC1B70C8AC0645365EF4</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>0FB468EE92880A98E7F2BE947E06EB6F762F8B87</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
