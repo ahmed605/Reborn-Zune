@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reborn_Zune_MusicLibraryEFCoreModel;
 using Reborn_Zune_MusicLibraryService.DataModel;
+using Reborn_Zune_MusicLibraryService.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,7 +46,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
                 Debug.WriteLine(File.Name + " Music meta data start retreiving");
 
 
-                var thumbnail = await File.GetThumbnailAsync(ThumbnailMode.MusicView, 100, ThumbnailOptions.ReturnOnlyIfCached);
+                var thumbnail = await File.GetThumbnailAsync(ThumbnailMode.MusicView, 100, ThumbnailOptions.UseCurrentScale);
                 var properties = await File.Properties.GetMusicPropertiesAsync();
 
                 var path = File.Path;
@@ -250,16 +251,13 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
         }
         private static async Task<byte[]> ConvertThumbnailToBytesAsync(StorageItemThumbnail thumbnail)
         {
-            if (thumbnail == null)
-            {
-                return new byte[0];
-            }
             byte[] result = new byte[thumbnail.Size];
             using (var reader = new DataReader(thumbnail))
             {
                 await reader.LoadAsync((uint)thumbnail.Size);
                 reader.ReadBytes(result);
-                return result;
+                string base64ImageString = Convert.ToBase64String(result);
+                return base64ImageString == Utilities.NULL_THUMBNAIL_BASE64_STRING ? new byte[0] : result;
             }
         }
         #endregion
