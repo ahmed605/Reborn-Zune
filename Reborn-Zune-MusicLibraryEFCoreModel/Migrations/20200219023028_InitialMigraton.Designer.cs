@@ -9,16 +9,16 @@ using Reborn_Zune_MusicLibraryEFCoreModel;
 namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
 {
     [DbContext(typeof(MusicLibraryDbContext))]
-    [Migration("20190611031600_Initial")]
-    partial class Initial
+    [Migration("20200219023028_InitialMigraton")]
+    partial class InitialMigraton
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062");
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
 
-            modelBuilder.Entity("MusicLibraryEFCoreModel.Music", b =>
+            modelBuilder.Entity("Reborn_Zune_MusicLibraryEFCoreModel.Music", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,6 +48,9 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
                         .HasColumnName("Path")
                         .IsUnicode(true);
 
+                    b.Property<bool>("Synced")
+                        .HasColumnName("Synced");
+
                     b.Property<string>("ThumbnailId")
                         .HasColumnName("ThumbnailId")
                         .IsUnicode(true);
@@ -73,7 +76,7 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
                     b.ToTable("Music");
                 });
 
-            modelBuilder.Entity("MusicLibraryEFCoreModel.MusicInPlaylist", b =>
+            modelBuilder.Entity("Reborn_Zune_MusicLibraryEFCoreModel.MusicInPlaylist", b =>
                 {
                     b.Property<string>("MusicId")
                         .HasColumnName("MusicId")
@@ -92,7 +95,7 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
                     b.ToTable("MusicInPlaylist");
                 });
 
-            modelBuilder.Entity("MusicLibraryEFCoreModel.Playlist", b =>
+            modelBuilder.Entity("Reborn_Zune_MusicLibraryEFCoreModel.Playlist", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,7 +117,7 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
                     b.ToTable("Playlst");
                 });
 
-            modelBuilder.Entity("MusicLibraryEFCoreModel.Thumbnail", b =>
+            modelBuilder.Entity("Reborn_Zune_MusicLibraryEFCoreModel.Thumbnail", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,8 +128,7 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
                     b.Property<byte[]>("ImageBytes")
                         .IsRequired()
                         .HasColumnName("Image")
-                        .HasColumnType("BLOB")
-                        .IsUnicode(true);
+                        .HasColumnType("BLOB");
 
                     b.HasKey("Id");
 
@@ -137,22 +139,22 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
                     b.ToTable("Thumbnail");
                 });
 
-            modelBuilder.Entity("MusicLibraryEFCoreModel.Music", b =>
+            modelBuilder.Entity("Reborn_Zune_MusicLibraryEFCoreModel.Music", b =>
                 {
-                    b.HasOne("MusicLibraryEFCoreModel.Thumbnail", "Thumbnail")
+                    b.HasOne("Reborn_Zune_MusicLibraryEFCoreModel.Thumbnail", "Thumbnail")
                         .WithMany("Musics")
                         .HasForeignKey("ThumbnailId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MusicLibraryEFCoreModel.MusicInPlaylist", b =>
+            modelBuilder.Entity("Reborn_Zune_MusicLibraryEFCoreModel.MusicInPlaylist", b =>
                 {
-                    b.HasOne("MusicLibraryEFCoreModel.Music", "Music")
+                    b.HasOne("Reborn_Zune_MusicLibraryEFCoreModel.Music", "Music")
                         .WithMany("MusicInPlaylists")
                         .HasForeignKey("MusicId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MusicLibraryEFCoreModel.Playlist", "Playlist")
+                    b.HasOne("Reborn_Zune_MusicLibraryEFCoreModel.Playlist", "Playlist")
                         .WithMany("MusicInPlaylists")
                         .HasForeignKey("PlaylistId")
                         .OnDelete(DeleteBehavior.Cascade);

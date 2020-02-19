@@ -18,6 +18,7 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel
         public string Artist { get; set; }
         public string Year { get; set; }
         public string ThumbnailId { get; set; }
+        public bool Synced { get; set; }
         public Thumbnail Thumbnail { get; set; }
         
         public ICollection<MusicInPlaylist> MusicInPlaylists { get; set; }

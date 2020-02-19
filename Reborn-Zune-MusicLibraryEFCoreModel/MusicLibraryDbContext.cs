@@ -62,11 +62,16 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel
                     .IsUnicode()
                     .HasColumnName("ThumbnailId");
 
+                entity.Property<bool>(e => e.Synced)
+                    .HasColumnName("Synced")
+                    .IsRequired();
+
                 entity.HasKey(a => a.Id);
 
                 entity.HasIndex("Id")
                     .IsUnique()
                     .HasName("UQ__Music__AUQKR5RFNOUO6UFR");
+
 
                 entity.ToTable("Music");
 
