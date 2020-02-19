@@ -121,13 +121,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DataBase\DataBaseEngine.cs" />
-    <Compile Include="DataModel\IMLDataModel.cs" />
-    <Compile Include="DataModel\Library.cs" />
+    <Compile Include="DataModel\LocalAlbumModel.cs" />
+    <Compile Include="DataModel\LocalArtistModel.cs" />
+    <Compile Include="DataModel\LocalMusicModel.cs" />
+    <Compile Include="DataModel\LocalPlaylistModel.cs" />
+    <Compile Include="DataModel\LocalThumbnailModel.cs" />
     <Compile Include="LibraryDisk\LibraryEngine.cs" />
-    <Compile Include="DataModel\MLMusicInPlaylistModel.cs" />
-    <Compile Include="DataModel\MLMusicModel.cs" />
-    <Compile Include="DataModel\MLPlayListModel.cs" />
-    <Compile Include="DataModel\MLThumbnailModel.cs" />
     <Compile Include="MusicLibraryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Utility.cs" />
@@ -160,6 +159,7 @@
       <Name>Reborn-Zune-MusicLibraryEFCoreModel</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

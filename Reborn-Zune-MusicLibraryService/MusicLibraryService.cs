@@ -3,6 +3,7 @@ using Reborn_Zune_Common.Services;
 using Reborn_Zune_MusicLibraryService.DataBase;
 using Reborn_Zune_MusicLibraryService.DataModel;
 using Reborn_Zune_MusicLibraryService.LibraryDisk;
+using Reborn_Zune_MusicLibraryService.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +17,7 @@ namespace Reborn_Zune_MusicLibraryService
     public class MusicLibraryService : IService
     {
         private bool IsFirstUse => SystemInformation.IsFirstRun;
+        private bool IsChanged { get; set; }
 
         public event EventHandler Completed;
 
@@ -24,14 +26,20 @@ namespace Reborn_Zune_MusicLibraryService
             Run();
         }
 
-        public Library Library { get; set; }
-
         public async void Run()
         {
-            InitializeDBMS();
-            await LoadLibraryDiskAsync();
-            await CreateLibraryInstanceAsync();
-            Completed?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                InitializeDBMS();
+                var result = await LoadLibraryDiskAsync();
+                await DatabaseSynchronize(result);
+                Completed?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                throw new Exception(ex.ToString());
+            }
         }
 
         public void Clean()
@@ -44,82 +52,67 @@ namespace Reborn_Zune_MusicLibraryService
         {
             try
             {
-                Debug.WriteLine("DBMS Initialize");
                 DataBaseEngine.Initialize();
+                Debug.WriteLine("DBMS Initialize");
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
+                throw new Exception(e.ToString());
             }
 
         }
-
-        private async Task CreateLibraryInstanceAsync()
+        private async Task DatabaseSynchronize(IReadOnlyList<StorageFile> result)
         {
-            try
-            {
-                Library = await DataBaseEngine.FetchAllAsync();
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.ToString());
-            }
-
+            await DataBaseEngine.Sync(result);
         }
+
         #endregion
 
         #region LibraryDisk (Sealed)
-        private async Task LoadLibraryDiskAsync()
+        private async Task<IReadOnlyList<StorageFile>> LoadLibraryDiskAsync()
         {
             try
             {
                 Debug.WriteLine("Library Initialize");
-                var result = await LibraryEngine.Initialize(IsFirstUse);
-                foreach (var i in result)
-                {
-                    if (i.Value.GetType().Name == "StorageFile") //Add/Update DataBase
-                    {
-                        //Debug.WriteLine("StorageFile");
-                        if (i.Key == StorageLibraryChangeType.ContentsChanged)
-                        {
-                            //Debug.WriteLine("ContentChanged");
-                            await DataBaseEngine.Update(i.Value as StorageFile);
-                        }
-                        else if (i.Key == StorageLibraryChangeType.MovedIntoLibrary)
-                        {
-                            //Debug.WriteLine("MovedIntoLibrary");
-                            await DataBaseEngine.Add((StorageFile)i.Value);
-                        }
-
-                    }
-                    else if (i.Value.GetType().Name == "String") //Moved Out
-                    {
-                        //Debug.WriteLine("Move out");
-                        DataBaseEngine.Delete(i.Value.ToString());
-                    }
-                    else if (i.Value.GetType().Name == "KeyValuePair`2") //Moved or Renamed
-                    {
-                        //Debug.WriteLine("Moved or Renamed");
-                        DataBaseEngine.Update((KeyValuePair<string, string>)i.Value);
-                    }
-                }
-                //InitializeFinished?.Invoke(null, EventArgs.Empty);
+                LibraryReturnContainer result = await LibraryEngine.Initialize(IsFirstUse);
+                IsChanged = result.isChanged;
+                return result.files;
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
+                throw new Exception(e.ToString());
             }
 
         }
         #endregion
 
         #region ServiceOperation
-        public void AddSongsToPlaylist(string v, List<MLMusicModel> musics)
+        public LocalAlbumModel FetchAlbum(string AlbumId)
         {
-            DataBaseEngine.AddSongsToPlaylist(v, musics);
-            RefreshLibrary();
+            return DataBaseEngine.FetchAlbum(AlbumId);
         }
-
+        public List<LocalAlbumModel> FetchAllAlbums()
+        {
+            return DataBaseEngine.FetchAlbums();
+        }
+        public List<LocalThumbnailModel> FetchThumbnails()
+        {
+            return DataBaseEngine.FetchThumbnails();
+        }
+        public List<LocalPlaylistModel> FetchPlaylists()
+        {
+            return DataBaseEngine.FetchPlaylists();
+        }
+        public LocalPlaylistModel FetchPlaylist(string PlaylistId)
+        {
+            return DataBaseEngine.FetchPlaylist(PlaylistId);
+        }
+        public void AddSongsToPlaylist(string playlistId, List<LocalMusicModel> musics)
+        {
+            DataBaseEngine.AddSongsToPlaylist(playlistId, musics);
+        }
         public bool CreatePlaylist(string playlistName)
         {
             if (!DataBaseEngine.PlaylistNameAvailable(playlistName))
@@ -129,35 +122,21 @@ namespace Reborn_Zune_MusicLibraryService
             else
             {
                 DataBaseEngine.CreatePlaylist(playlistName);
-                RefreshLibrary();
                 return true;
             }
         }
-
-        public void EditPlaylistName(string oldName, string newName)
+        public void EditPlaylistName(string playlistId, string newName)
         {
-            DataBaseEngine.EditPlaylistName(oldName, newName);
-            RefreshLibrary();
+            DataBaseEngine.EditPlaylistName(playlistId, newName);
         }
-
-        public void DeletePlaylist(string name)
+        public void DeletePlaylist(string playlistId)
         {
-            DataBaseEngine.DeletePlaylist(name);
-            RefreshLibrary();
+            DataBaseEngine.DeletePlaylist(playlistId);
         }
-
-        public void RemoveSongsFromPlaylist(string playlistName, List<MLMusicModel> musics)
+        public void RemoveSongsFromPlaylist(string playlistId, List<LocalMusicModel> musics)
         {
-            DataBaseEngine.RemoveSongsFromPlaylist(playlistName, musics);
-            RefreshLibrary();
+            DataBaseEngine.RemoveSongsFromPlaylist(playlistId, musics);
         }
-
-        private void RefreshLibrary()
-        {
-            Library.MInP = new ObservableCollection<MLMusicInPlaylistModel>(DataBaseEngine.FetchSongPlaylistRelationship().Select(m => new MLMusicInPlaylistModel(m)).ToList());
-            Library.Playlists = new ObservableCollection<MLPlayListModel>(DataBaseEngine.FetchPlaylist().Select(p => new MLPlayListModel(p)).ToList());
-        }
-
         #endregion
 
     }
