@@ -19,9 +19,8 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel
         public string Year { get; set; }
         public string ThumbnailId { get; set; }
         public bool Synced { get; set; }
-        public Thumbnail Thumbnail { get; set; }
-        
-        public ICollection<MusicInPlaylist> MusicInPlaylists { get; set; }
+        public virtual Thumbnail Thumbnail { get; set; }
+        public virtual ICollection<MusicInPlaylist> MusicInPlaylists { get; set; }
 
     }
     public class Playlist : IEFCoreModel
@@ -33,15 +32,15 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel
 
         public string Id { get; set; }
         public string Name { get; set; }
-        public ICollection<MusicInPlaylist> MusicInPlaylists { get; set; }
+        public virtual ICollection<MusicInPlaylist> MusicInPlaylists { get; set; }
 
     }
     public class MusicInPlaylist : IEFCoreModel
     {
         public string MusicId { get; set; }
         public string PlaylistId { get; set; }
-        public Music Music { get; set; }
-        public Playlist Playlist { get; set; }
+        public virtual Music Music { get; set; }
+        public virtual Playlist Playlist { get; set; }
     }
     public class Thumbnail : IEFCoreModel
     {
@@ -51,7 +50,7 @@ namespace Reborn_Zune_MusicLibraryEFCoreModel
 
         public string Id { get; set; }
         public byte[] ImageBytes { get; set; }
-        public ICollection<Music> Musics { get; set; }
+        public virtual ICollection<Music> Musics { get; set; }
 
         
     }

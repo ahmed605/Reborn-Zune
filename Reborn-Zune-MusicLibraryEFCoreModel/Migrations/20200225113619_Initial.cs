@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
 {
-    public partial class InitialMigraton : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

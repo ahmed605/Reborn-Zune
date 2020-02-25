@@ -9,8 +9,8 @@ using Reborn_Zune_MusicLibraryEFCoreModel;
 namespace Reborn_Zune_MusicLibraryEFCoreModel.Migrations
 {
     [DbContext(typeof(MusicLibraryDbContext))]
-    [Migration("20200219023028_InitialMigraton")]
-    partial class InitialMigraton
+    [Migration("20200225113619_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

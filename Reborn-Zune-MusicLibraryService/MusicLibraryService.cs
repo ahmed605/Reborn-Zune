@@ -64,7 +64,10 @@ namespace Reborn_Zune_MusicLibraryService
         }
         private async Task DatabaseSynchronize(IReadOnlyList<StorageFile> result)
         {
-            await DataBaseEngine.Sync(result);
+            if (result != null)
+                await DataBaseEngine.Sync(result);
+            else
+                await Task.Delay(560);
         }
 
         #endregion
@@ -76,8 +79,8 @@ namespace Reborn_Zune_MusicLibraryService
             {
                 Debug.WriteLine("Library Initialize");
                 LibraryReturnContainer result = await LibraryEngine.Initialize(IsFirstUse);
-                IsChanged = result.isChanged;
-                return result.files;
+                IsChanged = result == null ? false : result.isChanged;
+                return result == null ? null : result.files;
             }
             catch (Exception e)
             {

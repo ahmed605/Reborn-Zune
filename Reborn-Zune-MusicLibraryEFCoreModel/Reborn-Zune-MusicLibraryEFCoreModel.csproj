@@ -29,6 +29,12 @@
     <Compile Remove="Migrations\20190610053301_Initial.Designer.cs" />
     <Compile Remove="Migrations\20190611031600_Initial.cs" />
     <Compile Remove="Migrations\20190611031600_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200219023028_InitialMigraton.cs" />
+    <Compile Remove="Migrations\20200219023028_InitialMigraton.Designer.cs" />
+    <Compile Remove="Migrations\20200225102752_Initial.cs" />
+    <Compile Remove="Migrations\20200225102752_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200225110635_Initial.cs" />
+    <Compile Remove="Migrations\20200225110635_Initial.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

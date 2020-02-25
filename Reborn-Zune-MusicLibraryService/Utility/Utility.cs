@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,20 +16,29 @@ namespace Reborn_Zune_MusicLibraryService.Utility
 
         public static BitmapImage GetBitmapImage(byte[] bytes)
         {
-            if (bytes.Length == 0)
+            try
             {
-                return new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg"));
-            }
-            else
-            {
-                using (MemoryStream mem = new MemoryStream(bytes, 0, bytes.Length))
+                if (bytes.Length == 0)
                 {
-                    mem.Position = 0;
-                    var Image = new BitmapImage();
-                    Image.SetSource(mem.AsRandomAccessStream());
-                    return Image;
+                    return new BitmapImage(new Uri("ms-appx:///Assets/Vap-logo-placeholder.jpg"));
+                }
+                else
+                {
+                    using (MemoryStream mem = new MemoryStream(bytes, 0, bytes.Length))
+                    {
+                        mem.Position = 0;
+                        var Image = new BitmapImage();
+                        Image.SetSourceAsync(mem.AsRandomAccessStream());
+                        return Image;
+                    }
                 }
             }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            return null;
+            
         }
 
     }

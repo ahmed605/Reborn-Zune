@@ -118,14 +118,14 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
         {
             using (var _context = new MusicLibraryDbContext())
             {
-                return CreateAlbum(_context.Musics.Where(m => m.Id == AlbumId).ToList());
+                return CreateAlbum(_context.Musics.Include(m => m.Thumbnail).Include(m => m.MusicInPlaylists).Where(m => m.Id == AlbumId).ToList());
             }
         }
         public static List<LocalAlbumModel> FetchAlbums()
         {
             using (var _context = new MusicLibraryDbContext())
             {
-                return _context.Musics.GroupBy(m => m.AlbumTitle).Select(g => CreateAlbum(g.ToList())).ToList();
+                return _context.Musics.Include(m=>m.Thumbnail).Include(m=>m.MusicInPlaylists).GroupBy(m => m.AlbumTitle).Select(g => CreateAlbum(g.ToList())).ToList();
             }
         }
         public static List<LocalThumbnailModel> FetchThumbnails()
@@ -144,7 +144,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
         {
             using (var _context = new MusicLibraryDbContext())
             {
-                return _context.Playlists.Select(p => new LocalPlaylistModel
+                return _context.Playlists.Include(p=>p.MusicInPlaylists).Select(p => new LocalPlaylistModel
                 {
                     Id = p.Id,
                     Name = p.Name,
@@ -169,7 +169,7 @@ namespace Reborn_Zune_MusicLibraryService.DataBase
         {
             using (var _context = new MusicLibraryDbContext())
             {
-                var qwe = _context.Playlists.FirstOrDefault(p => p.Id == PlaylistId);
+                var qwe = _context.Playlists.Include(p => p.MusicInPlaylists).FirstOrDefault(p => p.Id == PlaylistId);
                 return new LocalPlaylistModel
                 {
                     Id = qwe.Id,
