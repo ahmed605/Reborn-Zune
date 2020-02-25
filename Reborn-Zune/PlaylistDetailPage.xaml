@@ -35,8 +35,7 @@
             <Image
                 x:Name="ThumbnailImage"
                 Width="270"
-                Height="270"
-                Source="{x:Bind MainVM.DetailViewModel.Thumbnail, Mode=OneWay}" />
+                Height="270"/>
             <Button
                 x:Name="PlayButton"
                 Margin="0,35,0,0"
@@ -98,12 +97,12 @@
                 Background="Transparent"
                 Style="{StaticResource NoPointerOverButtonStyle}">
                 <Button.Flyout>
-                    <Flyout utils:BindableFlyout.ItemsSource="{x:Bind MainVM.DetailViewModel.Playlists, Mode=OneWay}">
-                        <utils:BindableFlyout.ItemTemplate>
+                    <Flyout>
+                        <!--<utils:BindableFlyout.ItemTemplate>
                             <DataTemplate x:DataType="model:LocalPlaylistModel">
                                 <MenuFlyoutItem Tapped="MenuFlyoutItem_Tapped" Text="{x:Bind Playlist.Name, Mode=OneWay}" />
                             </DataTemplate>
-                        </utils:BindableFlyout.ItemTemplate>
+                        </utils:BindableFlyout.ItemTemplate>-->
                     </Flyout>
                 </Button.Flyout>
                 <Button.Content>
@@ -162,12 +161,12 @@
                 extensions:VisualExtensions.Opacity="0"
                 FontSize="45"
                 FontWeight="Bold"
-                Text="{x:Bind MainVM.DetailViewModel.Title, Mode=OneWay}" />
+                Text="" />
             <TextBlock
                 x:Name="AlbumNameTextBlock"
                 extensions:VisualExtensions.Opacity="0"
                 FontSize="30"
-                Text="{x:Bind MainVM.DetailViewModel.Artist, Mode=OneWay}" />
+                Text="" />
             <TextBlock
                 x:Name="AlbumYearTextBlock"
                 extensions:VisualExtensions.Opacity="0"
@@ -179,8 +178,7 @@
                 Margin="3,60,0,0"
                 HorizontalAlignment="Left"
                 extensions:VisualExtensions.Opacity="0"
-                ChoosingItemContainer="List_ChoosingItemContainer"
-                ItemsSource="{x:Bind MainVM.DetailViewModel.Musics, Mode=OneWay}">
+                ChoosingItemContainer="List_ChoosingItemContainer">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -190,7 +188,7 @@
                         <Setter Property="BorderThickness" Value="0,0,0,1" />
                     </Style>
                 </ListView.ItemContainerStyle>
-                <ListView.ItemTemplate>
+                <!--<ListView.ItemTemplate>
                     <DataTemplate x:DataType="model:LocalMusicModel">
                         <Grid Width="380">
                             <TextBlock
@@ -207,7 +205,7 @@
                                 Text="{x:Bind Music.Duration}" />
                         </Grid>
                     </DataTemplate>
-                </ListView.ItemTemplate>
+                </ListView.ItemTemplate>-->
             </ListView>
         </StackPanel>
 
@@ -236,7 +234,6 @@
             <Image x:Name="CurrentPlayingThumbnailPlaceHolder" Source="ms-appx:///Assets/Vap-logo-placeholder.jpg" />
             <Image
                 x:Name="CurrentPlayingThumbnail"
-                Source="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.PreviewImage, Mode=OneWay}"
                 Tapped="CurrentPlayingThumbnail_Tapped" />
         </Grid>
 

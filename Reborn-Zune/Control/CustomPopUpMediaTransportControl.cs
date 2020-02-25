@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Microsoft.Toolkit.Uwp.UI.Animations;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI.Xaml.Media.Animation;
-using Reborn_Zune.Model;
 using Reborn_Zune.ViewModel;
 
 namespace Reborn_Zune.Control
@@ -86,26 +76,26 @@ namespace Reborn_Zune.Control
 
 
 
-        public MediaItemViewModel Model
-        {
-            get { return (MediaItemViewModel)GetValue(ModelProperty); }
-            set { SetValue(ModelProperty, value); }
-        }
+        //public MediaItemViewModel Model
+        //{
+        //    get { return (MediaItemViewModel)GetValue(ModelProperty); }
+        //    set { SetValue(ModelProperty, value); }
+        //}
 
-        // Using a DependencyProperty as the backing store for Model.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ModelProperty =
-            DependencyProperty.Register("Model", typeof(MediaItemViewModel), typeof(CustomPopUpMediaTransportControl), new PropertyMetadata(null, onMediaModelChanged));
+        //// Using a DependencyProperty as the backing store for Model.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty ModelProperty =
+        //    DependencyProperty.Register("Model", typeof(MediaItemViewModel), typeof(CustomPopUpMediaTransportControl), new PropertyMetadata(null, onMediaModelChanged));
 
 
 
-        private static void onMediaModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((CustomPopUpMediaTransportControl)d).MetaDataChanged(e.NewValue as MediaItemViewModel);
+        //private static void onMediaModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    ((CustomPopUpMediaTransportControl)d).MetaDataChanged(e.NewValue as MediaItemViewModel);
 
-        }
+        //}
 
-        private void MetaDataChanged(MediaItemViewModel model)
-        {
+        //private void MetaDataChanged(MediaItemViewModel model)
+        //{
             //if(model != null)
             //{
             //    if (MusicThumbnail != null)
@@ -127,6 +117,6 @@ namespace Reborn_Zune.Control
             //    }
             //}
             
-        }
+        //}
     }
 }

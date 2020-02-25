@@ -1,8 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
-using Reborn_Zune.Model;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +8,7 @@ using Windows.Foundation.Collections;
 using Windows.Media.Playback;
 using Windows.UI.Core;
 
-namespace Reborn_Zune.ViewModel
+namespace Reborn_Zune_MusicPlayerService.ViewModel
 {
     public class PlayerViewModel : ViewModelBase, IDisposable
     {
@@ -28,8 +26,9 @@ namespace Reborn_Zune.ViewModel
         public PlayerViewModel(MediaPlayer player, CoreDispatcher dispatcher)
         {
             this.player = player;
-            this.dispatcher = dispatcher;
             this.player.AudioCategory = MediaPlayerAudioCategory.Media;
+            this.dispatcher = dispatcher;
+            PlaybackSession = new PlaybackSessionViewModel(player.PlaybackSession, dispatcher);
         }
 
         public MediaPlayer GetPlayer()

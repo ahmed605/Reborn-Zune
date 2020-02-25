@@ -1,13 +1,15 @@
 ﻿using GalaSoft.MvvmLight;
-using Reborn_Zune.Model;
+using Reborn_Zune_MusicLibraryService.DataModel;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Windows.Media.Playback;
 using Windows.UI.Xaml.Media.Imaging;
 
-#pragma warning disable CS0067
-
-namespace Reborn_Zune.ViewModel
+namespace Reborn_Zune_MusicPlayerService.ViewModel
 {
     public class MediaItemViewModel : ViewModelBase
     {
@@ -22,7 +24,7 @@ namespace Reborn_Zune.ViewModel
 
         public LocalMusicModel MediaItem { get; private set; }
 
-        public string Title => MediaItem.Music.Title;
+        public string Title => MediaItem.Title;
 
         public BitmapImage PreviewImage
         {
@@ -48,7 +50,7 @@ namespace Reborn_Zune.ViewModel
 
                 // Don't have one, try to rebind to one in the list
                 playbackItem = listViewModel.PlaybackList.Items.SingleOrDefault(pi =>
-                    (string)pi.Source.CustomProperties[MediaItem.GetMediaItemIdKey] == MediaItem.Music.Id);
+                    (string)pi.Source.CustomProperties[MediaItem.GetMediaItemIdKey] == MediaItem.Id);
 
                 if (playbackItem != null)
                     return playbackItem;
@@ -77,6 +79,6 @@ namespace Reborn_Zune.ViewModel
 
             PreviewImage = mediaItem.Image;
         }
-        
+
     }
 }

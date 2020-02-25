@@ -23,7 +23,6 @@ namespace Reborn_Zune.ViewModel
         #region Fields
         private CoreDispatcher dispatcher;
         private Random rnd = new Random();
-        private PlayerViewModel _playerViewModel;
         private ObservableCollection<BitmapImage> _bitmapList;
         private ObservableCollection<UIElement> _tiles;
         private ObservableCollection<BitmapImage> thumbnails;

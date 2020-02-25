@@ -3,32 +3,21 @@ using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Reborn_Zune.Control;
-using Reborn_Zune.Model;
-using Reborn_Zune.Model.Interface;
 using Reborn_Zune.Utilities;
+using Reborn_Zune.View;
 using Reborn_Zune.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,19 +26,16 @@ namespace Reborn_Zune
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : AdjustedTitleBarPage
     {
-
         private MainViewModel MainVM { get; set; }
         private Compositor _compositor;
         private Visual _floatingVisual;
         private object  _storedItem;
         public MainPage()
         {
-            this.InitializeComponent();
-            
+            InitializeComponent();
             _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
-            TitleBarSetting();
             MainVM = new MainViewModel(Dispatcher);
             _floatingVisual = PlayerFloating.GetVisual();
         }
@@ -68,21 +54,6 @@ namespace Reborn_Zune
             offsetAnim.InsertKeyFrame(0f, new Vector3(0f, startY, 0f));
             offsetAnim.InsertKeyFrame(1f, new Vector3(0f, endY, 0f));
             _floatingVisual.StartAnimation("Translation", offsetAnim);
-        }
-
-        private static void TitleBarSetting()
-        {
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.InactiveBackgroundColor = Windows.UI.Colors.Transparent;
-            titleBar.InactiveForegroundColor = Colors.White;
-            titleBar.ButtonBackgroundColor = "#00000000".ToColor();
-            titleBar.ButtonForegroundColor = Colors.DarkGray;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            titleBar.ButtonInactiveForegroundColor = Colors.DarkGray;
-            titleBar.ButtonHoverBackgroundColor = Colors.Transparent;
-            titleBar.ButtonHoverForegroundColor = Colors.Black;
-            titleBar.ButtonPressedBackgroundColor = "#f5f5f5".ToColor();
-            titleBar.ButtonPressedForegroundColor = Colors.Black;
         }
 
         private void GridView_ChoosingItemContainer(ListViewBase sender, ChoosingItemContainerEventArgs args)
@@ -146,7 +117,8 @@ namespace Reborn_Zune
 
             _storedItem = (sender as GridViewItem).Content;
             //clickGridViewItem = rootElement.FindDescendant<ImageEx>();
-            MainVM.SetClickList((e.OriginalSource as FrameworkElement).DataContext as ILocalListModel);
+            //TODO
+            //MainVM.SetClickList((e.OriginalSource as FrameworkElement).DataContext as ILocalListModel);
             var gridView = rootElement.FindAscendant<GridView>();
             if(gridView.Name == "albums")
             {
@@ -157,7 +129,7 @@ namespace Reborn_Zune
                 var ca1 = playlists.PrepareConnectedAnimation("ca1", _storedItem, "Thumbnail");
             }
 
-            Frame.Navigate(typeof(PlaylistDetailPage), MainVM, new SuppressNavigationTransitionInfo());
+            //Frame.Navigate(typeof(PlaylistDetailPage), MainVM, new SuppressNavigationTransitionInfo());
         }
 
         private async void ItemContainer_PointerExited(object sender, PointerRoutedEventArgs e)
@@ -272,162 +244,168 @@ namespace Reborn_Zune
 
         private void PlayerFloating_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Frame.Navigate(typeof(TilePage), MainVM, new DrillInNavigationTransitionInfo());
+            //Frame.Navigate(typeof(TilePage), MainVM, new DrillInNavigationTransitionInfo());
         }
 
 
         private void NewPlaylistButton_Click(object sender, RoutedEventArgs e)
         {
             
-            bool result = MainVM.LibraryViewModel.CreatePlaylist(PlaylistName.Text);
-            if (result)
-            {
-                AddPlaylistFlyout.Hide();
-            }
-            else
-            {
-                UnAvailableHint.Visibility = Visibility.Visible;
-            }
+            //bool result = MainVM.LibraryViewModel.CreatePlaylist(PlaylistName.Text);
+            //if (result)
+            //{
+            //    AddPlaylistFlyout.Hide();
+            //}
+            //else
+            //{
+            //    UnAvailableHint.Visibility = Visibility.Visible;
+            //}
         }
 
         private void PlayButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var album = (sender as Button).DataContext as ILocalListModel;
-            MainVM.SetMediaList(album);
+            //TODO
+            //var album = (sender as Button).DataContext as ILocalListModel;
+            //MainVM.SetMediaList(album);
             
-            if(MainVM.FloatingVisible == Visibility.Collapsed)
-            {
-                MainVM.FloatingVisible = Visibility.Visible;
-                var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
-                offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
-                offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
-                offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
-                _floatingVisual.StartAnimation("Translation", offSetAnimation);
-            }
+            //if(MainVM.FloatingVisible == Visibility.Collapsed)
+            //{
+            //    MainVM.FloatingVisible = Visibility.Visible;
+            //    var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+            //    offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
+            //    offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
+            //    offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
+            //    _floatingVisual.StartAnimation("Translation", offSetAnimation);
+            //}
             
-            e.Handled = true;
+            //e.Handled = true;
         }
 
         
 
         private async void Albums_Loaded(object sender, RoutedEventArgs e)
         {
-            if(_storedItem != null)
-            {
-                albums.ScrollIntoView(_storedItem, ScrollIntoViewAlignment.Default);
-                ConnectedAnimation animation =
-            ConnectedAnimationService.GetForCurrentView().GetAnimation("ca2");
+            //if(_storedItem != null)
+            //{
+            //    albums.ScrollIntoView(_storedItem, ScrollIntoViewAlignment.Default);
+            //    ConnectedAnimation animation =
+            //ConnectedAnimationService.GetForCurrentView().GetAnimation("ca2");
                 
-                if (animation != null)
-                {
-                    await albums.TryStartConnectedAnimationAsync(
-                        animation, _storedItem, "Thumbnail");
-                }
-            }
+            //    if (animation != null)
+            //    {
+            //        await albums.TryStartConnectedAnimationAsync(
+            //            animation, _storedItem, "Thumbnail");
+            //    }
+            //}
         }
 
         private async void Playlists_Loaded(object sender, RoutedEventArgs e)
         {
-            if(_storedItem != null)
-            {
-                playlists.ScrollIntoView(_storedItem, ScrollIntoViewAlignment.Default);
-                ConnectedAnimation animation =
-            ConnectedAnimationService.GetForCurrentView().GetAnimation("ca2");
+            //if(_storedItem != null)
+            //{
+            //    playlists.ScrollIntoView(_storedItem, ScrollIntoViewAlignment.Default);
+            //    ConnectedAnimation animation =
+            //ConnectedAnimationService.GetForCurrentView().GetAnimation("ca2");
 
-                if (animation != null)
-                {
-                    await playlists.TryStartConnectedAnimationAsync(
-                        animation, _storedItem, "Thumbnail");
-                }
-            }
+            //    if (animation != null)
+            //    {
+            //        await playlists.TryStartConnectedAnimationAsync(
+            //            animation, _storedItem, "Thumbnail");
+            //    }
+            //}
         }
 
         private void AddToPlaylistFlyout_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var datacontext = (sender as FrameworkElement).DataContext as LocalPlaylistModel;
-            var album = MainVM.LibraryViewModel.AlbumAddToPlaylist;
+            //TODO
+            //var datacontext = (sender as FrameworkElement).DataContext as LocalPlaylistModel;
+            //var album = MainVM.LibraryViewModel.AlbumAddToPlaylist;
 
-            if (album is LocalAlbumModel)
-            {
-                MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
-            }
-            else
-            {
-                if (album.GetTitle() != datacontext.GetTitle())
-                {
-                    MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
-                }
-            }
+            //if (album is LocalAlbumModel)
+            //{
+            //    MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
+            //}
+            //else
+            //{
+            //    if (album.GetTitle() != datacontext.GetTitle())
+            //    {
+            //        MainVM.LibraryViewModel.AddSongsToPlaylist(datacontext.Playlist.Name, album.Musics.ToList());
+            //    }
+            //}
         }
 
         private void AddToButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            MainVM.LibraryViewModel.AlbumAddToPlaylist = (sender as Button).DataContext as ILocalListModel;
-            e.Handled = true;
+            //TODO
+            //MainVM.LibraryViewModel.AlbumAddToPlaylist = (sender as Button).DataContext as ILocalListModel;
+            //e.Handled = true;
         }
 
         private void PlaylistAddTo_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            MainVM.LibraryViewModel.AlbumAddToPlaylist = (sender as Button).DataContext as ILocalListModel;
-            e.Handled = true;
+            //TODO
+            //MainVM.LibraryViewModel.AlbumAddToPlaylist = (sender as Button).DataContext as ILocalListModel;
+            //e.Handled = true;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string selected = (sender as ComboBox).SelectedValue as string;
-            if(MainVM != null)
-                MainVM.LibraryViewModel.SortAlbums(selected);
+            //string selected = (sender as ComboBox).SelectedValue as string;
+            //if(MainVM != null)
+            //    MainVM.LibraryViewModel.SortAlbums(selected);
             
         }
 
         private void ShuffleAllButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            MainVM.ShuffleAll();
+            //TODO
+            //MainVM.ShuffleAll();
 
-            if (MainVM.FloatingVisible == Visibility.Collapsed)
-            {
-                MainVM.FloatingVisible = Visibility.Visible;
-                var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
-                offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
-                offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
-                offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
-                _floatingVisual.StartAnimation("Translation", offSetAnimation);
-            }
+            //if (MainVM.FloatingVisible == Visibility.Collapsed)
+            //{
+            //    MainVM.FloatingVisible = Visibility.Visible;
+            //    var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+            //    offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
+            //    offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
+            //    offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
+            //    _floatingVisual.StartAnimation("Translation", offSetAnimation);
+            //}
         }
 
         private void ShuffleAllPlaylistButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            MainVM.ShuffleAllPlaylists();
-            if (MainVM.FloatingVisible == Visibility.Collapsed)
-            {
-                MainVM.FloatingVisible = Visibility.Visible;
-                var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
-                offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
-                offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
-                offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
-                _floatingVisual.StartAnimation("Translation", offSetAnimation);
-            }
+            //TODO
+            //MainVM.ShuffleAllPlaylists();
+            //if (MainVM.FloatingVisible == Visibility.Collapsed)
+            //{
+            //    MainVM.FloatingVisible = Visibility.Visible;
+            //    var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+            //    offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
+            //    offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
+            //    offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
+            //    _floatingVisual.StartAnimation("Translation", offSetAnimation);
+            //}
         }
 
 
         private void NewPlaylistButton2_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            bool result = MainVM.LibraryViewModel.CreatePlaylist(PlaylistName2.Text);
-            if (result)
-            {
-                AddPlaylistFlyout2.Hide();
-            }
-            else
-            {
-                UnAvailableHint2.Visibility = Visibility.Visible;
-            }
+            //bool result = MainVM.LibraryViewModel.CreatePlaylist(PlaylistName2.Text);
+            //if (result)
+            //{
+            //    AddPlaylistFlyout2.Hide();
+            //}
+            //else
+            //{
+            //    UnAvailableHint2.Visibility = Visibility.Visible;
+            //}
         }
 
         private void ComboBox2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string selected = (sender as ComboBox).SelectedValue as string;
-            if (MainVM != null)
-                MainVM.LibraryViewModel.SortPlaylists(selected);
+            //string selected = (sender as ComboBox).SelectedValue as string;
+            //if (MainVM != null)
+            //    MainVM.LibraryViewModel.SortPlaylists(selected);
         }
     }
 }

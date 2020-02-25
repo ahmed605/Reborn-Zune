@@ -50,8 +50,7 @@
                 BorderThickness="6">
                 <Image
                     Width="142"
-                    Height="142"
-                    Source="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.PreviewImage, Mode=OneWay}" />
+                    Height="142" />
             </Border>
 
             <StackPanel Margin="20,10,0,0">
@@ -59,19 +58,19 @@
                     HorizontalAlignment="Left"
                     FontSize="29"
                     Foreground="White"
-                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Title, Mode=OneWay}" />
+                    Text="" />
                 <TextBlock
                     Margin="0,-4,0,0"
                     HorizontalAlignment="Left"
                     FontSize="24"
                     Foreground="White"
-                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.Artist, Mode=OneWay}" />
+                    Text="" />
                 <TextBlock
                     Margin="0,9,0,0"
                     HorizontalAlignment="Left"
                     FontSize="24"
                     Foreground="White"
-                    Text="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.MediaItem.Music.AlbumTitle, Mode=OneWay}" />
+                    Text="" />
             </StackPanel>
         </StackPanel>
 
@@ -88,9 +87,8 @@
                 x:Name="listview"
                 Margin="20,20,0,47"
                 HorizontalAlignment="Right"
-                ChoosingItemContainer="Listview_ChoosingItemContainer"
-                ItemsSource="{x:Bind MainVM.PlayerViewModel.MediaList.MediaList, Mode=OneWay}">
-                <ListView.ItemTemplate>
+                ChoosingItemContainer="Listview_ChoosingItemContainer">
+                <!--<ListView.ItemTemplate>
                     <DataTemplate x:DataType="model:LocalMusicModel">
                         <StackPanel
                             Width="300"
@@ -108,7 +106,7 @@
                                 Text="{x:Bind Music.Artist, Mode=OneWay}" />
                         </StackPanel>
                     </DataTemplate>
-                </ListView.ItemTemplate>
+                </ListView.ItemTemplate>-->
             </ListView>
         </Grid>
 

@@ -126,11 +126,9 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\Interface\ILocalListModel.cs" />
     <Compile Include="PlaylistDetailPage.xaml.cs">
       <DependentUpon>PlaylistDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\PlaybackService.cs" />
     <Compile Include="TilePage.xaml.cs">
       <DependentUpon>TilePage.xaml</DependentUpon>
     </Compile>
@@ -151,13 +149,9 @@
     <Compile Include="Control\VariableSizedWrapPanel.cs" />
     <Compile Include="ViewModel\DetailViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\MediaItemViewModel.cs" />
-    <Compile Include="ViewModel\MediaListViewModel.cs" />
     <Compile Include="ViewModel\LibraryViewModel.cs" />
-    <Compile Include="ViewModel\PlaybackSessionViewModel.cs" />
-    <Compile Include="ViewModel\PlayerViewModel.cs" />
     <Compile Include="ViewModel\TileViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\AdjustedTitleBarPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -297,12 +291,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="View\" />
+    <Folder Include="Model\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MusicPlayerService\Reborn-Zune-MusicPlayerService.csproj">
+      <Project>{EC46BC8A-E52E-4A70-BD94-4B766119A892}</Project>
+      <Name>Reborn-Zune-MusicPlayerService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Reborn-Zune-Common\Reborn-Zune-Common.csproj">
       <Project>{2256C043-07D6-48B1-A408-DB3309A59318}</Project>
       <Name>Reborn-Zune-Common</Name>

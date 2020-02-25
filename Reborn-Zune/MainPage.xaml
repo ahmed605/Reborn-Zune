@@ -1,4 +1,5 @@
-﻿<Page
+﻿<view:AdjustedTitleBarPage
+    xmlns:view="using:Reborn_Zune.View"
     x:Class="Reborn_Zune.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,15 +11,15 @@
     xmlns:local="using:Reborn_Zune"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
-    xmlns:model="using:Reborn_Zune.Model"
     xmlns:utils="using:Reborn_Zune.Utilities"
+    xmlns:datamodel="using:Reborn_Zune_MusicLibraryService.DataModel"
     Background="#F1F1F1"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
 
-    <Page.Resources>
+    <view:AdjustedTitleBarPage.Resources>
         <local:BooleanToVisibilityConverter x:Key="bool2VisConvert" />
-    </Page.Resources>
+    </view:AdjustedTitleBarPage.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.37*" />
@@ -142,7 +143,7 @@
                         controls:DockPanel.Dock="Top"
                         ChoosingItemContainer="GridView_ChoosingItemContainer"
                         ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
-                        ItemsSource="{x:Bind MainVM.LibraryViewModel.Albums, Mode=OneWay}"
+                        ItemsSource="{x:Bind MainVM.GetAllAlbums()}"
                         Loaded="Albums_Loaded"
                         SelectionMode="Single">
 
@@ -155,7 +156,7 @@
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
                         <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="model:LocalAlbumModel">
+                            <DataTemplate x:DataType="datamodel:LocalAlbumModel">
                                 <controls:DockPanel>
                                     <StackPanel
                                         x:Name="TitleAndName"
@@ -242,7 +243,7 @@
                                                         Text="&#xE768;" />
                                                 </Button.Content>
                                             </Button>
-                                            <Button
+                                            <!--<Button
                                                 x:Name="AlbumAddTo"
                                                 Width="25"
                                                 Height="25"
@@ -252,11 +253,11 @@
                                                 <Button.Flyout>
                                                     <Flyout utils:BindableFlyout.ItemsSource="{x:Bind LibraryViewModel.Playlists, Mode=OneWay}">
                                                         <utils:BindableFlyout.ItemTemplate>
-                                                            <DataTemplate x:DataType="model:LocalPlaylistModel">
+                                                            <DataTemplate x:DataType="datamodel:LocalPlaylistModel">
                                                                 <MenuFlyoutItem
                                                                     x:Name="AddToPlaylistFlyout"
                                                                     Tapped="AddToPlaylistFlyout_Tapped"
-                                                                    Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                                                    Text="{x:Bind Name, Mode=OneWay}" />
                                                             </DataTemplate>
                                                         </utils:BindableFlyout.ItemTemplate>
                                                     </Flyout>
@@ -264,7 +265,7 @@
                                                 <Button.Content>
                                                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" />
                                                 </Button.Content>
-                                            </Button>
+                                            </Button>-->
                                         </StackPanel>
                                     </Grid>
 
@@ -287,8 +288,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Top"
                         controls:DockPanel.Dock="Top"
-                        Orientation="Vertical"
-                        Visibility="{x:Bind MainVM.LibraryViewModel.hasPlaylist, Mode=OneWay}">
+                        Orientation="Vertical">
                         <TextBlock
                             FontSize="40"
                             HorizontalTextAlignment="Left"
@@ -321,8 +321,7 @@
                     </StackPanel>
                     <Grid
                         Margin="20,25,0,0"
-                        controls:DockPanel.Dock="Top"
-                        Visibility="{x:Bind MainVM.LibraryViewModel.hasPlaylistReverse, Mode=OneWay}">
+                        controls:DockPanel.Dock="Top">
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                             <Button
                                 x:Name="ShuffleAllPlaylistButton"
@@ -409,16 +408,15 @@
                         controls:DockPanel.Dock="Top"
                         ChoosingItemContainer="GridView_ChoosingItemContainer"
                         ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
-                        ItemsSource="{x:Bind MainVM.LibraryViewModel.Playlists, Mode=OneWay}"
-                        Loaded="Playlists_Loaded"
-                        Visibility="{x:Bind MainVM.LibraryViewModel.hasPlaylistReverse, Mode=OneWay}">
+                        ItemsSource="{x:Bind MainVM.GetAllPlaylists()}"
+                        Loaded="Playlists_Loaded">
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsWrapGrid MaximumRowsOrColumns="4" Orientation="Horizontal" />
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
                         <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="model:LocalPlaylistModel">
+                            <DataTemplate x:DataType="datamodel:LocalPlaylistModel">
                                 <controls:DockPanel>
                                     <TextBlock
                                         Margin="0,8,0,0"
@@ -427,7 +425,7 @@
                                         FontSize="18"
                                         FontWeight="Normal"
                                         Foreground="Black"
-                                        Text="{x:Bind Playlist.Name, Mode=OneWay}" />
+                                        Text="{x:Bind Name, Mode=OneWay}" />
                                     <Grid
                                         Width="175"
                                         Height="175"
@@ -489,10 +487,10 @@
                                                 Margin="10,0,0,0"
                                                 Style="{StaticResource MainPageCircleButtonStyle}"
                                                 Tapped="PlaylistAddTo_Tapped">
-                                                <Button.Flyout>
+                                                <!--<Button.Flyout>
                                                     <Flyout utils:BindableFlyout.ItemsSource="{x:Bind LibraryViewModel.Playlists, Mode=OneWay}">
                                                         <utils:BindableFlyout.ItemTemplate>
-                                                            <DataTemplate x:DataType="model:LocalPlaylistModel">
+                                                            <DataTemplate x:DataType="datamodel:LocalPlaylistModel">
                                                                 <MenuFlyoutItem
                                                                     x:Name="AddToPlaylistFlyout"
                                                                     Tapped="AddToPlaylistFlyout_Tapped"
@@ -500,7 +498,7 @@
                                                             </DataTemplate>
                                                         </utils:BindableFlyout.ItemTemplate>
                                                     </Flyout>
-                                                </Button.Flyout>
+                                                </Button.Flyout>-->
                                                 <Button.Content>
                                                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" />
                                                 </Button.Content>
@@ -539,7 +537,7 @@
                 <Border />
             </controls:DropShadowPanel>
             <Image x:Name="CurrentPlayingThumbnailPlaceHolder" Source="ms-appx:///Assets/Vap-logo-placeholder.jpg" />
-            <Image x:Name="CurrentPlayingThumbnail" Source="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.PreviewImage, Mode=OneWay}" />
+            <!--<Image x:Name="CurrentPlayingThumbnail" Source="{x:Bind MainVM.PlayerViewModel.MediaList.CurrentItem.PreviewImage, Mode=OneWay}" />-->
         </Grid>
     </Grid>
-</Page>
+</view:AdjustedTitleBarPage>

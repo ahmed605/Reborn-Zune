@@ -21,6 +21,7 @@ using Reborn_Zune_MusicLibraryService;
 using Windows.UI.ViewManagement;
 using Windows.UI;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Reborn_Zune_MusicPlayerService;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -80,6 +81,7 @@ namespace Reborn_Zune
 
         private void ExtendSplash_Completed(object sender, EventArgs e)
         {
+            ServiceLocator.SetInstance(new MusicPlaybackService(Dispatcher));
             rootFrame.Navigate(typeof(MainPage));
             // Place the frame in the current Window
             Window.Current.Content = rootFrame;

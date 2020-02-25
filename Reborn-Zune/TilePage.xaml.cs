@@ -1,36 +1,19 @@
-﻿using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Effects;
-using Microsoft.Toolkit.Uwp.Helpers;
+﻿using Microsoft.Toolkit.Uwp.Helpers;
 using Reborn_Zune.Control;
-using Reborn_Zune.Model;
-using Reborn_Zune.Utilities;
 using Reborn_Zune.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
-using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
-using Windows.Graphics.Effects;
 using Windows.System.Threading;
 using Windows.UI;
 using Windows.UI.Composition;
-using Windows.UI.Composition.Effects;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -164,10 +147,10 @@ namespace Reborn_Zune
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            MainVM = e.Parameter as MainViewModel;
-            TileVM = new TileViewModel(MainVM.LibraryViewModel.Thumbnails);
-            TileMediaElement.SetMediaPlayer(MainVM._player);
-            base.OnNavigatedTo(e);
+            //MainVM = e.Parameter as MainViewModel;
+            //TileVM = new TileViewModel(MainVM.LibraryViewModel.Thumbnails);
+            //TileMediaElement.SetMediaPlayer(MainVM._player);
+            //base.OnNavigatedTo(e);
         }
         
 
@@ -237,11 +220,12 @@ namespace Reborn_Zune
 
         private void Container_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            int doubleClickedIdx = MainVM.PlayerViewModel.MediaList.MediaList.IndexOf((e.OriginalSource as FrameworkElement).DataContext as LocalMusicModel);
-            if (MainVM.PlayerViewModel.MediaList.CurrentItemIndex != doubleClickedIdx)
-            {
-                MainVM.PlayerViewModel.SetCurrentItem(doubleClickedIdx);
-            }
+            //TODO
+            //int doubleClickedIdx = MainVM.PlayerViewModel.MediaList.MediaList.IndexOf((e.OriginalSource as FrameworkElement).DataContext as LocalMusicModel);
+            //if (MainVM.PlayerViewModel.MediaList.CurrentItemIndex != doubleClickedIdx)
+            //{
+            //    MainVM.PlayerViewModel.SetCurrentItem(doubleClickedIdx);
+            //}
         }
     }
 }

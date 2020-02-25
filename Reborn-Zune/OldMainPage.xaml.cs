@@ -1,26 +1,8 @@
-﻿using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.Effects;
-using Microsoft.Toolkit.Uwp.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Animations;
-using Reborn_Zune.Model;
+﻿using Microsoft.Toolkit.Uwp.Helpers;
 using Reborn_Zune.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
-using System.Numerics;
-using Windows.Graphics.Display;
-using Windows.Graphics.Effects;
 using Windows.UI;
-using Windows.UI.Composition;
-using Windows.UI.Composition.Effects;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 #pragma warning disable 0169
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
