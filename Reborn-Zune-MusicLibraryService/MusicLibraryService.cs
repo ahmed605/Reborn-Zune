@@ -66,8 +66,7 @@ namespace Reborn_Zune_MusicLibraryService
         {
             if (result != null)
                 await DataBaseEngine.Sync(result);
-            else
-                await Task.Delay(560);
+            await Task.Delay(1000);
         }
 
         #endregion
@@ -79,7 +78,7 @@ namespace Reborn_Zune_MusicLibraryService
             {
                 Debug.WriteLine("Library Initialize");
                 LibraryReturnContainer result = await LibraryEngine.Initialize(IsFirstUse);
-                IsChanged = result == null ? false : result.isChanged;
+                IsChanged = result == null  ? false : result.isChanged;
                 return result == null ? null : result.files;
             }
             catch (Exception e)

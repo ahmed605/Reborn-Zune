@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Reborn_Zune_Common.Interface;
 using Reborn_Zune_MusicLibraryService.DataModel;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,10 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune_MusicPlayerService.ViewModel
 {
-    public class MediaItemViewModel : ViewModelBase
+    public class MediaItemViewModel<T> : ViewModelBase
+        where T : IPlaybackItem
     {
-        MediaListViewModel listViewModel;
+        MediaListViewModel<T> listViewModel;
         MediaPlaybackItem playbackItem;
 
         BitmapImage previewImage;
@@ -22,9 +24,9 @@ namespace Reborn_Zune_MusicPlayerService.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 #pragma warning restore CS0108 // Member hides inherited member; missing new keyword
 
-        public LocalMusicModel MediaItem { get; private set; }
+        public T MediaItem { get; private set; }
 
-        public string Title => MediaItem.Title;
+        public string Title => MediaItem.GetTitle();
 
         public BitmapImage PreviewImage
         {
@@ -50,19 +52,19 @@ namespace Reborn_Zune_MusicPlayerService.ViewModel
 
                 // Don't have one, try to rebind to one in the list
                 playbackItem = listViewModel.PlaybackList.Items.SingleOrDefault(pi =>
-                    (string)pi.Source.CustomProperties[MediaItem.GetMediaItemIdKey] == MediaItem.Id);
+                    (string)pi.Source.CustomProperties[MediaItem.GetMediaItemIdKey()] == MediaItem.GetId());
 
                 if (playbackItem != null)
                     return playbackItem;
 
                 // Not in the list, make a new one
-                playbackItem = MediaItem.ToPlaybackItem();
+                //playbackItem = await MediaItem.ToPlaybackItem();
                 RaisePropertyChanged("PlaybackItem");
                 return playbackItem;
             }
         }
 
-        public MediaItemViewModel(MediaListViewModel listViewModel, LocalMusicModel mediaItem)
+        public MediaItemViewModel(MediaListViewModel<T> listViewModel, T mediaItem)
         {
             this.listViewModel = listViewModel;
             MediaItem = mediaItem;
@@ -77,7 +79,7 @@ namespace Reborn_Zune_MusicPlayerService.ViewModel
             // The reason we cache here is to avoid audio gaps 
             // between tracks on transitions when changing artwork.
 
-            PreviewImage = mediaItem.Image;
+            PreviewImage = mediaItem.GetImage();
         }
 
     }

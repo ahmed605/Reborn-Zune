@@ -235,7 +235,7 @@
                                                 Width="25"
                                                 Height="25"
                                                 Style="{StaticResource MainPageCircleButtonStyle}"
-                                                Tapped="PlayButton_Tapped">
+                                                Tapped="AlbumPlayButton_Tapped">
                                                 <Button.Content>
                                                     <TextBlock
                                                         FontFamily="Segoe MDL2 Assets"
@@ -471,8 +471,7 @@
                                             <Button
                                                 Width="25"
                                                 Height="25"
-                                                Style="{StaticResource MainPageCircleButtonStyle}"
-                                                Tapped="PlayButton_Tapped">
+                                                Style="{StaticResource MainPageCircleButtonStyle}">
                                                 <Button.Content>
                                                     <TextBlock
                                                         FontFamily="Segoe MDL2 Assets"

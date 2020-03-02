@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Reborn_Zune_Common.Interface;
 using Reborn_Zune_MusicLibraryService.DataModel;
 using System;
 using System.IO;
@@ -10,7 +11,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune_MusicLibraryService.DataModel
 {
-    public class LocalMusicModel
+    public class LocalMusicModel : IPlaybackItem
     {
         public const String MediaItemIdKey = "mediaItemId";
         public StorageFile File { get; set; }
@@ -25,17 +26,10 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
         public string ThumbnailId { get; set; }
         public byte[] ImageBytes { get; set; }
         public BitmapImage Image { get; set; }
-
-        public String GetMediaItemIdKey
+        
+        public async Task<MediaPlaybackItem> ToPlaybackItem()
         {
-            get
-            {
-                return MediaItemIdKey;
-            }
-        }
-
-        public MediaPlaybackItem ToPlaybackItem()
-        {
+            File = await StorageFile.GetFileFromPathAsync(Path);
             var source = MediaSource.CreateFromStorageFile(File);
 
             var playbackItem = new MediaPlaybackItem(source);
@@ -44,7 +38,7 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
 
             playbackItem.ApplyDisplayProperties(displayProperties);
 
-            source.CustomProperties[GetMediaItemIdKey] = Id;
+            source.CustomProperties[GetMediaItemIdKey()] = Id;
 
             return playbackItem;
         }
@@ -69,6 +63,26 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
                     Image.SetSource(mem.AsRandomAccessStream());
                 }
             }
+        }
+
+        public string GetTitle()
+        {
+            return Title;
+        }
+
+        public BitmapImage GetImage()
+        {
+            return Image;
+        }
+
+        public string GetMediaItemIdKey()
+        {
+            return MediaItemIdKey;
+        }
+
+        public string GetId()
+        {
+            return Id;
         }
     }
 }

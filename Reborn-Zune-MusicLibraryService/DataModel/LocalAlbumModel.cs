@@ -1,7 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using System.Collections.ObjectModel;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
+﻿using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Reborn_Zune_MusicLibraryService.DataModel

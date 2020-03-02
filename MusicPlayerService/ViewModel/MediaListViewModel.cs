@@ -1,4 +1,5 @@
-﻿using Reborn_Zune_MusicLibraryService.DataModel;
+﻿using Reborn_Zune_Common.Interface;
+using Reborn_Zune_MusicLibraryService.DataModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,16 +12,17 @@ using Windows.UI.Core;
 
 namespace Reborn_Zune_MusicPlayerService.ViewModel
 {
-    public class MediaListViewModel : ObservableCollection<MediaItemViewModel>, IDisposable
+    public class MediaListViewModel<T> : ObservableCollection<MediaItemViewModel<T>>, IDisposable
+        where T : IPlaybackItem
     {
         CoreDispatcher dispatcher;
         int currentItemIndex = -1;
         bool disposed;
         bool initializing;
 
-        public ObservableCollection<LocalMusicModel> MediaList { get; private set; }
+        public List<T> MediaList { get; private set; }
 
-        public MediaItemViewModel CurrentItem
+        public MediaItemViewModel<T> CurrentItem
         {
             get { return currentItemIndex == -1 ? null : this[currentItemIndex]; }
             set
@@ -76,14 +78,17 @@ namespace Reborn_Zune_MusicPlayerService.ViewModel
             private set;
         }
 
-        public MediaListViewModel(ObservableCollection<LocalMusicModel> mediaList, MediaPlaybackList playbackList, CoreDispatcher dispatcher)
+        public MediaListViewModel(
+            List<T> mediaList, 
+            MediaPlaybackList playbackList, 
+            CoreDispatcher dispatcher)
         {
             MediaList = mediaList;
             PlaybackList = playbackList;
             this.dispatcher = dispatcher;
 
             // Verify consistency of the lists that were passed in
-            var mediaListIds = mediaList.Select(i => i.Id);
+            var mediaListIds = mediaList.Select(i => i.GetId());
 
             var playbackListIds = playbackList.Items.Select(
                 i => (string)i.Source.CustomProperties.SingleOrDefault(
@@ -95,7 +100,7 @@ namespace Reborn_Zune_MusicPlayerService.ViewModel
             initializing = true;
 
             foreach (var mediaItem in mediaList)
-                Add(new MediaItemViewModel(this, mediaItem));
+                Add(new MediaItemViewModel<T>(this, mediaItem));
 
             initializing = false;
 
@@ -106,7 +111,7 @@ namespace Reborn_Zune_MusicPlayerService.ViewModel
             CurrentItemIndex = (int)PlaybackList.CurrentItemIndex;
         }
 
-        protected override void InsertItem(int index, MediaItemViewModel item)
+        protected override void InsertItem(int index, MediaItemViewModel<T> item)
         {
             base.InsertItem(index, item);
 
@@ -129,7 +134,7 @@ namespace Reborn_Zune_MusicPlayerService.ViewModel
             PlaybackList.Items.RemoveAt(index);
         }
 
-        protected override void SetItem(int index, MediaItemViewModel item)
+        protected override void SetItem(int index, MediaItemViewModel<T> item)
         {
             base.SetItem(index, item);
 

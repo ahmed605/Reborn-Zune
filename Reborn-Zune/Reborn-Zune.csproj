@@ -25,7 +25,7 @@
     <PackageCertificateThumbprint>0FB468EE92880A98E7F2BE947E06EB6F762F8B87</PackageCertificateThumbprint>
     <PackageCertificateKeyFile>
     </PackageCertificateKeyFile>
-    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <HockeyAppResourceId>e89efe217f71403cb92ac0fc2ff658df</HockeyAppResourceId>
@@ -33,6 +33,8 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <AppxBundle>Always</AppxBundle>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppInstallerUri>https://github.com/jasonwun/emptyTest</AppInstallerUri>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -305,6 +307,10 @@
     <ProjectReference Include="..\Reborn-Zune-Common\Reborn-Zune-Common.csproj">
       <Project>{2256C043-07D6-48B1-A408-DB3309A59318}</Project>
       <Name>Reborn-Zune-Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reborn-Zune-MusicLibraryEFCoreModel\Reborn-Zune-MusicLibraryEFCoreModel.csproj">
+      <Project>{8F3180AD-2351-435A-BCF3-9C62CEE2E8B5}</Project>
+      <Name>Reborn-Zune-MusicLibraryEFCoreModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\Reborn-Zune-MusicLibraryService\Reborn-Zune-MusicLibraryService.csproj">
       <Project>{8A9866A9-8E48-4160-B147-BFD40FE46EE0}</Project>

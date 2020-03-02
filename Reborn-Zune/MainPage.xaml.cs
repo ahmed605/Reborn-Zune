@@ -1,23 +1,22 @@
-﻿using Microsoft.Toolkit.Uwp.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Animations;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Reborn_Zune.Control;
 using Reborn_Zune.Utilities;
 using Reborn_Zune.View;
 using Reborn_Zune.ViewModel;
+using Reborn_Zune_Common.Interface;
+using Reborn_Zune_MusicLibraryService.DataModel;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using Windows.UI;
 using Windows.UI.Composition;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Animation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -208,9 +207,6 @@ namespace Reborn_Zune
             }
         }
         
-        
-
-
         private void PlayerFloating_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse || e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Pen)
@@ -247,7 +243,6 @@ namespace Reborn_Zune
             //Frame.Navigate(typeof(TilePage), MainVM, new DrillInNavigationTransitionInfo());
         }
 
-
         private void NewPlaylistButton_Click(object sender, RoutedEventArgs e)
         {
             
@@ -262,23 +257,24 @@ namespace Reborn_Zune
             //}
         }
 
-        private void PlayButton_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void AlbumPlayButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            //TODO
-            //var album = (sender as Button).DataContext as ILocalListModel;
-            //MainVM.SetMediaList(album);
-            
-            //if(MainVM.FloatingVisible == Visibility.Collapsed)
-            //{
-            //    MainVM.FloatingVisible = Visibility.Visible;
-            //    var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
-            //    offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
-            //    offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
-            //    offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
-            //    _floatingVisual.StartAnimation("Translation", offSetAnimation);
-            //}
-            
-            //e.Handled = true;
+            var a = ((LocalAlbumModel)((sender as Button).DataContext)).
+                Musics.Select(s => s as IPlaybackItem).ToList();
+            if (await MainVM.AddToPlaybackQueue(a))
+            {
+                //if(MainVM.FloatingVisible == Visibility.Collapsed)
+                //{
+                //    MainVM.FloatingVisible = Visibility.Visible;
+                //    var offSetAnimation = _compositor.CreateVector3KeyFrameAnimation();
+                //    offSetAnimation.InsertKeyFrame(0f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y + 100, 0));
+                //    offSetAnimation.InsertKeyFrame(1f, new Vector3(_floatingVisual.Offset.X, _floatingVisual.Offset.Y, 0));
+                //    offSetAnimation.Duration = TimeSpan.FromMilliseconds(500);
+                //    _floatingVisual.StartAnimation("Translation", offSetAnimation);
+                //}
+
+                //e.Handled = true;
+            }
         }
 
         

@@ -1,9 +1,12 @@
 ﻿using GalaSoft.MvvmLight;
+using Reborn_Zune_Common.Interface;
 using Reborn_Zune_Common.Services;
 using Reborn_Zune_MusicLibraryService;
 using Reborn_Zune_MusicLibraryService.DataModel;
 using Reborn_Zune_MusicPlayerService;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 #pragma warning disable 0169
@@ -17,7 +20,7 @@ namespace Reborn_Zune.ViewModel
         //private TileViewModel _tileViewModel;
         private Visibility _floatingVisible = Visibility.Collapsed;
         private MusicLibraryService libraryService = ServiceLocator.GetInstance("MusicLibraryService") as MusicLibraryService;
-        private MusicPlaybackService playerService = ServiceLocator.GetInstance("MusicPlaybackService") as MusicPlaybackService;
+        private MusicPlaybackService<IPlaybackItem> playerService = ServiceLocator.GetInstance("MusicPlaybackService`1") as MusicPlaybackService<IPlaybackItem>;
         public bool _isStop = true;
         #endregion
 
@@ -133,6 +136,10 @@ namespace Reborn_Zune.ViewModel
 
         #endregion
 
+        public async Task<bool> AddToPlaybackQueue(List<IPlaybackItem> model)
+        {
+            return await playerService.AddToPlaybackQueue(model);
+        }
 
     }
 }

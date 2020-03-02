@@ -22,6 +22,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Reborn_Zune_MusicPlayerService;
+using Reborn_Zune_Common.Interface;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -81,7 +82,7 @@ namespace Reborn_Zune
 
         private void ExtendSplash_Completed(object sender, EventArgs e)
         {
-            ServiceLocator.SetInstance(new MusicPlaybackService(Dispatcher));
+            ServiceLocator.SetInstance(new MusicPlaybackService<IPlaybackItem>(Dispatcher));
             rootFrame.Navigate(typeof(MainPage));
             // Place the frame in the current Window
             Window.Current.Content = rootFrame;
