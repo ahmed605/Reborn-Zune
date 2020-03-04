@@ -26,7 +26,9 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
         public string ThumbnailId { get; set; }
         public byte[] ImageBytes { get; set; }
         public BitmapImage Image { get; set; }
-        
+
+        private MediaPlaybackItem MediaPlaybackItem { get; set; }
+
         public async Task<MediaPlaybackItem> ToPlaybackItem()
         {
             File = await StorageFile.GetFileFromPathAsync(Path);
@@ -39,6 +41,8 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
             playbackItem.ApplyDisplayProperties(displayProperties);
 
             source.CustomProperties[GetMediaItemIdKey()] = Id;
+
+            MediaPlaybackItem = playbackItem;
 
             return playbackItem;
         }
@@ -83,6 +87,11 @@ namespace Reborn_Zune_MusicLibraryService.DataModel
         public string GetId()
         {
             return Id;
+        }
+
+        public MediaPlaybackItem GetExsistedPlaybackItem()
+        {
+            return MediaPlaybackItem;
         }
     }
 }

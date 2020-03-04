@@ -122,23 +122,23 @@
     <Compile Include="Control\ShadowSpotLightControl.xaml.cs">
       <DependentUpon>ShadowSpotLightControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ExtendSplash.xaml.cs">
+    <Compile Include="View\ExtendSplash.xaml.cs">
       <DependentUpon>ExtendSplash.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPage.xaml.cs">
+    <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PlaylistDetailPage.xaml.cs">
+    <Compile Include="View\PlaylistDetailPage.xaml.cs">
       <DependentUpon>PlaylistDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TilePage.xaml.cs">
+    <Compile Include="View\TilePage.xaml.cs">
       <DependentUpon>TilePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TimeSpanFormatConverter.cs" />
+    <Compile Include="Utilities\TimeSpanFormatConverter.cs" />
     <Compile Include="Utilities\BindableFlyout.cs" />
     <Compile Include="Utilities\CompositionExtensions.cs" />
     <Compile Include="Utilities\FluidBitMatrix.cs" />
-    <Compile Include="OldMainPage.xaml.cs">
+    <Compile Include="View\OldMainPage.xaml.cs">
       <DependentUpon>OldMainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -237,15 +237,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ExtendSplash.xaml">
+    <Page Include="View\ExtendSplash.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainPage.xaml">
+    <Page Include="View\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="OldMainPage.xaml">
+    <Page Include="View\OldMainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -253,7 +253,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PlaylistDetailPage.xaml">
+    <Page Include="View\PlaylistDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -261,7 +261,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TilePage.xaml">
+    <Page Include="View\TilePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

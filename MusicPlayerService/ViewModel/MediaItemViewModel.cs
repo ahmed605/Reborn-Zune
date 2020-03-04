@@ -58,7 +58,7 @@ namespace Reborn_Zune_MusicPlayerService.ViewModel
                     return playbackItem;
 
                 // Not in the list, make a new one
-                //playbackItem = await MediaItem.ToPlaybackItem();
+                playbackItem = MediaItem.GetExsistedPlaybackItem();
                 RaisePropertyChanged("PlaybackItem");
                 return playbackItem;
             }

@@ -1,7 +1,6 @@
 ﻿using Reborn_Zune_Common.Interface;
 using Reborn_Zune_Common.Services;
 using Reborn_Zune_MusicLibraryService.DataModel;
-using Reborn_Zune_MusicLibraryService.Interface;
 using Reborn_Zune_MusicPlayerService.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -169,8 +168,15 @@ namespace Reborn_Zune_MusicPlayerService
         public async Task<bool> AddToPlaybackQueue(List<T> mediaPlaybackList)
         {
             if (PlayBackListConsistencyDetect(mediaPlaybackList))
+            {
                 PlaybackList = await ToPlayBackList(mediaPlaybackList);
-            MediaList = new MediaListViewModel<T>(mediaPlaybackList, PlaybackList, dispatcher);
+                MediaList = new MediaListViewModel<T>(mediaPlaybackList, PlaybackList, dispatcher);
+            }
+            else
+            {
+                Player.Play();
+            }
+                
             return true;
         }
 

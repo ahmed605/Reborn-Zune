@@ -15,5 +15,6 @@ namespace Reborn_Zune_Common.Interface
         string GetMediaItemIdKey();
         string GetId();
         Task<MediaPlaybackItem> ToPlaybackItem();
+        MediaPlaybackItem GetExsistedPlaybackItem();
     }
 }
